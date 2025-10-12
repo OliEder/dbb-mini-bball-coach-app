@@ -14,6 +14,7 @@
 .Trashes
 .VolumeIcon.icns
 .com.apple.timemachine.donotpresent
+.env
 
 # Directories potentially created on remote AFP share
 .AppleDB
@@ -34,6 +35,10 @@ to-delete/
 *.njsproj
 *.sln
 *.sw?
+# ai_agents 
+ai_agents*
+ai_agent*
+web_research*
 
 # Test-Daten: Nur echte/production Daten ignorieren
 # Dummy-Daten sind OK und sollten committet werden

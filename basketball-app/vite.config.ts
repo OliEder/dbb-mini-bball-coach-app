@@ -8,8 +8,13 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
+      // Service Worker nur in Production registrieren
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
+      // WICHTIG: Deaktiviere Dev-Optionen
+      devOptions: {
+        enabled: false, // Service Worker im Dev-Mode deaktiviert
+      },
+      // Keine includeAssets - Icons fehlen aktuell
       manifest: {
         name: 'Basketball Team Manager',
         short_name: 'BBall Manager',
@@ -17,18 +22,8 @@ export default defineConfig({
         theme_color: '#1e3a8a',
         background_color: '#ffffff',
         display: 'standalone',
-        icons: [
-          {
-            src: 'pwa-192x192.png',
-            sizes: '192x192',
-            type: 'image/png'
-          },
-          {
-            src: 'pwa-512x512.png',
-            sizes: '512x512',
-            type: 'image/png'
-          }
-        ]
+        // Icons temporär entfernt - müssen noch erstellt werden
+        icons: []
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg}'],

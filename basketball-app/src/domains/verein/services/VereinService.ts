@@ -55,14 +55,14 @@ export class VereinService {
    * Nur eigene Vereine
    */
   async getEigeneVereine(): Promise<Verein[]> {
-    return await db.vereine.where({ ist_eigener_verein: true }).toArray();
+    return await db.vereine.filter(v => v.ist_eigener_verein === true).toArray();
   }
 
   /**
    * Gegner-Vereine
    */
   async getGegnerVereine(): Promise<Verein[]> {
-    return await db.vereine.where({ ist_eigener_verein: false }).toArray();
+    return await db.vereine.filter(v => v.ist_eigener_verein === false).toArray();
   }
 
   /**

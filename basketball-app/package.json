@@ -11,7 +11,14 @@
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",
     "lint": "eslint .",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "ai:analyze": "python3 ai_agent.py analyze",
+    "ai:fix-ts": "python3 ai_agent.py fix-ts", 
+    "ai:test": "python3 ai_agent.py test",
+    "ai:commit": "python3 ai_agent.py commit",
+    "ai:sync": "python3 ai_agent.py sync",
+    "ai:audit": "python3 ai_agent.py audit",
+    "research": "python3 web_research_agent.py"
   },
   "dependencies": {
     "clsx": "^2.1.1",

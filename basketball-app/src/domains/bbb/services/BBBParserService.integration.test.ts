@@ -12,7 +12,7 @@ import { join } from 'path';
 
 describe('BBBParserService - Integration with real JSP files', () => {
   let service: BBBParserService;
-  const testDataPath = join(__dirname, '../../../test-data/bbb');
+  const testDataPath = join(__dirname, '../../../../test-data/bbb');
 
   beforeEach(() => {
     service = new BBBParserService();
