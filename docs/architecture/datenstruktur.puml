@@ -1,0 +1,101 @@
+@startuml
+object "Spieler" as Spieler {
+    - vorname: String
+    - nachname: String
+    - geburtsdatum: Date
+    - DBBTNANummer: String
+    - KonfektionsGrEUJersey: Number
+    - KonfektionsGrEUHose: Number
+    - Erziehungsberechtiger1: Erziehungsberechtigter
+    - Erziehungsberechtiger2: Erziehungsberechtigter
+    - Lieblingstrikotnummer: String
+    - DBBgemeldet: Date
+    - EasyVereinGefunden: Boolean
+    - EasyVereinID: String
+    - Spielermetriken: List<Spielermetriken>
+}
+object "Erziehungsberechtigter" as Erziehungsberechtigter {
+    - vorname: String
+    - nachname: String
+    - telefonnummer: String
+    - email: String
+}
+Object "Spielermetriken" as Spielermetriken {
+    - Ballhandling: Number
+    - Passen: Number
+    - Fangen: Number    
+    - Spieluebersicht: Number
+    - Teamplay: Number
+    - OnBallDefense: Number
+    - OffBallDefense: Number
+    - Rebounding: Number
+    - Kondition: Number
+    - Abschlussbereitschaft: Number
+    - Wurf: Number
+    - DatumDerErfassung: Date
+}
+
+object "Trikots" as Trikots {
+    - Type: [Enum: Jersey, Hose]
+    - "Größe Hersteller": String
+    - "Größe EU": Number
+    - Trikotnummer: String
+}
+object "Spieltag" as Spieltag {
+    - Datum: Date
+    - Gegner: String
+    - Spielort: [Enum: Heim, Auswärts]
+    - Uhrzeit: Time
+    - Spielklasse: String
+    - SpielNr: String
+    - SpieltagNr: Number
+    - Endergebnis: String
+    - Spielzeit: String
+    - Kader: Object
+    - Modus: [Enum: DreiGegenDrei, VierGegenVier]
+    - Achtel: List<Achtel>
+}
+object "KaderGesamt" as Kader {
+    - Spieler: Spieler
+    - MinutenGesamt: Number
+    - PunkteGesamt: Number
+    - FoulsGesamt: Number
+    - TechnischeFoulsGesamt: Number
+    - DisqualifikationenGesamt: Number
+    - FreiwürfeGetroffen: Number
+    - FreiwürfeVersucht: Number
+    - ZweipunkteGetroffen: Number
+    - ZweipunkteVersucht: Number
+    - DreipunkteGetroffen: Number
+    - DreipunkteVersucht: Number
+    - OffRebounds: Number
+    - DefRebounds: Number
+    - Assists: Number
+    - Steals: Number
+    - Blocks: Number
+    - Turnovers: Number
+}
+object "Kader Spieltag" as KaderSpieltag {
+    - Spieler: List<Spieler>
+}
+object "Achtel" as Achtel {
+    - Nummer: Number
+    - Aufstellung: List<Object> // max 3 oder 4 Spieler je nach Modus
+    - Spielstand: String
+    - Bemerkung: String
+}
+
+object "AchtelSpieler" as AchtelSpieler {
+    - Spieler: Object
+    - Trikotnummer: String
+    - Position: [Enum: PG, SG, SF, PF, C]
+}
+
+Spieltag "1" -- "8" Achtel : besteht aus >
+Achtel "1" -- "n" AchtelSpieler : Aufstellung >
+AchtelSpieler "1" -- "1" Spieler : bezieht sich auf >
+AchtelSpieler "1" -- "1" Trikots : bekommt >
+
+Spieler "1" -- "1..2" Erziehungsberechtigter : hat >
+Spieler "1" -- "n" Spielermetriken : hat >
+@enduml

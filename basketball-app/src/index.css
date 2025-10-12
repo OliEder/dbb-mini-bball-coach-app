@@ -1,0 +1,132 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* WCAG 2.0 AA compliant base styles */
+@layer base {
+  /* High contrast focus indicator */
+  *:focus-visible {
+    @apply outline-2 outline-offset-2 outline-primary-600;
+  }
+
+  /* Ensure minimum touch target size (44x44px) */
+  button,
+  a,
+  input,
+  select,
+  textarea {
+    @apply min-h-[44px];
+  }
+
+  /* Screen reader only class */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+
+  /* Skip to main content link */
+  .skip-link {
+    @apply absolute left-0 top-0 bg-primary-600 text-white px-4 py-2 -translate-y-full;
+    @apply focus:translate-y-0 z-50;
+  }
+
+  body {
+    @apply bg-gray-50 text-gray-900 font-sans;
+    @apply antialiased;
+  }
+
+  /* Ensure sufficient line height for readability */
+  p, li {
+    @apply leading-relaxed;
+  }
+
+  /* High contrast links */
+  a {
+    @apply text-primary-600 hover:text-primary-700 focus:text-primary-700;
+    @apply underline decoration-2 underline-offset-2;
+  }
+}
+
+@layer components {
+  /* Accessible button styles */
+  .btn {
+    @apply px-4 py-2 rounded-lg font-medium transition-colors;
+    @apply focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2;
+    @apply disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-primary {
+    @apply btn bg-primary-600 text-white hover:bg-primary-700;
+    @apply focus-visible:outline-primary-600;
+  }
+
+  .btn-secondary {
+    @apply btn bg-gray-200 text-gray-900 hover:bg-gray-300;
+    @apply focus-visible:outline-gray-600;
+  }
+
+  .btn-success {
+    @apply btn bg-success-600 text-white hover:bg-success-700;
+    @apply focus-visible:outline-success-600;
+  }
+
+  .btn-danger {
+    @apply btn bg-error-600 text-white hover:bg-error-700;
+    @apply focus-visible:outline-error-600;
+  }
+
+  /* Form inputs with proper contrast */
+  .input {
+    @apply w-full px-3 py-2 border-2 border-gray-300 rounded-lg;
+    @apply focus:border-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-600/20;
+    @apply disabled:bg-gray-100 disabled:cursor-not-allowed;
+    @apply text-gray-900 placeholder-gray-500;
+  }
+
+  .input-error {
+    @apply border-error-600 focus:border-error-600 focus:ring-error-600/20;
+  }
+
+  /* Label with required indicator */
+  .label {
+    @apply block text-sm font-medium text-gray-900 mb-1;
+  }
+
+  .label-required::after {
+    content: " *";
+    @apply text-error-600;
+  }
+
+  /* Card component */
+  .card {
+    @apply bg-white rounded-lg shadow-sm border border-gray-200 p-6;
+  }
+
+  /* Alert components with proper contrast */
+  .alert {
+    @apply px-4 py-3 rounded-lg border-2;
+  }
+
+  .alert-info {
+    @apply alert bg-primary-50 border-primary-600 text-primary-900;
+  }
+
+  .alert-success {
+    @apply alert bg-success-50 border-success-600 text-success-900;
+  }
+
+  .alert-warning {
+    @apply alert bg-warning-50 border-warning-600 text-warning-900;
+  }
+
+  .alert-error {
+    @apply alert bg-error-50 border-error-600 text-error-900;
+  }
+}
