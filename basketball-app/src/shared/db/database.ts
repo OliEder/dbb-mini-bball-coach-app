@@ -223,82 +223,89 @@ export async function importDatabase(jsonData: string): Promise<void> {
     throw new Error('Ungültiges Backup-Format');
   }
   
-  await db.transaction('rw', 
-    db.vereine,
-    db.teams,
-    db.spieler,
-    db.bewertungen,
-    db.erziehungsberechtigte,
-    db.spieler_erziehungsberechtigte,
-    db.hallen,
-    db.ligen,
-    db.liga_teilnahmen,
-    db.spielplaene,
-    db.spiele,
-    db.liga_ergebnisse,
-    db.liga_tabellen,
-    db.trikots,
-    db.einsaetze,
-    db.achtel_statistiken,
-    db.trainings,
-    db.training_teilnahmen,
-    db.probetraining_teilnehmer,
-    db.probetraining_historie,
-    db.spieler_notizen,
-    db.saison_archive,
-    async () => {
-      // Clear all tables
-      await Promise.all([
-        db.vereine.clear(),
-        db.teams.clear(),
-        db.spieler.clear(),
-        db.bewertungen.clear(),
-        db.erziehungsberechtigte.clear(),
-        db.spieler_erziehungsberechtigte.clear(),
-        db.hallen.clear(),
-        db.ligen.clear(),
-        db.liga_teilnahmen.clear(),
-        db.spielplaene.clear(),
-        db.spiele.clear(),
-        db.liga_ergebnisse.clear(),
-        db.liga_tabellen.clear(),
-        db.trikots.clear(),
-        db.einsaetze.clear(),
-        db.achtel_statistiken.clear(),
-        db.trainings.clear(),
-        db.training_teilnahmen.clear(),
-        db.probetraining_teilnehmer.clear(),
-        db.probetraining_historie.clear(),
-        db.spieler_notizen.clear(),
-        db.saison_archive.clear(),
-      ]);
-      
-      // Import data
-      const data = backup.data;
-      if (data.vereine?.length) await db.vereine.bulkAdd(data.vereine);
-      if (data.teams?.length) await db.teams.bulkAdd(data.teams);
-      if (data.spieler?.length) await db.spieler.bulkAdd(data.spieler);
-      if (data.bewertungen?.length) await db.bewertungen.bulkAdd(data.bewertungen);
-      if (data.erziehungsberechtigte?.length) await db.erziehungsberechtigte.bulkAdd(data.erziehungsberechtigte);
-      if (data.spieler_erziehungsberechtigte?.length) await db.spieler_erziehungsberechtigte.bulkAdd(data.spieler_erziehungsberechtigte);
-      if (data.hallen?.length) await db.hallen.bulkAdd(data.hallen);
-      if (data.ligen?.length) await db.ligen.bulkAdd(data.ligen);
-      if (data.liga_teilnahmen?.length) await db.liga_teilnahmen.bulkAdd(data.liga_teilnahmen);
-      if (data.spielplaene?.length) await db.spielplaene.bulkAdd(data.spielplaene);
-      if (data.spiele?.length) await db.spiele.bulkAdd(data.spiele);
-      if (data.liga_ergebnisse?.length) await db.liga_ergebnisse.bulkAdd(data.liga_ergebnisse);
-      if (data.liga_tabellen?.length) await db.liga_tabellen.bulkAdd(data.liga_tabellen);
-      if (data.trikots?.length) await db.trikots.bulkAdd(data.trikots);
-      if (data.einsaetze?.length) await db.einsaetze.bulkAdd(data.einsaetze);
-      if (data.achtel_statistiken?.length) await db.achtel_statistiken.bulkAdd(data.achtel_statistiken);
-      if (data.trainings?.length) await db.trainings.bulkAdd(data.trainings);
-      if (data.training_teilnahmen?.length) await db.training_teilnahmen.bulkAdd(data.training_teilnahmen);
-      if (data.probetraining_teilnehmer?.length) await db.probetraining_teilnehmer.bulkAdd(data.probetraining_teilnehmer);
-      if (data.probetraining_historie?.length) await db.probetraining_historie.bulkAdd(data.probetraining_historie);
-      if (data.spieler_notizen?.length) await db.spieler_notizen.bulkAdd(data.spieler_notizen);
-      if (data.saison_archive?.length) await db.saison_archive.bulkAdd(data.saison_archive);
-      
-      console.log('✅ Database import complete');
-    }
-  );
+  const data = backup.data;
+  
+  // Dexie unterstützt max 5 Tabellen pro Transaction
+  // Daher in viele kleine Transaktionen aufteilen
+  
+  // Transaction 1: Vereine, Teams, Spieler, Bewertungen
+  await db.transaction('rw', db.vereine, db.teams, db.spieler, db.bewertungen, async () => {
+    await db.vereine.clear();
+    await db.teams.clear();
+    await db.spieler.clear();
+    await db.bewertungen.clear();
+    
+    if (data.vereine?.length) await db.vereine.bulkAdd(data.vereine);
+    if (data.teams?.length) await db.teams.bulkAdd(data.teams);
+    if (data.spieler?.length) await db.spieler.bulkAdd(data.spieler);
+    if (data.bewertungen?.length) await db.bewertungen.bulkAdd(data.bewertungen);
+  });
+  
+  // Transaction 2: Trikots, Erziehungsberechtigte
+  await db.transaction('rw', db.trikots, db.erziehungsberechtigte, db.spieler_erziehungsberechtigte, async () => {
+    await db.trikots.clear();
+    await db.erziehungsberechtigte.clear();
+    await db.spieler_erziehungsberechtigte.clear();
+    
+    if (data.trikots?.length) await db.trikots.bulkAdd(data.trikots);
+    if (data.erziehungsberechtigte?.length) await db.erziehungsberechtigte.bulkAdd(data.erziehungsberechtigte);
+    if (data.spieler_erziehungsberechtigte?.length) await db.spieler_erziehungsberechtigte.bulkAdd(data.spieler_erziehungsberechtigte);
+  });
+  
+  // Transaction 3: Hallen, Ligen, Liga-Teilnahmen
+  await db.transaction('rw', db.hallen, db.ligen, db.liga_teilnahmen, async () => {
+    await db.hallen.clear();
+    await db.ligen.clear();
+    await db.liga_teilnahmen.clear();
+    
+    if (data.hallen?.length) await db.hallen.bulkAdd(data.hallen);
+    if (data.ligen?.length) await db.ligen.bulkAdd(data.ligen);
+    if (data.liga_teilnahmen?.length) await db.liga_teilnahmen.bulkAdd(data.liga_teilnahmen);
+  });
+  
+  // Transaction 4: Spielplan, Spiele
+  await db.transaction('rw', db.spielplaene, db.spiele, async () => {
+    await db.spielplaene.clear();
+    await db.spiele.clear();
+    
+    if (data.spielplaene?.length) await db.spielplaene.bulkAdd(data.spielplaene);
+    if (data.spiele?.length) await db.spiele.bulkAdd(data.spiele);
+  });
+  
+  // Transaction 5: Liga-Ergebnisse, Tabellen, Einsätze
+  await db.transaction('rw', db.liga_ergebnisse, db.liga_tabellen, db.einsaetze, db.achtel_statistiken, async () => {
+    await db.liga_ergebnisse.clear();
+    await db.liga_tabellen.clear();
+    await db.einsaetze.clear();
+    await db.achtel_statistiken.clear();
+    
+    if (data.liga_ergebnisse?.length) await db.liga_ergebnisse.bulkAdd(data.liga_ergebnisse);
+    if (data.liga_tabellen?.length) await db.liga_tabellen.bulkAdd(data.liga_tabellen);
+    if (data.einsaetze?.length) await db.einsaetze.bulkAdd(data.einsaetze);
+    if (data.achtel_statistiken?.length) await db.achtel_statistiken.bulkAdd(data.achtel_statistiken);
+  });
+  
+  // Transaction 6: Training, Teilnahmen
+  await db.transaction('rw', db.trainings, db.training_teilnahmen, async () => {
+    await db.trainings.clear();
+    await db.training_teilnahmen.clear();
+    
+    if (data.trainings?.length) await db.trainings.bulkAdd(data.trainings);
+    if (data.training_teilnahmen?.length) await db.training_teilnahmen.bulkAdd(data.training_teilnahmen);
+  });
+  
+  // Transaction 7: Probetraining, Notizen, Archiv
+  await db.transaction('rw', db.probetraining_teilnehmer, db.probetraining_historie, db.spieler_notizen, db.saison_archive, async () => {
+    await db.probetraining_teilnehmer.clear();
+    await db.probetraining_historie.clear();
+    await db.spieler_notizen.clear();
+    await db.saison_archive.clear();
+    
+    if (data.probetraining_teilnehmer?.length) await db.probetraining_teilnehmer.bulkAdd(data.probetraining_teilnehmer);
+    if (data.probetraining_historie?.length) await db.probetraining_historie.bulkAdd(data.probetraining_historie);
+    if (data.spieler_notizen?.length) await db.spieler_notizen.bulkAdd(data.spieler_notizen);
+    if (data.saison_archive?.length) await db.saison_archive.bulkAdd(data.saison_archive);
+  });
+  
+  console.log('✅ Database import complete');
 }

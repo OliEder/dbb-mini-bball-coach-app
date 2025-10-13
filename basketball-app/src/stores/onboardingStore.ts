@@ -2,6 +2,7 @@
  * Onboarding Store - Zustand State Management
  * 
  * KORRIGIERT: BBB-Import zuerst, dann Team-Auswahl
+ * FIX: Files werden NICHT persistiert (verhindert Reload-Schleife)
  */
 
 import { create } from 'zustand';
@@ -27,7 +28,7 @@ interface OnboardingState {
   selected_team_name?: string;
   trainer_name?: string;
   
-  // CSV-Files
+  // CSV-Files (NICHT persistiert!)
   spieler_csv?: File;
   trikot_csv?: File;
 }
@@ -106,13 +107,16 @@ export const useOnboardingStore = create<OnboardingStore>()(
     }),
     {
       name: 'basketball-onboarding',
-      // Nur Step und non-File-Data speichern
+      // KRITISCH: Files und große Objekte NICHT persistieren!
       partialize: (state) => ({
         step: state.step,
         bbb_url: state.bbb_url,
         selected_team_name: state.selected_team_name,
         trainer_name: state.trainer_name,
-        // parsed_liga_data wird NICHT gespeichert (zu groß)
+        // EXPLIZIT AUSGESCHLOSSEN:
+        // - spieler_csv: File kann nicht serialisiert werden
+        // - trikot_csv: File kann nicht serialisiert werden
+        // - parsed_liga_data: Zu groß für localStorage
       })
     }
   )

@@ -85,34 +85,28 @@ export class TeamService {
    * - Einsatzpläne
    */
   async deleteTeam(team_id: UUID): Promise<void> {
-    await db.transaction('rw', 
-      db.teams,
-      db.spieler,
-      db.trikots,
-      db.spiele,
-      db.einsaetze,
-      async () => {
-        // Lösche Team
-        await db.teams.delete(team_id);
-        
-        // Lösche zugehörige Spieler
-        await db.spieler.where({ team_id }).delete();
-        
-        // Lösche zugehörige Trikots
-        await db.trikots.where({ team_id }).delete();
-        
-        // Lösche zugehörige Spiele
-        const spiele = await db.spiele.where({ team_id }).toArray();
-        const spielIds = spiele.map(s => s.spiel_id);
-        
+    // Dexie transaction unterstützt max 6 Tables
+    // Daher in 2 Transaktionen aufteilen
+    
+    // Transaction 1: Spiele & Einsätze
+    const spiele = await db.spiele.where({ team_id }).toArray();
+    const spielIds = spiele.map(s => s.spiel_id);
+    
+    if (spielIds.length > 0) {
+      await db.transaction('rw', db.einsaetze, db.spiele, async () => {
         for (const spiel_id of spielIds) {
-          // Lösche Einsatzpläne
           await db.einsaetze.where({ spiel_id }).delete();
-          // Lösche Spiel
           await db.spiele.delete(spiel_id);
         }
-      }
-    );
+      });
+    }
+    
+    // Transaction 2: Team, Spieler, Trikots
+    await db.transaction('rw', db.teams, db.spieler, db.trikots, async () => {
+      await db.teams.delete(team_id);
+      await db.spieler.where({ team_id }).delete();
+      await db.trikots.where({ team_id }).delete();
+    });
   }
 
   /**

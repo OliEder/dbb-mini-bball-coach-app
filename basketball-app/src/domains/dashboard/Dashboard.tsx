@@ -19,9 +19,11 @@ import { Home, Users, Calendar, ShirtIcon, BarChart3, Settings } from 'lucide-re
 import type { Team } from '@/shared/types';
 import { SpielerVerwaltung } from '@/domains/spieler/components/SpielerVerwaltung';
 import { SpielplanListe } from '@/domains/spielplan/components/SpielplanListe';
+import { TabellenAnsicht, type TabellenEintrag } from '@/domains/spielplan/components/TabellenAnsicht';
+import { tabellenService } from '@/domains/spielplan/services/TabellenService';
 import { DevTools } from '@/shared/components/DevTools';
 
-type View = 'overview' | 'spieler' | 'spielplan' | 'statistik' | 'einstellungen';
+type View = 'overview' | 'spieler' | 'spielplan' | 'tabelle' | 'statistik' | 'einstellungen';
 
 export function Dashboard() {
   const currentTeamId = useAppStore(state => state.currentTeamId);
@@ -32,6 +34,7 @@ export function Dashboard() {
     trikots: 0,
     spiele: 0,
   });
+  const [tabelle, setTabelle] = useState<TabellenEintrag[]>([]);
 
   useEffect(() => {
     loadData();
@@ -53,6 +56,14 @@ export function Dashboard() {
         trikots: trikotCount,
         spiele: spieleCount,
       });
+
+      // ⭐ Lade Tabellen-Daten aus der Datenbank
+      try {
+        const tabellenDaten = await tabellenService.loadTabelleForTeam(currentTeamId);
+        setTabelle(tabellenDaten);
+      } catch (error) {
+        console.error('Error loading tabelle:', error);
+      }
     }
   };
 
@@ -76,6 +87,7 @@ export function Dashboard() {
     { id: 'overview' as View, label: 'Übersicht', icon: Home },
     { id: 'spieler' as View, label: 'Spieler', icon: Users },
     { id: 'spielplan' as View, label: 'Spielplan', icon: Calendar },
+    { id: 'tabelle' as View, label: 'Tabelle', icon: BarChart3 },
     { id: 'statistik' as View, label: 'Statistik', icon: BarChart3 },
     { id: 'einstellungen' as View, label: 'Einstellungen', icon: Settings },
   ];
@@ -221,6 +233,14 @@ export function Dashboard() {
 
         {currentView === 'spielplan' && (
           <SpielplanListe teamId={team.team_id} teamName={team.name} />
+        )}
+
+        {currentView === 'tabelle' && (
+          <TabellenAnsicht 
+            eintraege={tabelle}
+            eigenerVerein={team.name}
+            title={`Tabelle - ${team.altersklasse} ${team.saison}`}
+          />
         )}
 
         {currentView === 'statistik' && (

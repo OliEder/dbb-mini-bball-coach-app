@@ -75,7 +75,7 @@ export class VereinService {
     return allVereine.filter(v => 
       v.name.toLowerCase().includes(lowerSearch) ||
       v.kurzname?.toLowerCase().includes(lowerSearch) ||
-      v.ort.toLowerCase().includes(lowerSearch)
+      v.ort?.toLowerCase().includes(lowerSearch)
     );
   }
 

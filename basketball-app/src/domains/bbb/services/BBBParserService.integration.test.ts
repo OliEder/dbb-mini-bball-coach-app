@@ -7,8 +7,8 @@
 
 import { describe, it, expect, beforeEach } from 'vitest';
 import { BBBParserService } from './BBBParserService';
-import { readFileSync } from 'fs';
-import { join } from 'path';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 
 describe('BBBParserService - Integration with real JSP files', () => {
   let service: BBBParserService;
@@ -241,6 +241,66 @@ describe('BBBParserService - Integration with real JSP files', () => {
       // Dokument sollte geparst werden können
       expect(doc).toBeDefined();
       expect(doc.body).toBeDefined();
+    });
+  });
+
+  describe('⭐ NEW: Parse real tabelle.jsp file', () => {
+    it('should parse teams from real tabelle.jsp file', () => {
+      const tabellePath = join(testDataPath, 'tabelle.jsp');
+      const html = readFileSync(tabellePath, 'utf-8');
+
+      const teams = service.parseTeamsFromTabelle(html);
+
+      // Sollte mindestens 5 Teams haben
+      expect(teams.length).toBeGreaterThanOrEqual(5);
+
+      // Jedes Team sollte einen Namen haben
+      teams.forEach(team => {
+        expect(team.team_name).toBeTruthy();
+        expect(team.verein_name).toBeTruthy();
+      });
+    });
+
+    it('should parse specific teams correctly from tabelle.jsp', () => {
+      const tabellePath = join(testDataPath, 'tabelle.jsp');
+      const html = readFileSync(tabellePath, 'utf-8');
+
+      const teams = service.parseTeamsFromTabelle(html);
+      const teamNames = teams.map(t => t.team_name);
+
+      // Prüfe auf bekannte Teams aus der echten Datei
+      expect(teamNames).toContain('DJK Neustadt a. d. Waldnaab 1');
+      expect(teamNames).toContain('TSV 1880 Schwandorf');
+      expect(teamNames).toContain('TB Weiden Basketball');
+    });
+
+    it('should handle teams with and without numbers', () => {
+      const tabellePath = join(testDataPath, 'tabelle.jsp');
+      const html = readFileSync(tabellePath, 'utf-8');
+
+      const teams = service.parseTeamsFromTabelle(html);
+
+      // Teams mit Nummer
+      const teamWithNumber = teams.find(t => t.team_name === 'DJK Neustadt a. d. Waldnaab 1');
+      expect(teamWithNumber).toBeDefined();
+      expect(teamWithNumber?.verein_name).toBe('DJK Neustadt a. d. Waldnaab');
+
+      // Teams ohne Nummer
+      const teamWithoutNumber = teams.find(t => t.team_name === 'TSV 1880 Schwandorf');
+      expect(teamWithoutNumber).toBeDefined();
+      expect(teamWithoutNumber?.verein_name).toBe('TSV 1880 Schwandorf');
+    });
+
+    it('should have unique team names', () => {
+      const tabellePath = join(testDataPath, 'tabelle.jsp');
+      const html = readFileSync(tabellePath, 'utf-8');
+
+      const teams = service.parseTeamsFromTabelle(html);
+      const teamNames = teams.map(t => t.team_name);
+      const uniqueNames = new Set(teamNames);
+
+      // Alle Team-Namen sollten eindeutig sein
+      expect(uniqueNames.size).toBe(teamNames.length);
     });
   });
 });

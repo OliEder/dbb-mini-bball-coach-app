@@ -53,6 +53,14 @@ export default defineConfig({
       '@shared': path.resolve(__dirname, './src/shared')
     }
   },
+  // Build-Optionen: Source-Maps nur in Development
+  build: {
+    sourcemap: false, // Keine Source-Maps in Production (reduziert Bundle-Größe)
+  },
+  // Optimizations für Dependencies
+  optimizeDeps: {
+    exclude: ['lucide-react'], // Kann Probleme mit Tree-Shaking haben
+  },
   test: {
     globals: true,
     environment: 'jsdom',

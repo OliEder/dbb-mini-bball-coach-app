@@ -43,3 +43,6 @@ workbox-*.js
 src/**/*.js
 src/**/*.jsx
 !src/**/*.config.js
+
+# Temporary files
+COMMIT-SUMMARY.md

@@ -1,396 +1,274 @@
 # 🏀 Basketball Team Manager - PWA
 
-Progressive Web App für Basketball-Trainer zur Verwaltung von Teams, Spielern, Trikots und Einsatzplänen.
+Progressive Web App für Basketball-Trainer zur Verwaltung von Teams, Spielern, Trikots und Spielplänen.
 
-## ✨ Features
-
-### ✅ Implementiert (MVP v1.0)
-
-- **Onboarding Flow**
-  - Multi-Step Setup mit Progress-Indicator
-  - Team-Erstellung mit Altersklassen (U8-U18)
-  - Vereins-Zuordnung
-  - CSV-Import für Spieler & Trikots
-  - Optional: BBB-URL für späteren Spielplan-Import
-
-- **Team Management**
-  - Multi-Team-Support
-  - Saison-Verwaltung
-  - Leistungsorientierte U12-Kennzeichnung
-
-- **Spieler-Import**
-  - Robuster CSV-Parser mit Validation
-  - Erziehungsberechtigte-Zuordnung
-  - Konfektionsgrößen für Trikotvergabe
-  - TNA-Nummer für Ligaberechtigung
-
-- **Trikot-Import**
-  - Wendejerseys & Hosen
-  - Größen-Tracking (EU 116-170)
-  - Farben (dunkel/hell)
-  - Verfügbarkeits-Status
-
-- **Dashboard**
-  - Übersicht mit Statistiken
-  - Spieler-Count
-  - Trikot-Count
-  - Spiele-Count
-
-### 🚧 In Entwicklung (Roadmap)
-
-- BBB-Integration (basketball-bund.net)
-  - Automatischer Spielplan-Import
-  - Liga-Tabellen
-  - Ergebnisse-Sync
-  - Benchmark-Analysen
-- Spielplan-Verwaltung
-- Einsatzplanung (8 Achtel Rotation)
-- Spieler-Bewertungen (9 Skills)
-- Training-Tracking
-- Offline-Sync
+[![Version](https://img.shields.io/badge/version-1.2.3-blue.svg)](./CHANGELOG.md)
+[![License](https://img.shields.io/badge/license-Private-red.svg)]()
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue.svg)](https://www.typescriptlang.org/)
+[![React](https://img.shields.io/badge/React-18.3-blue.svg)](https://react.dev/)
+[![WCAG](https://img.shields.io/badge/WCAG-2.0%20AA-green.svg)](https://www.w3.org/WAI/WCAG21/quickref/)
 
 ---
 
-## 🚀 Installation & Setup
-
-### Voraussetzungen
-
-- Node.js >= 18.x
-- npm >= 9.x
-
-### 1. Dependencies installieren
+## 🚀 Quick Start
 
 ```bash
+# 1. Dependencies installieren
 npm install
-```
 
-### 2. Development Server starten
-
-```bash
+# 2. Development Server starten
 npm run dev
+
+# 3. Im Browser öffnen
+# http://localhost:5173
 ```
 
-App ist verfügbar unter: `http://localhost:5173`
+---
 
-### 3. Production Build
+## ✨ Features
 
-```bash
-npm run build
-npm run preview
-```
+### ✅ Implementiert (v1.2.3)
+
+#### Onboarding & Setup
+- 🎯 Multi-Step Onboarding mit Progress-Indicator
+- 🏀 Team-Erstellung mit Altersklassen (U8-U18)
+- 🏛️ Vereins-Zuordnung
+- 📊 CSV-Import für Spieler & Trikots
+- 🔗 BBB-Integration für automatischen Spielplan-Import
+
+#### Team Management
+- 👥 Multi-Team-Support
+- 📅 Saison-Verwaltung
+- ⭐ Leistungsorientierte U12-Kennzeichnung
+
+#### Spieler-Verwaltung
+- 📝 Robuster CSV-Parser mit Validation
+- 👨‍👩‍👧 Erziehungsberechtigte-Zuordnung (DSGVO-konform)
+- 👕 Konfektionsgrößen für Trikotvergabe
+- 🎫 TNA-Nummer für Ligaberechtigung
+- 📊 9-Skill-Bewertungssystem
+
+#### Trikot-Management
+- 🔄 Wendejerseys & Hosen
+- 📏 Größen-Tracking (EU 116-170)
+- 🎨 Farben (dunkel/hell)
+- ✅ Verfügbarkeits-Status
+
+#### BBB-Integration (basketball-bund.net)
+- 🌐 Automatischer Liga-Import
+- 📋 Spielplan-Sync
+- 📊 Tabellen-Daten
+- 🎯 Ergebnisse-Import
+- 🔄 Robuster CORS-Proxy mit Fallback
+
+#### Dashboard
+- 📈 Übersicht mit Statistiken
+- 👥 Spieler-Count
+- 👕 Trikot-Count
+- 🏀 Spiele-Count
+
+### 🚧 In Entwicklung (Roadmap)
+
+- [ ] **Einsatzplanung** - 8-Achtel-Rotation mit DBB-Regelvalidierung
+- [ ] **Spieltag-Features** - Live-Timer, Statistiken, Wechsel-Management
+- [ ] **Training-Tracking** - Anwesenheit, Übungen, Fortschritt
+- [ ] **Benchmark-Analysen** - Vergleich mit Liga-Durchschnitt
+- [ ] **PDF-Export** - Spielberichte, Einsatzpläne
+
+Siehe [CHANGELOG.md](./CHANGELOG.md) für vollständige Versionshistorie.
 
 ---
 
 ## 📦 Tech Stack
 
-### Core
-- **React 18** - UI Framework
-- **TypeScript** - Type Safety
-- **Vite** - Build Tool & Dev Server
-
-### State Management
-- **Zustand** - Globaler State (lightweight)
-- **Zustand Persist** - LocalStorage Persistence
-
-### Database
-- **Dexie.js** - IndexedDB Wrapper
-- **IndexedDB** - Browser-native Storage (Offline-First)
-
-### Styling
-- **Tailwind CSS** - Utility-First CSS
-- **WCAG 2.0 AA** - Accessibility Standards
-
-### Testing
-- **Vitest** - Unit Test Framework
-- **Testing Library** - Component Testing
-- **fake-indexeddb** - IndexedDB Mocking
-
-### PWA
-- **vite-plugin-pwa** - Service Worker
-- **Workbox** - Offline Caching
-
-### CSV Processing
-- **Papaparse** - Robust CSV Parser
-
-### Icons
-- **Lucide React** - Icon Library
+| Kategorie | Technologie | Version |
+|-----------|-------------|---------|
+| **Framework** | React | 18.3 |
+| **Sprache** | TypeScript | 5.3 |
+| **Build Tool** | Vite | 5.x |
+| **State** | Zustand | 4.x |
+| **Database** | Dexie.js / IndexedDB | 4.x |
+| **Styling** | Tailwind CSS | 3.x |
+| **Testing** | Vitest | 1.x |
+| **PWA** | vite-plugin-pwa | 0.19 |
+| **CSV** | Papaparse | 5.x |
+| **Icons** | Lucide React | 0.468 |
 
 ---
 
-## 🧪 Testing
+## 🛠️ Installation & Setup
 
-### Unit Tests ausführen
+### Voraussetzungen
+
+- **Node.js** >= 18.x
+- **npm** >= 9.x
+- Moderner Browser (Chrome, Firefox, Safari, Edge)
+
+### Installation
 
 ```bash
-npm run test
+# Repository klonen
+git clone <repository-url>
+cd basketball-app
+
+# Dependencies installieren
+npm install
 ```
 
-### Test UI (interaktiv)
+### Development
 
 ```bash
+# Dev Server starten (Hot Reload)
+npm run dev
+
+# TypeScript Type-Check
+npm run type-check
+
+# Linting
+npm run lint
+```
+
+### Testing
+
+```bash
+# Unit Tests (watch mode)
+npm test
+
+# Test UI (interaktiv)
 npm run test:ui
-```
 
-### Coverage Report
-
-```bash
+# Coverage Report
 npm run test:coverage
 ```
 
-### Bestehende Tests
+### Production Build
 
-- ✅ `TeamService.test.ts` - 14 Tests für Team CRUD
-- 🚧 Weitere Tests folgen
+```bash
+# Build erstellen
+npm run build
+
+# Build lokal testen
+npm run preview
+```
+
+Siehe [SETUP.md](./SETUP.md) für detaillierte Setup-Anleitung.
 
 ---
 
 ## 📁 Projekt-Struktur
 
 ```
-src/
-├── main.tsx                    # Entry Point
-├── App.tsx                     # Root Component + Routing
-├── index.css                   # Global Styles (WCAG-optimiert)
-│
-├── stores/                     # Zustand State Management
-│   ├── appStore.ts            # Globaler App-State
-│   └── onboardingStore.ts     # Onboarding-Flow State
-│
-├── shared/                     # Shared Code
-│   ├── types/
-│   │   └── index.ts           # Alle TypeScript Interfaces (24 Tabellen)
-│   └── db/
-│       └── database.ts        # Dexie Database Definition
-│
-├── domains/                    # Domain-Driven Design
-│   ├── onboarding/
-│   │   ├── components/
-│   │   │   ├── OnboardingLayout.tsx
-│   │   │   ├── OnboardingContainer.tsx
-│   │   │   ├── WelcomeStep.tsx
-│   │   │   ├── TeamStep.tsx
-│   │   │   ├── VereinStep.tsx
-│   │   │   ├── SpielerImportStep.tsx
-│   │   │   ├── TrikotImportStep.tsx
-│   │   │   ├── SpielplanStep.tsx
-│   │   │   └── CompleteStep.tsx
-│   │   └── services/
-│   │       └── CSVImportService.ts
+basketball-app/
+├── src/
+│   ├── main.tsx                    # Entry Point
+│   ├── App.tsx                     # Root Component
+│   ├── index.css                   # Global Styles
 │   │
-│   ├── team/
-│   │   └── services/
-│   │       ├── TeamService.ts
-│   │       └── TeamService.test.ts
+│   ├── stores/                     # Zustand State
+│   │   ├── appStore.ts
+│   │   └── onboardingStore.ts
 │   │
-│   ├── verein/
-│   │   └── services/
-│   │       └── VereinService.ts
+│   ├── shared/                     # Shared Code
+│   │   ├── types/
+│   │   │   └── index.ts           # TypeScript Interfaces
+│   │   └── db/
+│   │       └── database.ts        # Dexie Database
 │   │
-│   └── dashboard/
-│       └── Dashboard.tsx
+│   └── domains/                    # Domain-Driven Design
+│       ├── onboarding/
+│       │   ├── components/
+│       │   └── services/
+│       ├── team/
+│       │   └── services/
+│       ├── spieler/
+│       ├── trikot/
+│       ├── spielplan/
+│       ├── bbb/                    # BBB-Integration
+│       │   └── services/
+│       │       ├── BBBParserService.ts
+│       │       └── BBBParserService.test.ts
+│       └── dashboard/
 │
-└── test/
-    └── setup.ts               # Vitest Config
+├── docs/                           # Dokumentation
+│   ├── README.md                   # Docs-Index
+│   ├── bugfixes/                   # Bugfix-Protokolle
+│   ├── development/                # Dev-Guides
+│   └── archive/                    # Archivierte Docs
+│
+├── test-data/                      # Test-Daten
+│
+├── README.md                       # Diese Datei
+├── CHANGELOG.md                    # Versionshistorie
+├── SETUP.md                        # Setup-Guide
+├── STATUS.md                       # Projekt-Status
+├── package.json
+└── vite.config.ts
 ```
 
 ---
 
 ## 🗄️ Datenbank-Schema
 
-Die App verwendet **IndexedDB** mit folgender Struktur (v1.0):
+Die App nutzt **IndexedDB** mit 22 Tabellen:
 
 ### Kern-Tabellen
+- `VEREINE` - Vereinsverwaltung
+- `TEAMS` - Multi-Team-Support
+- `SPIELER` - Eigene + Gegner + Scouting
+- `BEWERTUNGEN` - 9-Skill-System
+- `ERZIEHUNGSBERECHTIGTE` - DSGVO-konform
+- `TRIKOTS` - Wendejerseys & Hosen
 
-1. **VEREINE** - Vereins-Verwaltung
-2. **TEAMS** - Multi-Team-Support
-3. **SPIELER** - Eigene Spieler + Gegner + Scouting
-4. **BEWERTUNGEN** - 9 Skills, Gesamt-Wert
-5. **ERZIEHUNGSBERECHTIGTE** - DSGVO-konform
-6. **SPIELER_ERZIEHUNGSBERECHTIGTE** - n:m Beziehung
-7. **HALLEN** - Spielorte mit Navigation
-8. **LIGEN** - BBB-Integration
-9. **LIGA_TEILNAHMEN** - Team-Liga-Zuordnung
-10. **SPIELPLAENE** - BBB-URLs für Auto-Sync
-11. **SPIELE** - Spielnr für BBB-Match
-12. **LIGA_ERGEBNISSE** - Benchmark-Analysen
-13. **LIGA_TABELLEN** - Dashboard-Anzeige
-14. **TRIKOTS** - Wendejerseys & Hosen
-15. **EINSAETZE** - 8 Achtel Rotation
-16. **ACHTEL_STATISTIKEN** - Performance-Tracking
-17. **TRAININGS** - Training-Verwaltung
-18. **TRAINING_TEILNAHMEN** - Anwesenheit
-19. **PROBETRAINING_TEILNEHMER** - Interessenten
-20. **PROBETRAINING_HISTORIE** - Teilnahme-Tracking
-21. **SPIELER_NOTIZEN** - Vertrauliche Notizen
-22. **SAISON_ARCHIVE** - Historische Daten
+### Spielplan-Tabellen
+- `LIGEN` - Liga-Informationen
+- `SPIELPLAENE` - BBB-Integration
+- `SPIELE` - Spielverwaltung
+- `LIGA_ERGEBNISSE` - Ergebnisse
+- `LIGA_TABELLEN` - Tabellenstände
 
-### Indizes für Performance
+### Weitere Tabellen
+- `HALLEN` - Spielorte
+- `EINSAETZE` - 8-Achtel-Rotation
+- `TRAININGS` - Training-Management
+- `SAISON_ARCHIVE` - Historische Daten
+- ... und mehr
 
-```typescript
-// Beispiel: Spieler-Tabelle
-spieler: 'spieler_id, team_id, verein_id, spieler_typ, [vorname+nachname], aktiv'
-```
+Siehe [Datenbank-Schema](./docs/development/DATABASE.md) für Details.
 
 ---
 
-## 📋 CSV-Import Format
+## 🧪 Testing
 
-### Spieler-CSV
+Die App folgt **Test-Driven Development** (TDD):
 
-**Erforderliche Spalten:**
-- `vorname` ✅ Pflicht
-- `nachname` ✅ Pflicht
-
-**Optionale Spalten:**
-- `geburtsdatum` (YYYY-MM-DD)
-- `tna_nr` (DBB-Ausweisnummer)
-- `konfektionsgroesse_jersey` (116-170)
-- `konfektionsgroesse_hose` (116-170)
-- `erz_vorname`
-- `erz_nachname`
-- `erz_telefon`
-- `erz_email`
-
-**Beispiel:**
-```csv
-vorname,nachname,geburtsdatum,tna_nr,konfektionsgroesse_jersey,konfektionsgroesse_hose,erz_vorname,erz_nachname,erz_telefon,erz_email
-Max,Mustermann,2015-03-15,12345678,140,140,Maria,Mustermann,0170 1234567,maria@example.com
+```bash
+# Tests ausführen
+npm test                    # Watch mode
+npm run test:ui            # Interactive UI
+npm run test:coverage      # Coverage Report
 ```
 
-### Trikot-CSV
+### Test-Coverage
 
-**Erforderliche Spalten:**
-- `art` ✅ ("Wendejersey" oder "Hose")
-- `groesse` ✅ (xs, s, m, l, xl)
-- `eu_groesse` ✅ (116-170)
+- ✅ `TeamService` - 14 Tests
+- ✅ `BBBParserService` - 50+ Tests
+- ✅ `CSVImportService` - 10+ Tests
+- 🚧 Weitere Tests in Entwicklung
 
-**Optionale Spalten:**
-- `nummer` (Trikot-Nummer)
-- `farbe_dunkel`
-- `farbe_hell`
-
-**Beispiel:**
-```csv
-art,nummer,groesse,eu_groesse,farbe_dunkel,farbe_hell
-Wendejersey,4,m,140,blau,weiß
-Hose,,m,140,,
-```
+**Ziel:** >80% Coverage
 
 ---
 
 ## ♿ Accessibility (WCAG 2.0 AA)
 
-Die App erfüllt **WCAG 2.0 AA Standards**:
+Die App ist **WCAG 2.0 AA konform**:
 
-### Implementiert
-
-✅ **Farbkontraste:** Mindestens 4.5:1 für normalen Text  
-✅ **Tastaturnavigation:** Alle Funktionen per Keyboard erreichbar  
-✅ **Focus Management:** 2px Outline, 2px Offset  
-✅ **Touch Targets:** Minimum 44x44px  
-✅ **Screen Reader Support:** Semantisches HTML, ARIA-Labels  
-✅ **Skip-to-Content Link:** Für Keyboard-User  
-✅ **Error Messages:** Klare, hilfreiche Fehlermeldungen  
-✅ **Form Labels:** Alle Inputs haben Labels  
-
-### CSS-Klassen
-
-```css
-/* Accessible Button */
-.btn-primary {
-  min-height: 44px;
-  padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
-  font-weight: 500;
-  transition: colors 200ms;
-  &:focus-visible {
-    outline: 2px solid var(--primary-600);
-    outline-offset: 2px;
-  }
-}
-
-/* Screen Reader Only */
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-}
-```
-
----
-
-## 🛠️ Development Guidelines
-
-### Domain-Driven Design
-
-Jede Domain ist eigenständig:
-```
-domains/[domain]/
-├── components/     # React Components
-├── services/       # Business Logic
-├── models/         # (optional) Types
-└── [domain].test.ts
-```
-
-### Test-Driven Development
-
-1. Test schreiben (rot)
-2. Code implementieren (grün)
-3. Refactoring (cleanup)
-
-Beispiel:
-```typescript
-// 1. Test schreiben
-describe('TeamService', () => {
-  it('should create a new team', async () => {
-    const team = await teamService.createTeam({...});
-    expect(team.name).toBe('U10 mixed');
-  });
-});
-
-// 2. Code implementieren
-export class TeamService {
-  async createTeam(input: CreateTeamInput): Promise<Team> {
-    // Implementation
-  }
-}
-
-// 3. Test läuft durch ✅
-```
-
-### WCAG-Compliance
-
-- Alle Buttons: `min-h-[44px]`
-- Alle Inputs: `label` + `aria-describedby`
-- Fehler: `role="alert"`, `aria-invalid="true"`
-- Progress: `role="progressbar"`, `aria-valuenow`
-- Tabs: `role="tablist"`, `aria-selected`
-
----
-
-## 📝 Scripts
-
-```bash
-# Development
-npm run dev              # Vite Dev Server (Hot Reload)
-
-# Building
-npm run build            # TypeScript compile + Vite build
-npm run preview          # Preview Production Build
-
-# Testing
-npm run test             # Vitest (watch mode)
-npm run test:ui          # Interactive Test UI
-npm run test:coverage    # Coverage Report
-
-# Code Quality
-npm run lint             # ESLint
-npm run type-check       # TypeScript Check (no emit)
-```
+✅ **Farbkontraste** - Minimum 4.5:1  
+✅ **Tastaturnavigation** - Alle Funktionen per Keyboard  
+✅ **Focus Management** - 2px Outline, 2px Offset  
+✅ **Touch Targets** - Minimum 44x44px  
+✅ **Screen Reader** - Semantisches HTML, ARIA-Labels  
+✅ **Error Messages** - Klare, hilfreiche Fehlermeldungen  
 
 ---
 
@@ -398,54 +276,103 @@ npm run type-check       # TypeScript Check (no emit)
 
 Die App ist **DSGVO-konform**:
 
-✅ **Datensparsamkeit:** Nur notwendige Daten  
-✅ **Lokale Speicherung:** Alle Daten bleiben im Browser  
-✅ **Keine Server:** Kein Tracking, keine Cookies  
-✅ **Explizite Zustimmung:** Erziehungsberechtigte müssen zustimmen  
-✅ **Löschung:** Vollständige Datenlöschung möglich  
+✅ **Datensparsamkeit** - Nur notwendige Daten  
+✅ **Lokale Speicherung** - Alle Daten im Browser  
+✅ **Keine Server** - Kein Tracking, keine Cookies  
+✅ **Explizite Zustimmung** - Für Erziehungsberechtigte  
+✅ **Löschung** - Vollständige Datenlöschung möglich  
 
-### Gespeicherte Daten
+**Gespeicherte Daten:**
+- Spieler: Vorname, Nachname, Geburtsdatum (optional)
+- Erziehungsberechtigte: Kontaktdaten (mit Zustimmung)
 
-**Personenbezogene Daten:**
-- Spieler: Vorname, Nachname, Geburtsdatum (optional), TNA-Nr
-- Erziehungsberechtigte: Vorname, Nachname, Telefon, E-Mail
-
-**Keine Speicherung von:**
-- Adressen (DSGVO-Minimierung)
-- Trainer-Kontaktdaten (bist du selbst)
-- Vereins-Adressen (nicht nötig)
+**Nicht gespeichert:**
+- Adressen
+- Trainer-Kontaktdaten
+- Vereins-Kontaktdaten
 
 ---
 
-## 🐛 Bekannte Einschränkungen
+## 📚 Dokumentation
 
-1. **Kein Routing-Library:** Simple Routing ohne History API
-2. **Keine BBB-Integration:** Noch nicht implementiert
-3. **Keine Offline-Sync-Konflikte:** Wird später hinzugefügt
-4. **Keine Multi-User:** Single-User-App (Trainer)
+| Dokument | Beschreibung |
+|----------|-------------|
+| [README.md](./README.md) | Diese Datei - Überblick und Quick Start |
+| [CHANGELOG.md](./CHANGELOG.md) | Vollständige Versionshistorie |
+| [SETUP.md](./SETUP.md) | Detaillierte Setup-Anleitung |
+| [STATUS.md](./STATUS.md) | Aktueller Projekt-Status |
+| [docs/](./docs/) | Vollständige Dokumentation |
+
+Siehe [Dokumentations-Index](./docs/README.md) für alle Dokumente.
+
+---
+
+## 🐛 Bugfixes & Updates
+
+Alle Bugfixes und Updates sind dokumentiert:
+
+| Version | Datum | Highlights |
+|---------|-------|-----------|
+| **1.2.3** | 2025-10-13 | CORS-Proxy Fallback, Robuste Liga-ID Extraktion |
+| **1.2.2** | 2025-10-12 | Security-Updates |
+| **1.2.1** | 2025-10-11 | Header-Filtering, Liga-Name Parsing |
+| **1.2.0** | 2025-10-10 | Spielplan-Domain, BBB-Integration |
+| **1.1.0** | 2025-10-09 | Spieler-Domain, 9-Skill-System |
+| **1.0.0** | 2025-10-08 | Initial Release |
+
+Siehe [CHANGELOG.md](./CHANGELOG.md) für Details.
 
 ---
 
 ## 🗺️ Roadmap
 
-### Phase 2: BBB-Integration (nächste 2 Wochen)
-- [ ] BBBSyncService
-- [ ] HTML-Parser für Spielplan/Tabelle/Ergebnisse
-- [ ] Automatischer Sync bei App-Start
-- [ ] Benchmark-Analysen (gemeinsame Gegner)
+### Q4 2025 (Oktober - Dezember)
 
-### Phase 3: Einsatzplanung (nächste 4 Wochen)
+#### Phase 2: Einsatzplanung (4 Wochen)
 - [ ] 8-Achtel-Editor
-- [ ] DBB-Regelvalidierung (Pausen, Balance)
-- [ ] Spieler-Bewertungen
-- [ ] Team-Score-Berechnung
+- [ ] DBB-Regelvalidierung
+- [ ] Spieler-Bewertungen Integration
 - [ ] Ersatz-Vorschläge
 
-### Phase 4: Spieltag-Features (nächste 6 Wochen)
+#### Phase 3: Spieltag-Features (6 Wochen)
 - [ ] Timer & Live-Tracking
 - [ ] Spiel-Statistiken
 - [ ] Schnelle Wechsel
-- [ ] Export als PDF
+- [ ] PDF-Export
+
+#### Phase 4: Training & Analysen (4 Wochen)
+- [ ] Training-Tracking
+- [ ] Benchmark-Analysen
+- [ ] Performance-Metriken
+- [ ] Daten-Export
+
+Siehe [STATUS.md](./STATUS.md) für detaillierte Roadmap.
+
+---
+
+## 📝 Scripts
+
+```bash
+# Development
+npm run dev              # Vite Dev Server
+npm run type-check       # TypeScript Check
+npm run lint             # ESLint
+
+# Building
+npm run build            # Production Build
+npm run preview          # Preview Build
+
+# Testing
+npm test                 # Vitest (watch)
+npm run test:ui          # Test UI
+npm run test:coverage    # Coverage Report
+```
+
+---
+
+## 🤝 Contributing
+
+Dies ist ein privates Projekt. Contributions sind aktuell nicht möglich.
 
 ---
 
@@ -455,7 +382,7 @@ Private Entwicklung - Keine öffentliche Lizenz
 
 ---
 
-## 👨‍💻 Entwickler
+## 👨‍💻 Autor
 
 Entwickelt mit ❤️ von einem Basketball-Trainer für Basketball-Trainer
 
@@ -463,14 +390,27 @@ Entwickelt mit ❤️ von einem Basketball-Trainer für Basketball-Trainer
 
 ## 🙏 Credits
 
-- **React** - Facebook
+- **React** - Meta
+- **TypeScript** - Microsoft
+- **Vite** - Evan You
 - **Dexie.js** - David Fahlander
 - **Tailwind CSS** - Adam Wathan
+- **Zustand** - Daishi Kato
 - **Lucide Icons** - Lucide Contributors
 - **Papaparse** - Matt Holt
-- **Zustand** - Daishi Kato
 
 ---
 
-**Version:** 1.0.0  
-**Letztes Update:** 11. Oktober 2025
+**Version:** 1.2.3  
+**Letzte Aktualisierung:** 13. Oktober 2025  
+**Status:** ✅ Aktive Entwicklung
+
+---
+
+## 📧 Support
+
+Bei Fragen oder Problemen öffne ein Issue im Repository.
+
+---
+
+[📚 Zur vollständigen Dokumentation →](./docs/README.md)

@@ -8,6 +8,7 @@
  * - Liga (aus BBB-Daten)
  * - Team (mit Verweis auf Verein + Liga)
  * - Spielplan (mit allen Spielen + BBB-URLs)
+ * - Tabellen-Daten (⭐ NEW: Vollständige Statistiken)
  * - Spieler (aus CSV)
  * - Trikots (aus CSV)
  */
@@ -148,10 +149,16 @@ export function CompleteStep() {
       };
       await db.spielplaene.add(spielplan);
 
-      // SCHRITT 5: Spiele erstellen
-      setProgress(`Importiere ${parsed_liga_data.spiele.length} Spiele...`);
+      // SCHRITT 5: Spiele erstellen - NUR eigene Spiele
+      setProgress(`Importiere Spiele...`);
       
-      const spiele: Spiel[] = parsed_liga_data.spiele.map(spielInfo => ({
+      // Filtere nur Spiele, bei denen das eigene Team beteiligt ist
+      const eigeneSpiele = parsed_liga_data.spiele.filter(spielInfo => 
+        spielInfo.heim_team === selected_team_name || 
+        spielInfo.gast_team === selected_team_name
+      );
+      
+      const spiele: Spiel[] = eigeneSpiele.map(spielInfo => ({
         spiel_id: uuidv4(),
         spielplan_id: spielplan.spielplan_id,
         team_id: team.team_id,
@@ -162,14 +169,56 @@ export function CompleteStep() {
         heim: spielInfo.heim_team,
         gast: spielInfo.gast_team,
         ist_heimspiel: spielInfo.heim_team === selected_team_name,
-        status: 'geplant',
+        status: spielInfo.is_finished ? 'abgeschlossen' : 'geplant',
+        ergebnis_heim: spielInfo.heim_score,
+        ergebnis_gast: spielInfo.gast_score,
         altersklasse: parsed_liga_data.liga.altersklasse as Altersklasse,
         created_at: new Date(),
       }));
 
       await db.spiele.bulkAdd(spiele);
+      
+      setProgress(`${eigeneSpiele.length} eigene Spiele importiert`);
+      
+      // Log für Debug
+      console.log(`✅ ${eigeneSpiele.length} von ${parsed_liga_data.spiele.length} Spielen importiert (nur eigene)`);
+      console.log(`🏀 ${eigeneSpiele.filter(s => s.heim_team === selected_team_name).length} Heimspiele, ${eigeneSpiele.filter(s => s.gast_team === selected_team_name).length} Auswärtsspiele`);
+      
+      const finishedGames = eigeneSpiele.filter(s => s.is_finished);
+      if (finishedGames.length > 0) {
+        console.log(`✅ ${finishedGames.length} abgeschlossene Spiele mit Ergebnissen`);
+      }
 
-      // SCHRITT 6: Liga-Teilnahme für alle Teams erstellen
+      // SCHRITT 6: Tabellen-Daten speichern
+      setProgress('Speichere Tabellen-Daten...');
+      
+      // ⭐ NEW: Speichere vollständige Tabellen-Statistiken
+      if (parsed_liga_data.tabelle && parsed_liga_data.tabelle.length > 0) {
+        for (const eintrag of parsed_liga_data.tabelle) {
+          await db.liga_tabellen.add({
+            id: uuidv4(),
+            ligaid: liga.liga_id,
+            teamname: eintrag.team_name,
+            platz: eintrag.rang,
+            spiele: eintrag.spiele,
+            siege: eintrag.siege,
+            niederlagen: eintrag.niederlagen,
+            punkte: eintrag.punkte,
+            korbe_erzielt: eintrag.koerbe_plus,
+            korbe_erhalten: eintrag.koerbe_minus,
+            korb_differenz: eintrag.diff,
+            // Heim/Auswärts-Statistiken sind in BBB nicht verfügbar
+            heim_siege: 0,
+            heim_niederlagen: 0,
+            auswaerts_siege: 0,
+            auswaerts_niederlagen: 0,
+            syncam: new Date(),
+          });
+        }
+        console.log(`✅ ${parsed_liga_data.tabelle.length} Tabellen-Einträge gespeichert`);
+      }
+
+      // SCHRITT 7: Liga-Teilnahme für alle Teams erstellen
       setProgress('Registriere Teams in Liga...');
       
       for (const teamInfo of parsed_liga_data.teams) {
@@ -199,7 +248,7 @@ export function CompleteStep() {
         });
       }
 
-      // SCHRITT 7: Spieler importieren (JETZT mit echtem Team-ID!)
+      // SCHRITT 8: Spieler importieren (JETZT mit echtem Team-ID!)
       setProgress('Importiere Spieler...');
       
       const spielerImport = await csvImportService.importSpieler(spieler_csv, team.team_id);
@@ -209,7 +258,7 @@ export function CompleteStep() {
         // Nicht abbrechen, aber warnen
       }
 
-      // SCHRITT 8: Trikots importieren (JETZT mit echtem Team-ID!)
+      // SCHRITT 9: Trikots importieren (JETZT mit echtem Team-ID!)
       setProgress('Importiere Trikots...');
       
       const trikotImport = await csvImportService.importTrikots(trikot_csv, team.team_id);
@@ -219,7 +268,7 @@ export function CompleteStep() {
         // Nicht abbrechen, aber warnen
       }
 
-      // SCHRITT 9: App State aktualisieren
+      // SCHRITT 10: App State aktualisieren
       setProgress('Finalisiere...');
       setCurrentTeam(team.team_id);
       completeOnboarding();
@@ -227,7 +276,7 @@ export function CompleteStep() {
 
       setStatus('success');
 
-      // SCHRITT 10: Nach 2 Sekunden zum Dashboard
+      // SCHRITT 11: Nach 2 Sekunden zum Dashboard
       setTimeout(() => {
         window.location.href = '/dashboard';
       }, 2000);
