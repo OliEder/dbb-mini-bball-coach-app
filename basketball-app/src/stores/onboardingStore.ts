@@ -36,9 +36,13 @@ interface OnboardingState {
 interface OnboardingStore extends OnboardingState {
   // Actions
   setStep: (step: OnboardingStep) => void;
+  nextStep: () => void;
+  previousStep: () => void;
   setBBBUrl: (url: string) => void;
+  setBbbUrl: (url: string) => void; // Alias für Kompatibilität
   setParsedLigaData: (data: BBBParseResult) => void;
   setSelectedTeam: (teamName: string) => void;
+  setTeam: (teamName: string) => void; // Alias für Kompatibilität
   setTrainerName: (name: string) => void;
   setSpielerCSV: (file: File) => void;
   setTrikotCSV: (file: File) => void;
@@ -65,11 +69,31 @@ export const useOnboardingStore = create<OnboardingStore>()(
 
       setStep: (step) => set({ step }),
 
+      nextStep: () => {
+        const current = get().step;
+        const steps: OnboardingStep[] = ['welcome', 'bbb_url', 'team_select', 'spieler', 'trikots', 'complete'];
+        const currentIndex = steps.indexOf(current);
+        if (currentIndex < steps.length - 1) {
+          set({ step: steps[currentIndex + 1] });
+        }
+      },
+      
+      previousStep: () => {
+        const current = get().step;
+        const steps: OnboardingStep[] = ['welcome', 'bbb_url', 'team_select', 'spieler', 'trikots', 'complete'];
+        const currentIndex = steps.indexOf(current);
+        if (currentIndex > 0) {
+          set({ step: steps[currentIndex - 1] });
+        }
+      },
+
       setBBBUrl: (url) => set({ bbb_url: url }),
+      setBbbUrl: (url) => set({ bbb_url: url }), // Alias
 
       setParsedLigaData: (data) => set({ parsed_liga_data: data }),
 
       setSelectedTeam: (teamName) => set({ selected_team_name: teamName }),
+      setTeam: (teamName) => set({ selected_team_name: teamName }), // Alias
 
       setTrainerName: (name) => set({ trainer_name: name }),
 

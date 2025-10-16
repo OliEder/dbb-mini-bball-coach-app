@@ -1,0 +1,1687 @@
+openapi: 3.0.0
+info:
+  title: DBB Basketball REST API
+  version: "3.0.0"
+  description: |
+    Vollständige REST API für den Deutschen Basketball-Bund (DBB).
+    Reverse Engineered und validiert mit realen Responses.
+
+    **Basis-URL:** https://www.basketball-bund.net
+
+    **Hauptfunktionen:**
+    1. **Liga-Suche** via `/rest/wam/data` (Filter-basiert)
+    2. **Liga-Daten** (Tabelle, Spielplan, Statistiken)
+    3. **Spiel-Details** (Match-Info, Boxscore)
+    4. **Team-Statistiken**
+    5. **Kreuztabellen**
+
+    **Typischer Workflow:**
+    ```
+    1. POST /rest/wam/data {} 
+       → Alle Filter-Optionen laden
+
+    2. POST /rest/wam/data {verbandIds: [2]} 
+       → Gebiete in Bayern
+
+    3. POST /rest/wam/data {verbandIds: [2], gebietIds: ["4_"], altersklasseIds: [10]} 
+       → U10 Ligen in Oberpfalz
+       → Response enthält ligaId: 51961
+
+    4. GET /rest/competition/table/id/51961
+       → Tabelle der Liga
+
+    5. GET /rest/competition/spielplan/id/51961
+       → Spielplan der Liga
+    ```
+
+servers:
+- url: https://www.basketball-bund.net
+  description: DBB Production API
+
+tags:
+- name: Filter & Discovery
+  description: Liga-Suche und Filter-Discovery
+- name: Liga-Informationen
+  description: Basis-Informationen zu Ligen
+- name: Tabellen & Statistiken
+  description: Tabellen, Kreuztabellen, Team-Statistiken
+- name: Spielplan
+  description: Spielpläne und Spiel-Listen
+- name: Spiel-Details
+  description: Detaillierte Spiel-Informationen und Boxscores
+
+paths:
+  # ============================================
+  # 1. FILTER & DISCOVERY
+  # ============================================
+
+  /rest/wam/data:
+    post:
+      tags:
+      - Filter & Discovery
+      summary: Liga-Filter & Discovery (Hauptendpoint)
+      description: |
+        **Iterative Liga-Suche:**
+
+        1. **Leeres JSON `{}`** 
+           → Gibt alle verfügbaren Filter-Optionen zurück
+           → Response: `hasMoreData: true`
+
+        2. **Mit Filtern** 
+           → Gibt gefilterte Optionen + `hits` zurück
+           → Response: `hasMoreData: true` (weitere Filterung nötig)
+
+        3. **Spezifische Filter**
+           → Response: `hasMoreData: false` + `ligaListe`
+           → Enthält finale Liga-Liste mit `ligaId`
+
+        **Beispiel-Workflow:**
+        ```json
+        // Step 1: Alle Optionen
+        POST {}
+
+        // Step 2: Bayern + U10
+        POST {"verbandIds": [2], "altersklasseIds": [10]}
+
+        // Step 3: Bayern + Oberpfalz + U10 + Bezirksliga
+        POST {"verbandIds": [2], "gebietIds": ["4_"], "altersklasseIds": [10], "spielklasseIds": [320]}
+        → Response: ligaId: 51961
+        ```
+
+        **Wichtig:**
+        - `hits` in Response zeigt Anzahl Treffer pro Option
+        - `hasMoreData: false` bedeutet finale Daten verfügbar
+        - Filter sind kombinierbar (AND-Logik)
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WamFilterRequest'
+            examples:
+              alle_optionen:
+                summary: Alle Filter-Optionen
+                description: Gibt alle verfügbaren Verbände, Altersklassen, etc. zurück
+                value: {}
+
+              bayern_u10:
+                summary: Bayern U10 (alle Bezirke)
+                value:
+                  token: 0
+                  verbandIds: [ 2 ]
+                  gebietIds: []
+                  ligatypIds: []
+                  akgGeschlechtIds: []
+                  altersklasseIds: [ 10 ]
+                  spielklasseIds: []
+                  sortBy: 1
+
+              oberpfalz_mittelfranken_u10:
+                summary: Oberpfalz + Mittelfranken U10
+                value:
+                  token: 0
+                  verbandIds: [ 2 ]
+                  gebietIds: [ "3_", "4_" ]
+                  ligatypIds: []
+                  akgGeschlechtIds: []
+                  altersklasseIds: [ 10 ]
+                  spielklasseIds: []
+                  sortBy: 1
+
+              oberpfalz_u10_bezirksliga:
+                summary: Oberpfalz U10 nur Bezirksliga
+                value:
+                  token: 0
+                  verbandIds: [ 2 ]
+                  gebietIds: [ "4_" ]
+                  ligatypIds: []
+                  akgGeschlechtIds: []
+                  altersklasseIds: [ 10 ]
+                  spielklasseIds: [ 320 ]
+                  sortBy: 1
+
+      responses:
+        '200':
+          description: Filter-Optionen oder finale Liga-Daten
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WamDataResponse'
+              examples:
+                with_more_data:
+                  summary: Response mit weiteren Filter-Optionen
+                  description: hasMoreData=true, weitere Filterung nötig
+                  value:
+                    timestamp: "2025-10-14T15:30:29+0200"
+                    status: "0"
+                    message: ""
+                    data:
+                      wam:
+                        token: "0"
+                        verbandIds: [ 2 ]
+                        gebietIds: []
+                      verbaende:
+                      - id: 2
+                        label: "Bayern"
+                        hits: 45
+                      gebiete:
+                      - id: "4_"
+                        bezirk: "Oberpfalz"
+                        kreis: null
+                        hits: 10
+                      altersklassen:
+                      - id: 10
+                        label: "U10"
+                        hits: 10
+                      spielklassen:
+                      - id: 320
+                        label: "Bezirksliga"
+                        hits: 2
+                      ligaListe:
+                        hasMoreData: true
+
+                final_liga_data:
+                  summary: Finale Liga-Daten
+                  description: hasMoreData=false, Liga-Liste verfügbar
+                  value:
+                    timestamp: "2025-10-14T15:30:29+0200"
+                    status: "0"
+                    message: ""
+                    data:
+                      ligaListe:
+                        startAtIndex: 0
+                        ligen:
+                        - ligaId: 51961
+                          liganame: "U10 mixed Bezirksliga"
+                          liganr: 1040
+                          skName: "Bezirksliga"
+                          akName: "U10"
+                          geschlechtId: 3
+                          geschlecht: "mix"
+                          verbandId: 2
+                          verbandName: "Bayern"
+                          bezirknr: 4
+                          bezirkName: "Oberpfalz"
+                        hasMoreData: false
+                        size: 1
+
+  # ============================================
+  # 2. LIGA-INFORMATIONEN
+  # ============================================
+
+  /rest/competition/list:
+    post:
+      tags:
+      - Liga-Informationen
+      summary: Details für mehrere Ligen
+      description: Holt detaillierte Informationen für eine Liste von Liga-IDs
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: integer
+              example: [ 51961, 51928 ]
+              description: Array von Liga-IDs
+      responses:
+        '200':
+          description: Array von Liga-Details
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CompetitionDetails'
+
+  /rest/competition/id/{ligaId}:
+    get:
+      tags:
+      - Liga-Informationen
+      summary: Details für eine Liga
+      description: Holt detaillierte Informationen für eine einzelne Liga
+      parameters:
+      - $ref: '#/components/parameters/ligaId'
+      responses:
+        '200':
+          description: Liga-Details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompetitionDetails'
+
+  /rest/competition/actual/id/{ligaId}:
+    get:
+      tags:
+      - Liga-Informationen
+      summary: Aktueller Liga-Stand
+      description: |
+        Holt den aktuellen Stand der Liga:
+        - Aktueller Spieltag
+        - Nächste Spiele
+        - Aktuelle Tabellen-Situation
+      parameters:
+      - $ref: '#/components/parameters/ligaId'
+      responses:
+        '200':
+          description: Aktueller Liga-Stand
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompetitionActualResponse'
+
+  # ============================================
+  # 3. TABELLEN & STATISTIKEN
+  # ============================================
+
+  /rest/competition/table/id/{ligaId}:
+    get:
+      tags:
+      - Tabellen & Statistiken
+      summary: Liga-Tabelle
+      description: |
+        Holt die aktuelle Tabelle für eine Liga.
+
+        **Enthält:**
+        - Position/Rang
+        - Team-Name, Verein
+        - Spiele, Siege, Niederlagen
+        - Punkte (2 pro Sieg)
+        - Erzielte/Erhaltene Körbe
+        - Korbdifferenz
+      parameters:
+      - $ref: '#/components/parameters/ligaId'
+      responses:
+        '200':
+          description: Liga-Tabelle
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TableResponse'
+
+  /rest/competition/crosstable/id/{ligaId}:
+    get:
+      tags:
+      - Tabellen & Statistiken
+      summary: Kreuztabelle
+      description: |
+        Holt die Kreuztabelle (direkter Vergleich aller Teams).
+
+        **Zeigt:**
+        - Ergebnisse aller Spiele zwischen Teams
+        - Direkter Vergleich für Benchmark-Analysen
+        - Wichtig für gemeinsame Gegner-Vergleiche
+      parameters:
+      - $ref: '#/components/parameters/ligaId'
+      responses:
+        '200':
+          description: Kreuztabelle
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CrosstableResponse'
+
+  /rest/competition/teamstatistic/id/{ligaId}:
+    get:
+      tags:
+      - Tabellen & Statistiken
+      summary: Team-Statistiken
+      description: |
+        Holt detaillierte Team-Statistiken (falls verfügbar).
+
+        **Achtung:** Nicht für alle Ligen verfügbar!
+        Meist nur ab Regionalliga+
+
+        **Enthält:**
+        - Punkte pro Spiel (Offense/Defense)
+        - Wurfquoten (FG%, 3P%, FT%)
+        - Rebounds, Assists, Steals, Blocks
+        - Turnover-Quote
+      parameters:
+      - $ref: '#/components/parameters/ligaId'
+      responses:
+        '200':
+          description: Team-Statistiken
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamStatisticsResponse'
+        '404':
+          description: Keine Statistiken für diese Liga verfügbar
+
+  # ============================================
+  # 4. SPIELPLAN
+  # ============================================
+
+  /rest/competition/spielplan/id/{ligaId}:
+    get:
+      tags:
+      - Spielplan
+      summary: Kompletter Spielplan
+      description: |
+        Holt alle Spiele einer Liga (vergangene und zukünftige).
+
+        **Enthält:**
+        - Spielnummer (wichtig für Spielberichtsbogen)
+        - Spieltag
+        - Datum, Uhrzeit
+        - Heim- und Gastteam (mit Vereins-Info)
+        - Halle/Spielort
+        - Ergebnis (falls gespielt)
+        - Match-ID für weitere Details
+
+        **Wichtig:** Alle Spiele der Liga, nicht nur eigene!
+      parameters:
+      - $ref: '#/components/parameters/ligaId'
+      responses:
+        '200':
+          description: Spielplan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpielplanResponse'
+
+  # ============================================
+  # 5. SPIEL-DETAILS
+  # ============================================
+
+  /rest/match/id/{matchId}:
+    get:
+      tags:
+      - Spiel-Details
+      summary: Basis Spiel-Informationen
+      description: |
+        Holt grundlegende Informationen zu einem Spiel.
+
+        **Enthält:**
+        - Teams, Datum, Uhrzeit
+        - Status (scheduled, finished, cancelled)
+        - Ergebnis (falls gespielt)
+      parameters:
+      - $ref: '#/components/parameters/matchId'
+      responses:
+        '200':
+          description: Spiel-Informationen
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MatchBasicResponse'
+
+  /rest/match/id/{matchId}/matchInfo:
+    get:
+      tags:
+      - Spiel-Details
+      summary: Erweiterte Match-Informationen
+      description: |
+        Holt erweiterte Informationen zu einem Spiel.
+
+        **Enthält:**
+        - Teams mit vollständiger Kader-Liste
+        - Spieler: Name, Trikotnummer, TNA (letzten 3 Stellen)
+        - Trainer, Co-Trainer
+        - Schiedsrichter
+        - Anschreiber, Zeitnehmer
+        - Halle mit Adresse
+        - Ergebnis nach Vierteln/Achteln (U10)
+        - Fouls (Team + Persönlich)
+      parameters:
+      - $ref: '#/components/parameters/matchId'
+      responses:
+        '200':
+          description: Erweiterte Match-Informationen
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MatchInfoResponse'
+
+  /rest/match/id/{matchId}/boxscore:
+    get:
+      tags:
+      - Spiel-Details
+      summary: Detaillierter Boxscore
+      description: |
+        Holt detaillierte Spiel-Statistiken.
+
+        **Achtung:** Nur für höhere Ligen verfügbar (Regionalliga+)!
+        In Mini-Ligen (U8-U12) meist nicht vorhanden.
+
+        **Enthält:**
+        - Team-Statistiken (Wurfquoten, Rebounds, etc.)
+        - Spieler-Statistiken (Punkte, Assists, Rebounds, etc.)
+        - Play-by-Play (falls verfügbar)
+      parameters:
+      - $ref: '#/components/parameters/matchId'
+      responses:
+        '200':
+          description: Boxscore-Statistiken
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BoxscoreResponse'
+        '404':
+          description: Kein Boxscore verfügbar für dieses Spiel
+
+# ============================================
+# COMPONENTS
+# ============================================
+
+components:
+  parameters:
+    ligaId:
+      name: ligaId
+      in: path
+      required: true
+      schema:
+        type: integer
+        example: 51961
+      description: Liga-ID (aus /rest/wam/data)
+
+    matchId:
+      name: matchId
+      in: path
+      required: true
+      schema:
+        type: integer
+        example: 2803589
+      description: Spiel-ID (aus Spielplan)
+
+  schemas:
+    # ============================================
+    # WAM FILTER SCHEMAS
+    # ============================================
+
+    WamFilterRequest:
+      type: object
+      description: Filter-Parameter für Liga-Suche
+      properties:
+        token:
+          type: integer
+          example: 0
+          description: Token (immer 0)
+
+        verbandIds:
+          type: array
+          items:
+            type: integer
+          example: [ 2 ]
+          description: |
+            Landesverbands-IDs:
+            - 1: Baden-Württemberg
+            - 2: Bayern
+            - 3: Berlin
+            - 4: Bremen
+            - 5: Hamburg
+            - 6: Hessen
+            - 7: Niedersachsen
+            - 8: Rheinland-Pfalz
+            - 9: Saarland
+            - 10: Schleswig-Holstein
+            - 11: Nordrhein-Westfalen
+            - 12: Mecklenburg-Vorpommern
+            - 13: Sachsen-Anhalt
+            - 14: Brandenburg
+            - 15: Sachsen
+            - 16: Thüringen
+            - 29: Deutsche Meisterschaften
+            - 30: Regionalliga Nord
+            - 31: Regionalliga Südwest
+            - 32: Regionalliga Südost
+            - 33: Regionalliga West
+            - 100: Bundesligen
+
+        gebietIds:
+          type: array
+          items:
+            type: string
+          example: [ "4_" ]
+          description: |
+            Gebiet-IDs (Bezirk/Kreis innerhalb Verband).
+
+            **Format:**
+            - "X_" = Bezirk (z.B. "4_" = Oberpfalz)
+            - "X_Y" = Bezirk + Kreis (z.B. "1_1" = Oberbayern Kreis Mitte)
+
+            **Bayern Bezirke:**
+            - "1_": Oberbayern
+            - "2_": Schwaben
+            - "3_": Mittelfranken
+            - "4_": Oberpfalz
+            - "5_": Oberfranken
+            - "6_": Unterfranken
+
+        ligatypIds:
+          type: array
+          items:
+            type: integer
+          example: []
+          description: |
+            Liga-Typ-IDs:
+            - 1: Ligaspielbetrieb
+            - 2: Pokalrunde
+            - 3: Auf-/Abstiegsspiele
+            - 4: Play-Off-/Qualifikation
+            - 9: Meisterschaft/Finals
+            - 10: Liga ohne Spielplan
+            - 11: Vorbereitungsliga
+
+        akgGeschlechtIds:
+          type: array
+          items:
+            type: integer
+          example: []
+          description: |
+            Altersklasse + Geschlecht Kombination.
+            Format: "AKG_GeschlechtID"
+            - "2_1": Jugend männlich
+            - "2_2": Jugend weiblich
+
+        altersklasseIds:
+          type: array
+          items:
+            type: integer
+          example: [ 10 ]
+          description: |
+            Altersklassen-IDs:
+            - 1: Senioren
+            - 8: U8
+            - 9: U9
+            - 10: U10
+            - 11: U11
+            - 12: U12
+            - 14: U14
+            - 15: U15
+            - 16: U16
+            - 18: U18
+            - 20: U20
+            - 45: Ü45
+            - 50: Ü50
+            - 55: Ü55
+
+        spielklasseIds:
+          type: array
+          items:
+            type: integer
+          example: []
+          description: |
+            Spielklassen-IDs:
+            - 337: Bay. Meisterschaft
+            - 338: Bezirksoberliga
+            - 320: Bezirksliga
+            - 325: Bezirksklasse
+            - 330: Kreisliga
+            - 335: Kreisklasse
+
+        sortBy:
+          type: integer
+          example: 1
+          description: Sortier-Option (meist 1)
+
+    WamDataResponse:
+      type: object
+      description: Response von /rest/wam/data
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          example: "2025-10-14T15:30:29+0200"
+
+        status:
+          type: string
+          example: "0"
+          description: Status-Code ("0" = Success)
+
+        message:
+          type: string
+          example: ""
+          description: Fehler-Nachricht (leer bei Erfolg)
+
+        data:
+          type: object
+          properties:
+            wam:
+              $ref: '#/components/schemas/WamFilterRequest'
+              description: Verwendete Filter-Parameter
+
+            verbaende:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 2
+                  label:
+                    type: string
+                    example: "Bayern"
+                  hits:
+                    type: integer
+                    example: 45
+                    description: Anzahl gefundener Ligen in diesem Verband
+
+            gebiete:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: "4_"
+                  bezirk:
+                    type: string
+                    nullable: true
+                    example: "Oberpfalz"
+                  kreis:
+                    type: string
+                    nullable: true
+                    example: null
+                  hits:
+                    type: integer
+                    example: 4
+
+            ligatypen:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  label:
+                    type: string
+                    example: "Ligaspielbetrieb"
+                  hits:
+                    type: integer
+                    example: 10
+
+            agkGeschlechtList:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: "2_1"
+                  akg:
+                    type: string
+                    example: "Jugend"
+                  geschlecht:
+                    type: string
+                    example: "m"
+                    enum: [ m, w ]
+                  hits:
+                    type: integer
+                    example: 8
+
+            altersklassen:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 10
+                  label:
+                    type: string
+                    example: "U10"
+                  hits:
+                    type: integer
+                    example: 10
+
+            spielklassen:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 320
+                  label:
+                    type: string
+                    example: "Bezirksliga"
+                  hits:
+                    type: integer
+                    example: 2
+
+            ligaListe:
+              type: object
+              nullable: true
+              description: Nur vorhanden wenn hasMoreData=false
+              properties:
+                startAtIndex:
+                  type: integer
+                  example: 0
+
+                ligen:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/LigaListeEintrag'
+
+                hasMoreData:
+                  type: boolean
+                  example: false
+                  description: |
+                    - false: Finale Liga-Liste verfügbar
+                    - true: Weitere Filterung nötig
+
+                size:
+                  type: integer
+                  example: 10
+                  description: Anzahl gefundener Ligen
+
+        version:
+          type: string
+          example: "11.42.2-b100829"
+
+        dateFormat:
+          type: string
+          example: "yyyy-MM-dd"
+
+        timeFormat:
+          type: string
+          example: "yyyy-MM-dd'T'HH:mm:ssZ"
+
+        timeFormatShort:
+          type: string
+          example: "HH:mm"
+
+        serverInstance:
+          type: string
+          example: "www"
+
+        username:
+          type: string
+          nullable: true
+          example: null
+
+        appContext:
+          type: string
+          example: "https://www.basketball-bund.net"
+
+    LigaListeEintrag:
+      type: object
+      description: Einzelne Liga in der Liste
+      properties:
+        seasonId:
+          type: integer
+          nullable: true
+          example: null
+
+        seasonName:
+          type: string
+          nullable: true
+          example: null
+
+        actualMatchDay:
+          type: integer
+          nullable: true
+          example: null
+
+        ligaId:
+          type: integer
+          example: 51961
+          description: Eindeutige Liga-ID (für weitere API-Calls!)
+
+        liganame:
+          type: string
+          example: "U10 mixed Bezirksliga"
+
+        liganr:
+          type: integer
+          example: 1040
+          description: Liga-Nummer (für Anzeige)
+
+        skName:
+          type: string
+          example: "Bezirksliga"
+          description: Spielklassen-Name
+
+        skNameSmall:
+          type: string
+          nullable: true
+          example: null
+
+        skEbeneId:
+          type: integer
+          example: 1
+          description: Spielklassen-Ebene (1=Bezirk, 2=Kreis)
+
+        skEbeneName:
+          type: string
+          example: "Bezirk"
+
+        akName:
+          type: string
+          example: "U10"
+          description: Altersklassen-Name
+
+        geschlechtId:
+          type: integer
+          example: 3
+          description: |
+            Geschlecht-ID:
+            - 1: männlich
+            - 2: weiblich
+            - 3: mix
+
+        geschlecht:
+          type: string
+          example: "mix"
+          enum: [ männlich, weiblich, mix ]
+
+        verbandId:
+          type: integer
+          example: 2
+
+        verbandName:
+          type: string
+          example: "Bayern"
+
+        bezirknr:
+          type: integer
+          example: 4
+
+        bezirkName:
+          type: string
+          example: "Oberpfalz"
+
+        kreisnr:
+          type: integer
+          nullable: true
+          example: null
+
+        kreisname:
+          type: string
+          nullable: true
+          example: null
+
+        statisticType:
+          type: string
+          nullable: true
+          example: null
+
+        vorabliga:
+          type: boolean
+          example: false
+
+        tableExists:
+          type: boolean
+          nullable: true
+          example: null
+
+        crossTableExists:
+          type: boolean
+          nullable: true
+          example: null
+
+    # ============================================
+    # LIGA-INFORMATIONEN
+    # ============================================
+
+    CompetitionDetails:
+      type: object
+      description: Detaillierte Liga-Informationen
+      properties:
+        ligaId:
+          type: integer
+          example: 51961
+
+        liganame:
+          type: string
+          example: "U10 mixed Bezirksliga"
+
+        saison:
+          type: string
+          example: "2025/26"
+
+        verbandName:
+          type: string
+          example: "Bayern"
+
+        bezirkName:
+          type: string
+          example: "Oberpfalz"
+
+        altersklasse:
+          type: string
+          example: "U10"
+
+        spielklasse:
+          type: string
+          example: "Bezirksliga"
+
+        geschlecht:
+          type: string
+          example: "mix"
+
+        teams:
+          type: array
+          items:
+            $ref: '#/components/schemas/TeamBasic'
+
+        anzahlTeams:
+          type: integer
+          example: 7
+
+        spieltage:
+          type: integer
+          example: 14
+
+    CompetitionActualResponse:
+      type: object
+      description: Aktueller Stand der Liga
+      properties:
+        ligaId:
+          type: integer
+          example: 51961
+
+        aktueller_spieltag:
+          type: integer
+          example: 3
+
+        naechste_spiele:
+          type: array
+          items:
+            $ref: '#/components/schemas/SpielBasic'
+
+        aktuelle_tabelle:
+          type: array
+          items:
+            $ref: '#/components/schemas/TabellenEintrag'
+
+    # ============================================
+    # TABELLEN & STATISTIKEN
+    # ============================================
+
+    TableResponse:
+      type: object
+      description: Liga-Tabelle
+      properties:
+        ligaId:
+          type: integer
+          example: 51961
+
+        liganame:
+          type: string
+          example: "U10 mixed Bezirksliga"
+
+        saison:
+          type: string
+          example: "2025/26"
+
+        lastUpdate:
+          type: string
+          format: date-time
+          example: "2025-10-14T10:15:00"
+
+        teams:
+          type: array
+          items:
+            $ref: '#/components/schemas/TabellenEintrag'
+
+    TabellenEintrag:
+      type: object
+      description: Einzelner Tabellen-Eintrag
+      properties:
+        position:
+          type: integer
+          example: 1
+          description: Tabellenplatz
+
+        teamId:
+          type: integer
+          example: 5679
+
+        teamName:
+          type: string
+          example: "DJK Neustadt a. d. Waldnaab 1"
+
+        clubId:
+          type: integer
+          example: 1234
+
+        clubName:
+          type: string
+          example: "DJK Neustadt a. d. Waldnaab"
+
+        games:
+          type: integer
+          example: 8
+          description: Gespielte Spiele
+
+        wins:
+          type: integer
+          example: 7
+          description: Siege
+
+        losses:
+          type: integer
+          example: 1
+          description: Niederlagen
+
+        points:
+          type: integer
+          example: 14
+          description: Punkte (2 pro Sieg, 0 pro Niederlage)
+
+        scoredPoints:
+          type: integer
+          example: 456
+          description: Erzielte Körbe
+
+        concededPoints:
+          type: integer
+          example: 298
+          description: Erhaltene Körbe
+
+        pointsDifference:
+          type: integer
+          example: 158
+          description: Korbdifferenz
+
+    CrosstableResponse:
+      type: object
+      description: Kreuztabelle (direkter Vergleich)
+      properties:
+        ligaId:
+          type: integer
+          example: 51961
+
+        teams:
+          type: array
+          items:
+            type: string
+          example: [ "DJK Neustadt 1", "TSV Schwandorf", "TB Weiden" ]
+
+        results:
+          type: array
+          description: Matrix der Ergebnisse
+          items:
+            type: array
+            items:
+              type: object
+              properties:
+                heim:
+                  type: integer
+                  nullable: true
+                  example: 45
+                gast:
+                  type: integer
+                  nullable: true
+                  example: 38
+                matchId:
+                  type: integer
+                  nullable: true
+                  example: 2803589
+
+    TeamStatisticsResponse:
+      type: object
+      description: Team-Statistiken (nicht für alle Ligen verfügbar)
+      properties:
+        ligaId:
+          type: integer
+          example: 51961
+
+        teams:
+          type: array
+          items:
+            type: object
+            properties:
+              teamId:
+                type: integer
+                example: 5679
+
+              teamName:
+                type: string
+                example: "DJK Neustadt 1"
+
+              stats:
+                type: object
+                properties:
+                  ppg:
+                    type: number
+                    format: float
+                    example: 57.0
+                    description: Points per game (Offense)
+
+                  oppg:
+                    type: number
+                    format: float
+                    example: 37.25
+                    description: Opponent points per game (Defense)
+
+                  fgPercentage:
+                    type: number
+                    format: float
+                    nullable: true
+                    example: 45.5
+
+                  threePointPercentage:
+                    type: number
+                    format: float
+                    nullable: true
+                    example: 28.3
+
+                  ftPercentage:
+                    type: number
+                    format: float
+                    nullable: true
+                    example: 65.2
+
+                  rebounds:
+                    type: number
+                    format: float
+                    nullable: true
+                    example: 32.5
+
+                  assists:
+                    type: number
+                    format: float
+                    nullable: true
+                    example: 12.3
+
+    # ============================================
+    # SPIELPLAN
+    # ============================================
+
+    SpielplanResponse:
+      type: object
+      description: Kompletter Spielplan
+      properties:
+        ligaId:
+          type: integer
+          example: 51961
+
+        liganame:
+          type: string
+          example: "U10 mixed Bezirksliga"
+
+        saison:
+          type: string
+          example: "2025/26"
+
+        games:
+          type: array
+          items:
+            $ref: '#/components/schemas/SpielBasic'
+
+    SpielBasic:
+      type: object
+      description: Basis Spiel-Informationen
+      properties:
+        matchId:
+          type: integer
+          example: 2803589
+          description: Spiel-ID für weitere API-Calls
+
+        gameNumber:
+          type: integer
+          example: 1049
+          description: Spielnummer (wichtig für Spielberichtsbogen!)
+
+        gameDay:
+          type: integer
+          example: 3
+          description: Spieltag
+
+        date:
+          type: string
+          format: date
+          example: "2025-10-12"
+
+        time:
+          type: string
+          example: "12:00"
+
+        homeTeam:
+          $ref: '#/components/schemas/TeamBasic'
+
+        awayTeam:
+          $ref: '#/components/schemas/TeamBasic'
+
+        venue:
+          $ref: '#/components/schemas/Venue'
+
+        status:
+          type: string
+          enum: [ scheduled, finished, cancelled ]
+          example: "finished"
+
+        homeScore:
+          type: integer
+          nullable: true
+          example: 45
+          description: Endergebnis Heim (null bei zukünftigen Spielen)
+
+        awayScore:
+          type: integer
+          nullable: true
+          example: 38
+          description: Endergebnis Gast (null bei zukünftigen Spielen)
+
+        referee:
+          type: string
+          nullable: true
+          example: "Schmidt, M."
+
+    # ============================================
+    # SPIEL-DETAILS
+    # ============================================
+
+    MatchBasicResponse:
+      type: object
+      description: Basis Match-Informationen
+      properties:
+        matchId:
+          type: integer
+          example: 2803589
+
+        gameNumber:
+          type: integer
+          example: 1049
+
+        date:
+          type: string
+          format: date
+          example: "2025-10-12"
+
+        time:
+          type: string
+          example: "12:00"
+
+        status:
+          type: string
+          example: "finished"
+
+        homeTeam:
+          $ref: '#/components/schemas/TeamBasic'
+
+        awayTeam:
+          $ref: '#/components/schemas/TeamBasic'
+
+        score:
+          type: object
+          properties:
+            home:
+              type: integer
+              example: 45
+            away:
+              type: integer
+              example: 38
+
+    MatchInfoResponse:
+      type: object
+      description: Erweiterte Match-Informationen
+      properties:
+        matchId:
+          type: integer
+          example: 2803589
+
+        gameNumber:
+          type: integer
+          example: 1049
+          description: Spielnummer (für Spielberichtsbogen)
+
+        date:
+          type: string
+          format: date
+          example: "2025-10-12"
+
+        time:
+          type: string
+          example: "12:00"
+
+        status:
+          type: string
+          example: "finished"
+
+        ligaId:
+          type: integer
+          example: 51961
+
+        liganame:
+          type: string
+          example: "U10 mixed Bezirksliga"
+
+        homeTeam:
+          $ref: '#/components/schemas/TeamWithPlayers'
+
+        awayTeam:
+          $ref: '#/components/schemas/TeamWithPlayers'
+
+        score:
+          type: object
+          properties:
+            home:
+              type: integer
+              example: 45
+            away:
+              type: integer
+              example: 38
+
+            quarters:
+              type: array
+              description: Ergebnis nach Vierteln/Achteln
+              items:
+                type: object
+                properties:
+                  quarter:
+                    type: integer
+                    example: 1
+                    description: "Viertel/Achtel-Nummer (U10: 1-8)"
+                  home:
+                    type: integer
+                    example: 12
+                  away:
+                    type: integer
+                    example: 8
+
+            halftime:
+              type: object
+              nullable: true
+              properties:
+                home:
+                  type: integer
+                  example: 24
+                away:
+                  type: integer
+                  example: 18
+
+        venue:
+          $ref: '#/components/schemas/Venue'
+
+        referees:
+          type: array
+          items:
+            type: string
+          example: [ "Schmidt, M.", "Weber, K." ]
+
+        officials:
+          type: object
+          properties:
+            scorer:
+              type: string
+              nullable: true
+              example: "Weber, Klaus"
+            timekeeper:
+              type: string
+              nullable: true
+              example: "Bauer, Lisa"
+
+        fouls:
+          type: object
+          description: Foul-Informationen
+          properties:
+            home:
+              type: object
+              properties:
+                teamFouls:
+                  type: integer
+                  example: 12
+                  description: Team-Fouls
+                personalFouls:
+                  type: array
+                  description: Persönliche Fouls pro Spieler
+                  items:
+                    type: object
+                    properties:
+                      playerId:
+                        type: integer
+                      playerName:
+                        type: string
+                      fouls:
+                        type: integer
+            away:
+              type: object
+              properties:
+                teamFouls:
+                  type: integer
+                  example: 15
+                personalFouls:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      playerId:
+                        type: integer
+                      playerName:
+                        type: string
+                      fouls:
+                        type: integer
+
+    BoxscoreResponse:
+      type: object
+      description: Detaillierte Boxscore-Statistiken (nur höhere Ligen!)
+      properties:
+        matchId:
+          type: integer
+          example: 2803589
+
+        homeTeam:
+          $ref: '#/components/schemas/TeamStats'
+
+        awayTeam:
+          $ref: '#/components/schemas/TeamStats'
+
+    # ============================================
+    # HELPER SCHEMAS
+    # ============================================
+
+    TeamBasic:
+      type: object
+      description: Basis Team-Informationen
+      properties:
+        teamId:
+          type: integer
+          example: 5678
+
+        teamName:
+          type: string
+          example: "DJK Neustadt a. d. Waldnaab 1"
+
+        clubId:
+          type: integer
+          example: 1234
+
+        clubName:
+          type: string
+          example: "DJK Neustadt a. d. Waldnaab"
+
+    TeamWithPlayers:
+      allOf:
+      - $ref: '#/components/schemas/TeamBasic'
+      - type: object
+        properties:
+          coach:
+            type: string
+            nullable: true
+            example: "Müller, Hans"
+
+          assistant:
+            type: string
+            nullable: true
+            example: "Schmidt, Peter"
+
+          players:
+            type: array
+            items:
+              $ref: '#/components/schemas/Player'
+
+    Player:
+      type: object
+      description: Spieler-Informationen
+      properties:
+        playerId:
+          type: integer
+          example: 12345
+
+        firstName:
+          type: string
+          example: "Max"
+
+        lastName:
+          type: string
+          example: "Mustermann"
+
+        jerseyNumber:
+          type: integer
+          example: 5
+          description: Trikotnummer
+
+        tnaNumber:
+          type: string
+          nullable: true
+          example: "123"
+          description: Letzte 3 Stellen der TNA-Nummer
+
+        birthYear:
+          type: integer
+          nullable: true
+          example: 2015
+
+    TeamStats:
+      allOf:
+      - $ref: '#/components/schemas/TeamWithPlayers'
+      - type: object
+        properties:
+          playerStats:
+            type: array
+            items:
+              $ref: '#/components/schemas/PlayerStats'
+
+          teamStats:
+            type: object
+            properties:
+              points:
+                type: integer
+                example: 45
+              fieldGoalsMade:
+                type: integer
+                example: 18
+              fieldGoalsAttempted:
+                type: integer
+                example: 45
+              fieldGoalPercentage:
+                type: number
+                format: float
+                example: 40.0
+              threePointsMade:
+                type: integer
+                example: 3
+              threePointsAttempted:
+                type: integer
+                example: 12
+              threePointPercentage:
+                type: number
+                format: float
+                example: 25.0
+              freeThrowsMade:
+                type: integer
+                example: 6
+              freeThrowsAttempted:
+                type: integer
+                example: 10
+              freeThrowPercentage:
+                type: number
+                format: float
+                example: 60.0
+              rebounds:
+                type: integer
+                example: 32
+              assists:
+                type: integer
+                example: 12
+              steals:
+                type: integer
+                example: 8
+              blocks:
+                type: integer
+                example: 3
+              turnovers:
+                type: integer
+                example: 15
+              fouls:
+                type: integer
+                example: 18
+
+    PlayerStats:
+      allOf:
+      - $ref: '#/components/schemas/Player'
+      - type: object
+        properties:
+          minutesPlayed:
+            type: integer
+            nullable: true
+            example: 28
+          points:
+            type: integer
+            example: 15
+          fieldGoalsMade:
+            type: integer
+            example: 6
+          fieldGoalsAttempted:
+            type: integer
+            example: 12
+          threePointsMade:
+            type: integer
+            example: 1
+          threePointsAttempted:
+            type: integer
+            example: 4
+          freeThrowsMade:
+            type: integer
+            example: 2
+          freeThrowsAttempted:
+            type: integer
+            example: 3
+          rebounds:
+            type: integer
+            nullable: true
+            example: 7
+          assists:
+            type: integer
+            nullable: true
+            example: 4
+          steals:
+            type: integer
+            nullable: true
+            example: 2
+          blocks:
+            type: integer
+            nullable: true
+            example: 1
+          turnovers:
+            type: integer
+            nullable: true
+            example: 3
+          fouls:
+            type: integer
+            example: 2
+
+    Venue:
+      type: object
+      description: Spielort/Halle
+      properties:
+        name:
+          type: string
+          example: "Gymnasium"
+
+        address:
+          type: string
+          nullable: true
+          example: "Schulstraße 1, 92639 Weiden"
+
+        city:
+          type: string
+          nullable: true
+          example: "Weiden"
+
+        zipCode:
+          type: string
+          nullable: true
+          example: "92639"
+
+externalDocs:
+  description: DBB Website
+  url: https://www.basketball-bund.net

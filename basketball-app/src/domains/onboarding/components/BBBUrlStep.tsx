@@ -1,227 +1,176 @@
 /**
- * BBB URL Step - SCHRITT 2 (nach Welcome)
- * 
- * User gibt BBB-Liga-URL ein
- * Parser extrahiert automatisch Liga, Vereine und Teams
+ * BBB URL Step - Liga-Import aus basketball-bund.net
  */
 
 import React, { useState } from 'react';
+import { Globe, AlertCircle, Loader, CheckCircle } from 'lucide-react';
 import { useOnboardingStore } from '@/stores/onboardingStore';
-import { bbbParserService } from '@/domains/bbb/services/BBBParserService';
-import { ArrowRight, ArrowLeft, Link2, Loader2, CheckCircle, AlertCircle, Info } from 'lucide-react';
+import { BBBApiService } from '@/domains/bbb-api/services/BBBApiService';
 
 export function BBBUrlStep() {
-  const { bbb_url, setBBBUrl, setParsedLigaData, setStep, canProceed } = useOnboardingStore();
-  
+  const { nextStep, previousStep, setBbbUrl, bbb_url } = useOnboardingStore();
   const [url, setUrl] = useState(bbb_url || '');
-  const [parsing, setParsing] = useState(false);
   const [error, setError] = useState('');
-  const [parseResult, setParseResult] = useState<{
-    liga_name: string;
-    team_count: number;
-    spiele_count: number;
-  } | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [validUrl, setValidUrl] = useState(false);
 
-  const handleChange = (value: string) => {
-    setUrl(value);
-    setBBBUrl(value);
-    if (error) setError('');
-    if (parseResult) setParseResult(null);
+  const validateUrl = (inputUrl: string): number | null => {
+    // Extract Liga ID using the static method from BBBApiService
+    const ligaId = BBBApiService.extractLigaId(inputUrl);
+    
+    if (!ligaId) {
+      // Check if it's at least a basketball-bund.net URL
+      if (!inputUrl.includes('basketball-bund.net')) {
+        setError('Bitte gib eine URL von basketball-bund.net ein');
+        return null;
+      }
+      setError('Keine Liga-ID in der URL gefunden. Bitte verwende eine Liga-Seite.');
+      return null;
+    }
+    
+    return ligaId;
   };
 
-  const handleParse = async () => {
-    if (!url.trim()) {
-      setError('Bitte gib eine URL ein');
+  const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newUrl = e.target.value;
+    setUrl(newUrl);
+    setError('');
+    setValidUrl(false);
+    
+    // Clear error when typing
+    if (newUrl && newUrl.length > 10) {
+      const ligaId = validateUrl(newUrl);
+      if (ligaId) {
+        setValidUrl(true);
+      }
+    }
+  };
+
+  const handleSubmit = async () => {
+    const ligaId = validateUrl(url);
+    
+    if (!ligaId) {
       return;
     }
 
-    setParsing(true);
+    setLoading(true);
     setError('');
 
     try {
-      const result = await bbbParserService.parseLigaFromUrl(url);
+      // Save URL and Liga ID
+      setBbbUrl(url);
       
-      // Speichern im Store
-      setParsedLigaData(result);
+      // Store Liga ID for next step
+      localStorage.setItem('onboarding_liga_id', ligaId.toString());
       
-      // Success-Anzeige
-      setParseResult({
-        liga_name: result.liga.liga_name,
-        team_count: result.teams.length,
-        spiele_count: result.spiele.length,
-      });
-      
+      // Proceed to team selection
+      nextStep();
     } catch (err) {
-      console.error('BBB Parse Error:', err);
-      setError((err as Error).message);
+      setError('Fehler beim Verarbeiten der URL. Bitte versuche es erneut.');
+      console.error('Error processing URL:', err);
     } finally {
-      setParsing(false);
+      setLoading(false);
     }
   };
 
-  const handleNext = () => {
-    if (canProceed()) {
-      setStep('team_select');
-    }
-  };
-
-  const handleBack = () => {
-    setStep('welcome');
-  };
+  const sampleUrls = [
+    'https://www.basketball-bund.net/index.jsp?Action=101&liga_id=51961',
+    'https://www.basketball-bund.net/liga/tabelle.jsp?ligaid=51961',
+    'https://www.basketball-bund.net/public/ergebnisse.jsp?liga_id=51961'
+  ];
 
   return (
-    <div>
-      <h2 className="text-2xl font-bold text-gray-900 mb-2">
-        Spielplan importieren
-      </h2>
-      <p className="text-gray-600 mb-6">
-        Gib die URL deiner Liga von basketball-bund.net ein.
-        Alle Team- und Spielplan-Daten werden automatisch importiert.
-      </p>
-
-      {/* Info Box */}
-      <div className="alert-info mb-6">
-        <div className="flex items-start gap-3">
-          <Info className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />
-          <div className="flex-1 text-sm">
-            <p className="font-medium mb-2">So findest du die URL:</p>
-            <ol className="list-decimal list-inside space-y-1">
-              <li>Gehe zu <strong>basketball-bund.net</strong></li>
-              <li>Suche deine Liga (z.B. "U10 Oberpfalz")</li>
-              <li>Öffne <strong>Spielplan</strong>, <strong>Tabelle</strong> oder <strong>Ergebnisse</strong></li>
-              <li>Kopiere die URL aus der Adressleiste</li>
-            </ol>
-            <p className="mt-3 text-primary-700 font-medium">
-              ✅ Die App erkennt automatisch alle drei URLs (Spielplan, Tabelle, Ergebnisse)
-            </p>
-          </div>
-        </div>
+    <div className="max-w-2xl mx-auto">
+      <div className="mb-8">
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">
+          Liga-Import aus basketball-bund.net
+        </h2>
+        <p className="text-gray-600">
+          Kopiere die URL deiner Liga von basketball-bund.net, um Teams und Spielplan zu importieren.
+        </p>
       </div>
 
-      {/* URL Input */}
       <div className="mb-6">
-        <label htmlFor="bbb-url" className="label label-required">
-          Basketball-Bund.net Liga-URL
+        <label htmlFor="bbb-url" className="block text-sm font-medium text-gray-700 mb-2">
+          Liga-URL
         </label>
         <div className="relative">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <Globe className="h-5 w-5 text-gray-400" />
+          </div>
           <input
             id="bbb-url"
             type="url"
             value={url}
-            onChange={(e) => handleChange(e.target.value)}
-            className={error ? 'input input-error pr-10' : 'input pr-10'}
+            onChange={handleUrlChange}
             placeholder="https://www.basketball-bund.net/..."
-            aria-invalid={!!error}
-            aria-describedby={error ? 'bbb-url-error' : 'bbb-url-help'}
-            disabled={parsing}
-            autoFocus
+            className={`block w-full pl-10 pr-10 py-3 border rounded-lg focus:ring-orange-500 focus:border-orange-500 ${
+              error ? 'border-red-300' : validUrl ? 'border-green-300' : 'border-gray-300'
+            }`}
+            disabled={loading}
           />
-          <Link2 
-            className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" 
-            aria-hidden="true"
-          />
+          {validUrl && (
+            <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+              <CheckCircle className="h-5 w-5 text-green-500" />
+            </div>
+          )}
         </div>
-        {error ? (
-          <p id="bbb-url-error" className="mt-1 text-sm text-error-600" role="alert">
-            {error}
-          </p>
-        ) : (
-          <p id="bbb-url-help" className="mt-1 text-sm text-gray-500">
-            Funktioniert mit Spielplan-, Tabellen- oder Ergebnisse-URLs
-          </p>
+        {error && (
+          <div className="mt-2 flex items-start">
+            <AlertCircle className="h-5 w-5 text-red-500 mr-2 flex-shrink-0 mt-0.5" />
+            <p className="text-sm text-red-600">{error}</p>
+          </div>
         )}
       </div>
 
-      {/* Example URL */}
-      <details className="mb-6 text-sm">
-        <summary className="cursor-pointer text-primary-600 hover:text-primary-700 font-medium">
-          Beispiel-URL anzeigen
-        </summary>
-        <div className="mt-2 p-3 bg-gray-50 rounded border border-gray-200 font-mono text-xs break-all">
-          https://www.basketball-bund.net/public/spielplan_list.jsp?print=1&liga_id=51961
-        </div>
-      </details>
+      <div className="bg-gray-50 p-4 rounded-lg mb-6">
+        <h3 className="font-semibold text-gray-700 mb-2">Wo finde ich die URL?</h3>
+        <ol className="text-sm text-gray-600 space-y-1">
+          <li>1. Gehe zu <a href="https://www.basketball-bund.net" target="_blank" rel="noopener noreferrer" className="text-orange-500 hover:underline">basketball-bund.net</a></li>
+          <li>2. Navigiere zu deiner Liga (über "Ergebnisse" oder "Ligen")</li>
+          <li>3. Kopiere die URL aus der Adressleiste deines Browsers</li>
+        </ol>
+      </div>
 
-      {/* Parse Button */}
-      {url && !parseResult && (
+      <div className="mb-6">
+        <h4 className="text-sm font-medium text-gray-700 mb-2">Beispiel-URLs:</h4>
+        <div className="space-y-2">
+          {sampleUrls.map((sampleUrl, index) => (
+            <button
+              key={index}
+              onClick={() => {
+                setUrl(sampleUrl);
+                setError('');
+                setValidUrl(true);
+              }}
+              className="block w-full text-left text-xs text-gray-500 hover:text-orange-500 hover:bg-orange-50 p-2 rounded transition-colors truncate"
+            >
+              {sampleUrl}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="flex gap-4">
         <button
-          type="button"
-          onClick={handleParse}
-          disabled={parsing}
-          className="btn-primary inline-flex items-center gap-2 mb-6"
+          onClick={previousStep}
+          className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
         >
-          {parsing ? (
+          Zurück
+        </button>
+        <button
+          onClick={handleSubmit}
+          disabled={!url || loading || !validUrl}
+          className="flex-1 bg-orange-500 text-white py-3 px-6 rounded-lg font-semibold hover:bg-orange-600 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center justify-center"
+        >
+          {loading ? (
             <>
-              <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />
+              <Loader className="w-5 h-5 mr-2 animate-spin" />
               Lade Liga-Daten...
             </>
           ) : (
-            <>
-              <Link2 className="w-4 h-4" aria-hidden="true" />
-              Liga-Daten laden
-            </>
+            'Weiter'
           )}
-        </button>
-      )}
-
-      {/* Parse Result */}
-      {parseResult && (
-        <div className="p-4 rounded-lg border-2 bg-success-50 border-success-600 mb-6">
-          <div className="flex items-start gap-3">
-            <CheckCircle className="w-6 h-6 text-success-600 flex-shrink-0" />
-            <div className="flex-1">
-              <h3 className="font-semibold text-success-900 mb-2">
-                ✅ Liga erfolgreich geladen!
-              </h3>
-              <dl className="space-y-1 text-sm text-success-800">
-                <div>
-                  <dt className="inline font-medium">Liga:</dt>
-                  <dd className="inline ml-2">{parseResult.liga_name}</dd>
-                </div>
-                <div>
-                  <dt className="inline font-medium">Teams:</dt>
-                  <dd className="inline ml-2">{parseResult.team_count} gefunden</dd>
-                </div>
-                <div>
-                  <dt className="inline font-medium">Spiele:</dt>
-                  <dd className="inline ml-2">{parseResult.spiele_count} im Spielplan</dd>
-                </div>
-              </dl>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* DEV Mode Hinweis */}
-      {import.meta.env.DEV && (
-        <div className="alert-warning mb-6">
-          <p className="text-sm">
-            <strong>Development Mode:</strong> Es werden Demo-Daten verwendet.
-            In Production wird die echte BBB-Website geparst.
-          </p>
-        </div>
-      )}
-
-      {/* Navigation */}
-      <div className="flex justify-between gap-4 pt-4">
-        <button
-          type="button"
-          onClick={handleBack}
-          className="btn-secondary inline-flex items-center gap-2"
-          disabled={parsing}
-        >
-          <ArrowLeft className="w-5 h-5" aria-hidden="true" />
-          Zurück
-        </button>
-
-        <button
-          type="button"
-          onClick={handleNext}
-          className="btn-primary inline-flex items-center gap-2"
-          disabled={!canProceed()}
-        >
-          Weiter
-          <ArrowRight className="w-5 h-5" aria-hidden="true" />
         </button>
       </div>
     </div>

@@ -29,6 +29,8 @@ export type Beziehungstyp =
 
 export type SpielStatus = 'geplant' | 'live' | 'abgeschlossen' | 'abgesagt';
 
+export type TeamTyp = 'eigen' | 'gegner';
+
 export type SpielPhase = 'planung' | 'in_halle' | 'im_spiel' | 'nachbereitung';
 
 export type EinsatzStatus = 'Im_Spiel' | 'Bank';
@@ -45,10 +47,23 @@ export type ProbetrainingStatus = 'aktiv' | 'interessiert' | 'aufgenommen' | 'ab
 
 export type NotizKategorie = 'Entwicklung' | 'Verhalten' | 'Gesundheit' | 'Elterngespräch';
 
+// ==================== USER/TRAINER ====================
+
+export interface User {
+  user_id: UUID;
+  vorname: string;
+  nachname: string;
+  name: string;  // Vollständiger Name
+  email?: string;
+  created_at: Date;
+  updated_at?: Date;
+}
+
 // ==================== VEREIN ====================
 
 export interface Verein {
   verein_id: UUID;
+  extern_verein_id?: string;  // clubId aus DBB API
   bbb_kontakt_id?: string;
   verband_id?: number;  // 2 = Bayern
   name: string;
@@ -63,24 +78,31 @@ export interface Verein {
 
 export interface Team {
   team_id: UUID;
+  extern_team_id?: string;  // teamId aus DBB API
   verein_id: UUID;
+  user_id?: UUID;  // Zuordnung zum Trainer (nur bei team_typ='eigen')
   bbb_mannschafts_id?: string;
   name: string;
   altersklasse: Altersklasse;
   saison: string;  // z.B. "2025/2026"
   trainer: string;
+  team_typ: TeamTyp;  // 'eigen' oder 'gegner'
   leistungsorientiert?: boolean;  // nur U12
   created_at: Date;
+  updated_at?: Date;
 }
 
 // ==================== SPIELER ====================
 
 export interface Spieler {
   spieler_id: UUID;
-  team_id?: UUID;  // Optional für Gegner
+  extern_spieler_id?: string;  // playerId aus DBB API (falls vorhanden)
+  team_id: UUID;  // PFLICHTFELD! 1:n Beziehung zu TEAMS
   verein_id?: UUID;  // Für Gegner-Tracking
   vorname: string;
   nachname: string;
+  trikotnummer?: number;  // Aus Match-Info
+  tna_letzten_drei?: string;  // Letzte 3 Stellen TNA aus Spielberichtsbogen
   geburtsdatum?: Date;
   spieler_typ: SpielerTyp;
   mitgliedsnummer?: string;
@@ -213,8 +235,10 @@ export interface Spielplan {
 
 export interface Spiel {
   spiel_id: UUID;
+  extern_spiel_id?: string;  // matchId aus DBB API
   spielplan_id?: UUID;
   team_id: UUID;
+  liga_id?: UUID;  // Zuordnung zur Liga
   
   // BBB-Integration v4.0
   spielnr?: number;
@@ -222,8 +246,10 @@ export interface Spiel {
   
   datum: Date;
   uhrzeit?: string;
-  heim: string;
-  gast: string;
+  heim_team_id?: UUID;  // Referenz zu TEAMS
+  gast_team_id?: UUID;  // Referenz zu TEAMS
+  heim: string;  // Team-Name (legacy)
+  gast: string;  // Team-Name (legacy)
   halle_id?: UUID;
   ist_heimspiel: boolean;
   
@@ -240,6 +266,7 @@ export interface Spiel {
   
   notizen?: string;
   created_at: Date;
+  updated_at?: Date;
 }
 
 // ==================== LIGA ERGEBNISSE (für Benchmark) ====================
@@ -431,7 +458,7 @@ export interface TrikotCSVRow {
   farbe_hell?: string;
 }
 
-// BBB Parser Types
+// BBB Parser Types (Legacy HTML-Parsing)
 export interface BBBSpielData {
   nr: number;
   tag: number;
@@ -451,6 +478,152 @@ export interface BBBTabellenEintrag {
   punkte: number;
   korbe_erzielt: number;
   korbe_erhalten: number;
+}
+
+// ==================== DBB REST API TYPES ====================
+
+// WAM Filter Request
+export interface WamFilterRequest {
+  token: number;
+  verbandIds: number[];
+  gebietIds: string[];
+  ligatypIds: number[];
+  akgGeschlechtIds: number[];
+  altersklasseIds: number[];
+  spielklasseIds: number[];
+  sortBy: number;
+}
+
+// WAM Data Response
+export interface WamFilterOption {
+  id: number | string;
+  label?: string;
+  bezirk?: string;
+  kreis?: string;
+  hits: number;
+}
+
+export interface WamLigaEintrag {
+  ligaId: number;
+  liganame: string;
+  liganr: number;
+  skName: string;  // Spielklasse
+  akName: string;  // Altersklasse
+  geschlecht: string;
+  verbandId: number;
+  verbandName: string;
+  bezirknr: number;
+  bezirkName: string;
+}
+
+export interface WamDataResponse {
+  data: {
+    verbaende: WamFilterOption[];
+    gebiete: WamFilterOption[];
+    altersklassen: WamFilterOption[];
+    spielklassen: WamFilterOption[];
+    ligaListe?: {
+      ligen: WamLigaEintrag[];
+      hasMoreData: boolean;
+      size: number;
+    };
+  };
+}
+
+// Competition Table Response
+export interface DBBTabellenEintrag {
+  position: number;
+  teamId: number;
+  teamName: string;
+  clubId: number;
+  clubName: string;
+  games: number;
+  wins: number;
+  losses: number;
+  points: number;
+  scoredPoints: number;
+  concededPoints: number;
+  pointsDifference: number;
+}
+
+export interface DBBTableResponse {
+  ligaId: number;
+  liganame: string;
+  teams: DBBTabellenEintrag[];
+}
+
+// Competition Spielplan Response
+export interface DBBSpielplanEintrag {
+  matchId: number;
+  gameNumber: number;
+  gameDay: number;
+  date: string;
+  time: string;
+  homeTeam: {
+    teamId: number;
+    teamName: string;
+    clubId: number;
+    clubName: string;
+  };
+  awayTeam: {
+    teamId: number;
+    teamName: string;
+    clubId: number;
+    clubName: string;
+  };
+  venue?: {
+    name: string;
+    address?: string;
+  };
+  status: string;
+  homeScore?: number;
+  awayScore?: number;
+}
+
+export interface DBBSpielplanResponse {
+  ligaId: number;
+  liganame: string;
+  games: DBBSpielplanEintrag[];
+}
+
+// Match Info Response
+export interface DBBPlayer {
+  playerId: number;
+  firstName: string;
+  lastName: string;
+  jerseyNumber?: number;
+  tnaNumber?: string;  // Letzte 3 Stellen
+}
+
+export interface DBBTeamWithPlayers {
+  teamId: number;
+  teamName: string;
+  clubId: number;
+  clubName: string;
+  coach?: string;
+  assistant?: string;
+  players: DBBPlayer[];
+}
+
+export interface DBBMatchInfoResponse {
+  matchId: number;
+  gameNumber: number;
+  date: string;
+  time: string;
+  ligaId: number;
+  homeTeam: DBBTeamWithPlayers;
+  awayTeam: DBBTeamWithPlayers;
+  venue?: {
+    name: string;
+    address?: string;
+    city?: string;
+    zipCode?: string;
+  };
+  score?: {
+    home: number;
+    away: number;
+  };
+  referees?: string[];
 }
 
 // Onboarding State

@@ -1,0 +1,15 @@
+meta {
+  name: competition-spielplan-id-_ligaId
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{baseURL}}/rest/competition/spielplan/id/:ligaId
+  body: none
+  auth: none
+}
+
+params:path {
+  ligaId: 47075
+}

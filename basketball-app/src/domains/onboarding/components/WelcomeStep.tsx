@@ -1,101 +1,84 @@
 /**
- * Welcome Step - KORRIGIERT
- * 
- * Erklärt den BBB-basierten Onboarding-Prozess
+ * Welcome Step - Erster Schritt im Onboarding
  */
 
 import React from 'react';
+import { Trophy, Users, Calendar, BarChart } from 'lucide-react';
 import { useOnboardingStore } from '@/stores/onboardingStore';
-import { ArrowRight, Link2, Users, ShirtIcon, Trophy } from 'lucide-react';
 
 export function WelcomeStep() {
-  const setStep = useOnboardingStore(state => state.setStep);
+  const nextStep = useOnboardingStore(state => state.nextStep);
 
-  const handleStart = () => {
-    setStep('bbb_url');
-  };
+  const features = [
+    {
+      icon: Users,
+      title: 'Team Management',
+      description: 'Verwalte deine Spieler und Teams'
+    },
+    {
+      icon: Calendar,
+      title: 'Spielplan',
+      description: 'Behalte alle Spiele im Blick'
+    },
+    {
+      icon: Trophy,
+      title: 'Live Spielbogen',
+      description: 'Erfasse Spielstatistiken in Echtzeit'
+    },
+    {
+      icon: BarChart,
+      title: 'Statistiken',
+      description: 'Analysiere die Entwicklung deines Teams'
+    }
+  ];
 
   return (
-    <div className="text-center">
-      <div className="mb-8">
-        <div className="inline-flex items-center justify-center w-20 h-20 bg-primary-100 rounded-full mb-4">
-          <Trophy className="w-10 h-10 text-primary-600" />
+    <div className="max-w-2xl mx-auto">
+      <div className="text-center mb-8">
+        <div className="inline-flex items-center justify-center w-20 h-20 bg-orange-100 rounded-full mb-4">
+          <span className="text-4xl">🏀</span>
         </div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">
-          Willkommen beim Basketball Team Manager!
-        </h2>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          Willkommen zur Basketball Trainer App
+        </h1>
         <p className="text-lg text-gray-600">
-          Lass uns zusammen dein Team einrichten.
+          Deine digitale Unterstützung für erfolgreiches Coaching
         </p>
       </div>
 
-      {/* Feature Overview */}
-      <div className="grid gap-4 mb-8 text-left">
-        <div className="flex items-start gap-3 p-4 bg-primary-50 rounded-lg">
-          <Link2 className="w-6 h-6 text-primary-600 flex-shrink-0 mt-0.5" />
-          <div>
-            <h3 className="font-semibold text-gray-900 mb-1">
-              Automatischer Import von basketball-bund.net
-            </h3>
-            <p className="text-sm text-gray-600">
-              Eine URL genügt! Wir importieren automatisch deine Liga, alle Teams, 
-              den vollständigen Spielplan und Gegner-Informationen.
-            </p>
-          </div>
-        </div>
-
-        <div className="flex items-start gap-3 p-4 bg-primary-50 rounded-lg">
-          <Users className="w-6 h-6 text-primary-600 flex-shrink-0 mt-0.5" />
-          <div>
-            <h3 className="font-semibold text-gray-900 mb-1">
-              Spieler & Trikots per CSV
-            </h3>
-            <p className="text-sm text-gray-600">
-              Einfacher CSV-Import für deine Spieler-Liste und Trikot-Verwaltung.
-            </p>
-          </div>
-        </div>
-
-        <div className="flex items-start gap-3 p-4 bg-primary-50 rounded-lg">
-          <ShirtIcon className="w-6 h-6 text-primary-600 flex-shrink-0 mt-0.5" />
-          <div>
-            <h3 className="font-semibold text-gray-900 mb-1">
-              Offline-Fähig & DSGVO-konform
-            </h3>
-            <p className="text-sm text-gray-600">
-              Alle Daten bleiben auf deinem Gerät. Funktioniert auch ohne Internet.
-            </p>
-          </div>
-        </div>
+      <div className="grid grid-cols-2 gap-4 mb-8">
+        {features.map((feature, index) => {
+          const Icon = feature.icon;
+          return (
+            <div
+              key={index}
+              className="bg-white p-4 rounded-lg border border-gray-200 hover:border-orange-300 transition-colors"
+            >
+              <Icon className="w-8 h-8 text-orange-500 mb-2" />
+              <h3 className="font-semibold text-gray-900 mb-1">
+                {feature.title}
+              </h3>
+              <p className="text-sm text-gray-600">
+                {feature.description}
+              </p>
+            </div>
+          );
+        })}
       </div>
 
-      {/* What's Next */}
-      <div className="alert-info mb-6">
-        <h3 className="font-semibold mb-2">
-          Was erwartet dich:
-        </h3>
-        <ul className="text-left text-sm space-y-1">
-          <li>✅ <strong>Liga importieren</strong> – Eine basketball-bund.net URL eingeben</li>
-          <li>✅ <strong>Team wählen</strong> – Dein Team aus der Liste auswählen</li>
-          <li>✅ <strong>Spieler importieren</strong> – CSV-Datei hochladen</li>
-          <li>✅ <strong>Trikots importieren</strong> – CSV-Datei hochladen</li>
-          <li>✅ <strong>Fertig!</strong> – Spielplan ist automatisch synchronisiert</li>
-        </ul>
+      <div className="bg-blue-50 p-4 rounded-lg mb-6">
+        <p className="text-sm text-blue-800">
+          <strong>Tipp:</strong> Die Einrichtung dauert nur wenige Minuten. 
+          Du kannst deine Liga-Daten direkt vom DBB importieren!
+        </p>
       </div>
 
-      {/* Start Button */}
       <button
-        onClick={handleStart}
-        className="btn-primary inline-flex items-center gap-2"
-        type="button"
+        onClick={() => nextStep()}
+        className="w-full bg-orange-500 text-white py-3 px-6 rounded-lg font-semibold hover:bg-orange-600 transition-colors"
       >
-        Los geht's!
-        <ArrowRight className="w-5 h-5" aria-hidden="true" />
+        Los geht's! 🚀
       </button>
-
-      <p className="mt-4 text-sm text-gray-500">
-        Geschätzte Dauer: 3-5 Minuten
-      </p>
     </div>
   );
 }

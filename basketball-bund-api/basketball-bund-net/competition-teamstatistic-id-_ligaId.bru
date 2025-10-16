@@ -1,0 +1,15 @@
+meta {
+  name: competition-teamstatistic-id-_ligaId
+  type: http
+  seq: 8
+}
+
+get {
+  url: {{baseURL}}/rest/competition/teamstatistic/id/:ligaId
+  body: none
+  auth: none
+}
+
+params:path {
+  ligaId: 51492
+}

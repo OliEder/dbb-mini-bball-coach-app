@@ -1,0 +1,857 @@
+{
+  "consumer": {
+    "name": "Basketball-PWA"
+  },
+  "interactions": [
+    {
+      "description": "a request for competition spielplan",
+      "providerStates": [
+        {
+          "name": "Liga has scheduled games"
+        }
+      ],
+      "request": {
+        "headers": {
+          "Accept": "application/json"
+        },
+        "method": "GET",
+        "path": "/rest/competition/spielplan/id/12345"
+      },
+      "response": {
+        "body": {
+          "games": [
+            {
+              "awayTeam": {
+                "clubId": 20,
+                "clubName": "TSV Neumarkt",
+                "teamId": 222,
+                "teamName": "TSV Neumarkt U10"
+              },
+              "date": "2025-11-01",
+              "gameDay": 1,
+              "gameNumber": 1,
+              "homeTeam": {
+                "clubId": 10,
+                "clubName": "SV Postbauer",
+                "teamId": 111,
+                "teamName": "SV Postbauer U10"
+              },
+              "matchId": 99991,
+              "status": "scheduled",
+              "time": "10:00",
+              "venue": {
+                "address": "Hauptstraße 10",
+                "name": "Sporthalle Postbauer"
+              }
+            }
+          ],
+          "ligaId": 12345,
+          "liganame": "U10 Bezirksliga Oberpfalz"
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "matchingRules": {
+          "body": {
+            "$.games": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type",
+                  "min": 1
+                }
+              ]
+            },
+            "$.games[*].awayTeam": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.games[*].date": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.games[*].gameDay": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.games[*].gameNumber": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.games[*].homeTeam": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.games[*].matchId": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.games[*].status": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.games[*].time": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.games[*].venue": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.ligaId": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.liganame": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            }
+          }
+        },
+        "status": 200
+      }
+    },
+    {
+      "description": "a request for competition table",
+      "providerStates": [
+        {
+          "name": "Liga exists with teams"
+        }
+      ],
+      "request": {
+        "headers": {
+          "Accept": "application/json"
+        },
+        "method": "GET",
+        "path": "/rest/competition/table/id/12345"
+      },
+      "response": {
+        "body": {
+          "ligaId": 12345,
+          "liganame": "U10 Bezirksliga Oberpfalz",
+          "teams": [
+            {
+              "clubId": 10,
+              "clubName": "SV Postbauer",
+              "concededPoints": 380,
+              "games": 10,
+              "losses": 2,
+              "points": 16,
+              "pointsDifference": 70,
+              "position": 1,
+              "scoredPoints": 450,
+              "teamId": 111,
+              "teamName": "SV Postbauer U10",
+              "wins": 8
+            }
+          ]
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "matchingRules": {
+          "body": {
+            "$.ligaId": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.liganame": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.teams": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type",
+                  "min": 1
+                }
+              ]
+            },
+            "$.teams[*].clubId": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.teams[*].clubName": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.teams[*].concededPoints": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.teams[*].games": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.teams[*].losses": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.teams[*].points": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.teams[*].pointsDifference": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.teams[*].position": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.teams[*].scoredPoints": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.teams[*].teamId": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.teams[*].teamName": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.teams[*].wins": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            }
+          }
+        },
+        "status": 200
+      }
+    },
+    {
+      "description": "a request for match info",
+      "providerStates": [
+        {
+          "name": "Match exists with full info"
+        }
+      ],
+      "request": {
+        "headers": {
+          "Accept": "application/json"
+        },
+        "method": "GET",
+        "path": "/rest/match/id/99991/matchInfo"
+      },
+      "response": {
+        "body": {
+          "awayTeam": {
+            "clubId": 20,
+            "clubName": "TSV Neumarkt",
+            "coach": "Hans Trainer",
+            "players": [],
+            "teamId": 222,
+            "teamName": "TSV Neumarkt U10"
+          },
+          "date": "2025-11-01",
+          "gameNumber": 1,
+          "homeTeam": {
+            "clubId": 10,
+            "clubName": "SV Postbauer",
+            "coach": "Oliver Marcuseder",
+            "players": [
+              {
+                "firstName": "Max",
+                "jerseyNumber": 4,
+                "lastName": "Mustermann",
+                "playerId": 1001,
+                "tnaNumber": "123"
+              }
+            ],
+            "teamId": 111,
+            "teamName": "SV Postbauer U10"
+          },
+          "ligaId": 12345,
+          "matchId": 99991,
+          "time": "10:00",
+          "venue": {
+            "address": "Hauptstraße 10",
+            "city": "Postbauer-Heng",
+            "name": "Sporthalle Postbauer",
+            "zipCode": "92353"
+          }
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "matchingRules": {
+          "body": {
+            "$.awayTeam": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.date": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.gameNumber": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.homeTeam": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.homeTeam.players": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type",
+                  "min": 1
+                }
+              ]
+            },
+            "$.ligaId": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.matchId": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.time": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.venue": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            }
+          }
+        },
+        "status": 200
+      }
+    },
+    {
+      "description": "a request for non-existent liga",
+      "providerStates": [
+        {
+          "name": "Liga does not exist"
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "path": "/rest/competition/table/id/99999"
+      },
+      "response": {
+        "body": {
+          "code": "LIGA_NOT_FOUND",
+          "error": "Liga not found"
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "matchingRules": {
+          "body": {
+            "$.code": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.error": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            }
+          }
+        },
+        "status": 404
+      }
+    },
+    {
+      "description": "a request to filter ligen",
+      "providerStates": [
+        {
+          "name": "Filter options available"
+        }
+      ],
+      "request": {
+        "body": {
+          "akgGeschlechtIds": [],
+          "altersklasseIds": [
+            10
+          ],
+          "gebietIds": [],
+          "ligatypIds": [],
+          "sortBy": 1,
+          "spielklasseIds": [],
+          "token": 0,
+          "verbandIds": [
+            2
+          ]
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "method": "POST",
+        "path": "/rest/wam/data"
+      },
+      "response": {
+        "body": {
+          "data": {
+            "altersklassen": [
+              {
+                "hits": 50,
+                "id": 10,
+                "label": "U10"
+              }
+            ],
+            "gebiete": [],
+            "ligaListe": {
+              "hasMoreData": false,
+              "ligen": [
+                {
+                  "akName": "U10",
+                  "bezirkName": "Oberpfalz",
+                  "bezirknr": 5,
+                  "geschlecht": "mixed",
+                  "ligaId": 12345,
+                  "liganame": "U10 Bezirksliga Oberpfalz",
+                  "liganr": 100,
+                  "skName": "Bezirksliga",
+                  "verbandId": 2,
+                  "verbandName": "Bayern"
+                }
+              ],
+              "size": 1
+            },
+            "spielklassen": [],
+            "verbaende": [
+              {
+                "hits": 100,
+                "id": 2,
+                "label": "Bayern"
+              }
+            ]
+          }
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "matchingRules": {
+          "body": {
+            "$.data.altersklassen": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type",
+                  "min": 1
+                }
+              ]
+            },
+            "$.data.altersklassen[*].hits": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.data.altersklassen[*].id": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.data.altersklassen[*].label": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.data.ligaListe": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.data.ligaListe.hasMoreData": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.data.ligaListe.ligen": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type",
+                  "min": 1
+                }
+              ]
+            },
+            "$.data.ligaListe.ligen[*].akName": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.data.ligaListe.ligen[*].bezirkName": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.data.ligaListe.ligen[*].bezirknr": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.data.ligaListe.ligen[*].geschlecht": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.data.ligaListe.ligen[*].ligaId": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.data.ligaListe.ligen[*].liganame": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.data.ligaListe.ligen[*].liganr": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.data.ligaListe.ligen[*].skName": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.data.ligaListe.ligen[*].verbandId": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.data.ligaListe.ligen[*].verbandName": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.data.ligaListe.size": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.data.verbaende": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type",
+                  "min": 1
+                }
+              ]
+            },
+            "$.data.verbaende[*].hits": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.data.verbaende[*].id": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.data.verbaende[*].label": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            }
+          }
+        },
+        "status": 200
+      }
+    },
+    {
+      "description": "multiple requests for complete sync",
+      "providerStates": [
+        {
+          "name": "Liga exists with full data"
+        }
+      ],
+      "request": {
+        "headers": {
+          "Accept": "application/json"
+        },
+        "method": "GET",
+        "path": "/rest/competition/table/id/12345"
+      },
+      "response": {
+        "body": {
+          "ligaId": 12345,
+          "liganame": "Test Liga",
+          "teams": [
+            {
+              "clubId": 10,
+              "clubName": "Club A",
+              "concededPoints": 90,
+              "games": 5,
+              "losses": 2,
+              "points": 6,
+              "pointsDifference": 10,
+              "position": 1,
+              "scoredPoints": 100,
+              "teamId": 111,
+              "teamName": "Team A",
+              "wins": 3
+            }
+          ]
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "status": 200
+      }
+    },
+    {
+      "description": "too many requests",
+      "providerStates": [
+        {
+          "name": "Rate limit exceeded"
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "path": "/rest/competition/table/id/12345"
+      },
+      "response": {
+        "body": {
+          "error": "Rate limit exceeded",
+          "retryAfter": 60
+        },
+        "headers": {
+          "Content-Type": "application/json",
+          "Retry-After": "60"
+        },
+        "matchingRules": {
+          "body": {
+            "$.error": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.retryAfter": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            }
+          }
+        },
+        "status": 429
+      }
+    }
+  ],
+  "metadata": {
+    "pact-js": {
+      "version": "16.0.0"
+    },
+    "pactRust": {
+      "ffi": "0.4.28",
+      "models": "1.3.5"
+    },
+    "pactSpecification": {
+      "version": "3.0.0"
+    }
+  },
+  "provider": {
+    "name": "DBB-API"
+  }
+}
