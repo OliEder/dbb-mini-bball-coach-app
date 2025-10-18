@@ -12,7 +12,8 @@ import {
   VerbandStep,
   AltersklassenStep,
   GebietStep,
-  LigenLoadingStep
+  LigenLoadingStep,
+  VereinStep
 } from './v2';
 import type { WamLigaEintrag, DBBTabellenEintrag } from '@shared/types';
 
@@ -23,6 +24,8 @@ export const OnboardingV2Container: React.FC = () => {
     selectedVerband,
     selectedAltersklassen,
     selectedGebiet,
+    geladeneTeams,
+    selectedVerein,
     
     // Actions
     setStep,
@@ -34,6 +37,7 @@ export const OnboardingV2Container: React.FC = () => {
     setGebiet,
     setLigen,
     addTeamsForLiga,
+    selectVerein,
     setError
   } = useOnboardingV2Store();
   
@@ -132,8 +136,29 @@ export const OnboardingV2Container: React.FC = () => {
           />
         );
       
-      // TODO: Weitere Steps implementieren
       case 'verein':
+        return (
+          <VereinStep
+            teamsByLiga={geladeneTeams}
+            initialSelection={selectedVerein}
+            onNext={(verein) => {
+              selectVerein(verein);
+              // Speichere auch die Teams des Vereins für den nächsten Schritt
+              const vereinTeams: DBBTabellenEintrag[] = [];
+              geladeneTeams.forEach(teams => {
+                teams.forEach(team => {
+                  if (team.clubName === verein.name || 
+                      team.clubId.toString() === verein.extern_verein_id) {
+                    vereinTeams.push(team);
+                  }
+                });
+              });
+              // TODO: Speichere vereinTeams im Store für Team-Select Step
+              nextStep();
+            }}
+            onBack={previousStep}
+          />
+        );
       case 'team-select':
       case 'sync':
       case 'team-selection':

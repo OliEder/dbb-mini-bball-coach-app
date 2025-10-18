@@ -80,6 +80,7 @@ export class BBBApiService {
 
   /**
    * Fetch mit CORS-Proxy Fallback
+   * Fix: Verwende rest parameters statt arguments (TypeScript strict mode)
    */
   private async fetchWithFallback(url: string, options?: RequestInit): Promise<Response> {
     // Skip CORS proxies if URL is localhost (for testing)

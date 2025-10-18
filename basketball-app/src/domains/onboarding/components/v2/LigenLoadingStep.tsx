@@ -61,10 +61,11 @@ export const LigenLoadingStep: React.FC<LigenLoadingStepProps> = ({
       });
       
       // 1. Lade alle Ligen basierend auf Filtern
+      // NEU: Lade ALLE Ligen des Verbands für bessere Verein-Erkennung
       const ligenResponse = await apiService.getWamData({
         token: 3,
         verbandIds: [verbandId],
-        gebietIds: [gebietId],
+        gebietIds: gebietId ? [gebietId] : [],
         ligatypIds: [],
         akgGeschlechtIds: [],
         altersklasseIds: altersklassenIds,
