@@ -3,7 +3,8 @@
  */
 
 import { db } from '@/shared/db/database';
-import { bbbParserService } from '@/domains/bbb/services/BBBParserService';
+// TODO: BBBParserService fehlt - wird im Onboarding-Refactoring erstellt
+// import { bbbParserService } from '@/domains/bbb-api/services/BBBParserService';
 import type { Spiel } from '@/shared/types';
 
 export interface TabellenEintrag {

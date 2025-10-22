@@ -37,6 +37,7 @@ describe('SpielService Integration Tests', () => {
       altersklasse: 'U10',
       saison: '2025/2026',
       trainer: 'Integration Trainer',
+      team_typ: 'eigen',
       created_at: new Date(),
     };
     await db.teams.add(testTeam);

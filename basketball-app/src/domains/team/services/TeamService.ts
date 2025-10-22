@@ -31,6 +31,7 @@ export class TeamService {
       altersklasse: input.altersklasse,
       saison: input.saison,
       trainer: input.trainer,
+      team_typ: 'eigen',  // Eigenes Team per default
       leistungsorientiert: input.leistungsorientiert,
       bbb_mannschafts_id: input.bbb_mannschafts_id,
       created_at: new Date(),
