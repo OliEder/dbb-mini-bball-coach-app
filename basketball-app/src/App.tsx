@@ -8,7 +8,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useAppStore } from './stores/appStore';
 import { initializeDatabase } from './shared/db/database';
-// import { OnboardingContainer } from './domains/onboarding/components/OnboardingContainer';
 import { OnboardingV2Container } from './domains/onboarding/components/OnboardingV2Container';
 import { Dashboard } from './domains/dashboard/Dashboard';
 

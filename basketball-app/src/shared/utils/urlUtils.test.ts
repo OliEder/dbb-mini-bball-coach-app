@@ -98,7 +98,7 @@ describe('normalizeBBBUrl', () => {
 });
 
 describe('BBBUrls', () => {
-  it('sollte korrekte API URLs generieren', () => {
+  it('sollte korrekte REST API URLs generieren', () => {
     expect(BBBUrls.tabelle(51961))
       .toBe('https://www.basketball-bund.net/rest/competition/table/id/51961');
     
@@ -107,14 +107,9 @@ describe('BBBUrls', () => {
     
     expect(BBBUrls.matchInfo(12345))
       .toBe('https://www.basketball-bund.net/rest/match/id/12345/matchInfo');
-  });
-
-  it('sollte korrekte HTML URLs generieren', () => {
-    expect(BBBUrls.htmlTabelle(51961))
-      .toContain('liga_id=51961');
     
-    expect(BBBUrls.htmlSpielplan(51961))
-      .toContain('liga_id=51961');
+    expect(BBBUrls.wamData())
+      .toBe('https://www.basketball-bund.net/rest/wam/data');
   });
 });
 

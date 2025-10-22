@@ -1,7 +1,7 @@
 /**
  * URL Utilities
  * 
- * Helfer-Funktionen für URL-Verarbeitung
+ * Helfer-Funktionen für URL-Verarbeitung und BBB API
  */
 
 /**
@@ -115,24 +115,37 @@ export function normalizeBBBUrl(url: string): string {
 }
 
 /**
- * Erstellt BBB API URLs
+ * BBB REST API URLs
+ * Alle Endpoints verwenden JSON-Responses
  */
 export const BBBUrls = {
+  /**
+   * Tabelle als JSON
+   * GET /rest/competition/table/id/{ligaId}
+   */
   tabelle: (ligaId: number) => 
     `https://www.basketball-bund.net/rest/competition/table/id/${ligaId}`,
     
+  /**
+   * Spielplan als JSON
+   * GET /rest/competition/spielplan/id/{ligaId}
+   */
   spielplan: (ligaId: number) => 
     `https://www.basketball-bund.net/rest/competition/spielplan/id/${ligaId}`,
     
+  /**
+   * Match-Details als JSON
+   * GET /rest/match/id/{matchId}/matchInfo
+   */
   matchInfo: (matchId: number) => 
     `https://www.basketball-bund.net/rest/match/id/${matchId}/matchInfo`,
     
-  // Legacy HTML URLs (for parsing)
-  htmlTabelle: (ligaId: number) =>
-    `https://www.basketball-bund.net/public/tabelle.jsp?print=1&viewDescKey=sport.dbb.views.TabellePublicView/index.jsp_&liga_id=${ligaId}`,
-    
-  htmlSpielplan: (ligaId: number) =>
-    `https://www.basketball-bund.net/public/ergebnisse.jsp?print=1&viewDescKey=sport.dbb.liga.ErgebnisseViewPublic/index.jsp_&liga_id=${ligaId}`,
+  /**
+   * WAM Data Filter (POST)
+   * POST /rest/wam/data
+   */
+  wamData: () =>
+    `https://www.basketball-bund.net/rest/wam/data`,
 };
 
 /**

@@ -12,6 +12,7 @@ import type {
   DBBTableResponse,
   DBBSpielplanResponse,
   DBBMatchInfoResponse,
+  DBBPlayerDetailsResponse,
 } from '../../../../shared/types';
 
 // Mock fetch
@@ -283,8 +284,8 @@ describe('BBBApiService', () => {
       const testUrl = 'https://test.com/api';
 
       expect(proxies[0] + encodeURIComponent(testUrl)).toContain('corsproxy.io');
-      expect(proxies.some(p => p.includes('cors-anywhere.herokuapp.com'))).toBeTruthy();
-      expect(proxies.some(p => p.includes('allorigins.win'))).toBeTruthy();
+      expect(proxies.some((p: string) => p.includes('cors-anywhere.herokuapp.com'))).toBeTruthy();
+      expect(proxies.some((p: string) => p.includes('allorigins.win'))).toBeTruthy();
     });
   });
 
@@ -475,6 +476,98 @@ describe('BBBApiService', () => {
       expect(BBBApiService.extractLigaId('')).toBeNull();
       expect(BBBApiService.extractLigaId('not-a-url')).toBeNull();
       expect(BBBApiService.extractLigaId('javascript:alert(1)')).toBeNull();
+    });
+  });
+
+  // ==================== NEU: getSpielerDetails Tests ====================
+  describe('getSpielerDetails', () => {
+    it('sollte Spieler-Details abrufen', async () => {
+      const playerId = 12345;
+      const mockResponse: DBBPlayerDetailsResponse = {
+        playerId: 12345,
+        firstName: 'Max',
+        lastName: 'Mustermann',
+        fullName: 'Max Mustermann',
+        dateOfBirth: '2015-03-15',
+        age: 10,
+        jerseyNumber: 7,
+        club: {
+          clubId: 999,
+          clubName: 'Test Basketball Club',
+          city: 'München',
+        },
+        currentTeam: {
+          teamId: 555,
+          teamName: 'U12 Test Team',
+          altersklasse: 'U12',
+        },
+      };
+
+      vi.mocked(global.fetch).mockResolvedValueOnce({
+        ok: true,
+        json: vi.fn().mockResolvedValue(mockResponse),
+      } as any);
+
+      const result = await service.getSpielerDetails(playerId);
+
+      // Prüfe: Wurde die richtige URL aufgerufen?
+      expect(global.fetch).toHaveBeenCalledWith(
+        expect.stringContaining(`/rest/player/id/${playerId}/details`),
+        expect.any(Object)
+      );
+      
+      // Prüfe: Sind die Daten korrekt zurückgegeben?
+      expect(result).toEqual(mockResponse);
+      expect(result.fullName).toBe('Max Mustermann');
+      expect(result.age).toBe(10);
+    });
+
+    it('sollte mit fehlenden optionalen Feldern umgehen', async () => {
+      const playerId = 99999;
+      const mockResponse: DBBPlayerDetailsResponse = {
+        playerId: 99999,
+        firstName: 'Lisa',
+        lastName: 'Test',
+        fullName: 'Lisa Test',
+        // Keine optionalen Felder wie dateOfBirth, jerseyNumber etc.
+        club: {
+          clubId: 111,
+          clubName: 'Mini Club',
+        },
+      };
+
+      vi.mocked(global.fetch).mockResolvedValueOnce({
+        ok: true,
+        json: vi.fn().mockResolvedValue(mockResponse),
+      } as any);
+
+      const result = await service.getSpielerDetails(playerId);
+
+      expect(result.playerId).toBe(99999);
+      expect(result.dateOfBirth).toBeUndefined();
+      expect(result.currentTeam).toBeUndefined();
+    });
+
+    it('sollte Fehler bei ungültiger Spieler-ID werfen', async () => {
+      const invalidPlayerId = -1;
+      
+      await expect(
+        service.getSpielerDetails(invalidPlayerId)
+      ).rejects.toThrow('Invalid player ID');
+    });
+
+    it('sollte Fehler bei nicht gefundenem Spieler behandeln', async () => {
+      const playerId = 999999999;
+      
+      vi.mocked(global.fetch).mockResolvedValueOnce({
+        ok: false,
+        status: 404,
+        json: vi.fn().mockResolvedValue({ error: 'Player not found' }),
+      } as any);
+
+      await expect(
+        service.getSpielerDetails(playerId)
+      ).rejects.toThrow();
     });
   });
 

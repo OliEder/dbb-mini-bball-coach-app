@@ -10,7 +10,8 @@ import type {
   DBBTableResponse,
   DBBTabellenEintrag,
   DBBSpielplanResponse,
-  DBBMatchInfoResponse
+  DBBMatchInfoResponse,
+  DBBPlayerDetailsResponse
 } from '../../../shared/types';
 
 export class BBBApiService {
@@ -299,6 +300,44 @@ export class BBBApiService {
       }
     );
     return await response.json();
+  }
+
+  /**
+   * GET /rest/player/id/{playerId}/details
+   * 
+   * Ruft detaillierte Informationen zu einem Spieler ab.
+   * 
+   * @param playerId - Die eindeutige Spieler-ID aus der DBB API
+   * @returns Promise mit Spieler-Details
+   * @throws Error wenn playerId ungültig ist oder API-Call fehlschlägt
+   * 
+   * @example
+   * ```typescript
+   * const details = await service.getSpielerDetails(12345);
+   * console.log(details.fullName); // "Max Mustermann"
+   * ```
+   */
+  async getSpielerDetails(playerId: number): Promise<DBBPlayerDetailsResponse> {
+    // Validierung: Spieler-ID muss positive Zahl sein
+    if (!playerId || playerId <= 0 || !Number.isInteger(playerId)) {
+      throw new Error('Invalid player ID: must be a positive integer');
+    }
+
+    // API-Call mit CORS-Fallback
+    const response = await this.fetchWithFallback(
+      `${this.BASE_URL}/rest/player/id/${playerId}/details`,
+      {
+        headers: {
+          'Accept': 'application/json',
+        },
+      }
+    );
+
+    // Response zu JSON parsen
+    const data = await response.json();
+    
+    // Rückgabe mit Type-Safety
+    return data;
   }
 
   /**

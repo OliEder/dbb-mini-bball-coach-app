@@ -123,7 +123,7 @@ export class BBBSyncService {
 
         // Sync Spieler des Heim-Teams
         if (matchInfo.homeTeam.players && matchInfo.homeTeam.players.length > 0) {
-          const heimTeam = await db.teams.get(spiel.heim_team_id);
+          const heimTeam = spiel.heim_team_id ? await db.teams.get(spiel.heim_team_id) : undefined;
           if (heimTeam) {
             for (const player of matchInfo.homeTeam.players) {
               await this.createOrUpdateSpieler({
@@ -140,7 +140,7 @@ export class BBBSyncService {
 
         // Sync Spieler des Gast-Teams
         if (matchInfo.awayTeam.players && matchInfo.awayTeam.players.length > 0) {
-          const gastTeam = await db.teams.get(spiel.gast_team_id);
+          const gastTeam = spiel.gast_team_id ? await db.teams.get(spiel.gast_team_id) : undefined;
           if (gastTeam) {
             for (const player of matchInfo.awayTeam.players) {
               await this.createOrUpdateSpieler({

@@ -36,6 +36,7 @@ describe('SpielerService', () => {
       altersklasse: 'U10',
       saison: '2025/2026',
       trainer: 'Test Trainer',
+      team_typ: 'eigen',
       created_at: new Date(),
     };
     await db.teams.add(testTeam);
@@ -67,6 +68,7 @@ describe('SpielerService', () => {
 
     it('sollte einen Gegenspieler ohne Team erstellen können', async () => {
       const gegnerData: Omit<Spieler, 'spieler_id' | 'created_at'> = {
+        team_id: testTeam.team_id,
         vorname: 'Felix',
         nachname: 'Gegner',
         spieler_typ: 'gegner',

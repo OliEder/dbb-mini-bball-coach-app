@@ -595,6 +595,36 @@ export interface DBBPlayer {
   tnaNumber?: string;  // Letzte 3 Stellen
 }
 
+// Player Details Response (NEU - für getSpielerDetails)
+export interface DBBPlayerDetailsResponse {
+  playerId: number;
+  firstName: string;
+  lastName: string;
+  fullName: string;  // "Vorname Nachname"
+  dateOfBirth?: string;  // ISO Format: "2015-03-15"
+  age?: number;
+  jerseyNumber?: number;
+  tnaNumber?: string;
+  position?: string;  // Guard, Forward, Center
+  height?: number;  // in cm
+  weight?: number;  // in kg
+  club: {
+    clubId: number;
+    clubName: string;
+    city?: string;
+  };
+  currentTeam?: {
+    teamId: number;
+    teamName: string;
+    altersklasse: string;
+  };
+  statistics?: {
+    gamesPlayed: number;
+    pointsTotal: number;
+    pointsAverage: number;
+  };
+}
+
 export interface DBBTeamWithPlayers {
   teamId: number;
   teamName: string;
