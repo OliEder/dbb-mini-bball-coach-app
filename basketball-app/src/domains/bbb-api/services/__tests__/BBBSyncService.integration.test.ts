@@ -41,103 +41,61 @@ describe('BBBSyncService Integration Tests', () => {
     it('sollte echte API-Antwortstrukturen korrekt verarbeiten', async () => {
       const ligaId = 12345;
 
-      // Mock real API responses based on actual DBB API structure
+      // Mock real API responses with new wrapper format
       const tableResponse = {
-        ligaId: ligaId,
-        liganame: 'U10 Bezirksliga Oberpfalz',
-        teams: [
-          {
-            position: 1,
-            teamId: 111,
-            teamName: 'SV Postbauer U10',
-            clubId: 10,
-            clubName: 'SV Postbauer',
-            games: 10,
-            wins: 8,
-            losses: 2,
-            points: 16,
-            scoredPoints: 450,
-            concededPoints: 380,
-            pointsDifference: 70,
-          },
-          {
-            position: 2,
-            teamId: 222,
-            teamName: 'TSV Neumarkt U10',
-            clubId: 20,
-            clubName: 'TSV Neumarkt',
-            games: 10,
-            wins: 6,
-            losses: 4,
-            points: 12,
-            scoredPoints: 400,
-            concededPoints: 380,
-            pointsDifference: 20,
-          }
-        ]
+        data: {
+          ligaId: ligaId,
+          liganame: 'U10 Bezirksliga Oberpfalz',
+          teams: [
+            {
+              platzierung: 1,
+              teamId: 111,
+              teamname: 'SV Postbauer U10',
+              spiele: 10,
+              gewonnen: 8,
+              verloren: 2,
+              punkte: 16,
+              korbpunkteGemacht: 450,
+              korbpunkteGegen: 380,
+              differenz: 70,
+            },
+            {
+              platzierung: 2,
+              teamId: 222,
+              teamname: 'TSV Neumarkt U10',
+              spiele: 10,
+              gewonnen: 6,
+              verloren: 4,
+              punkte: 12,
+              korbpunkteGemacht: 400,
+              korbpunkteGegen: 380,
+              differenz: 20,
+            }
+          ]
+        }
       };
 
       const spielplanResponse = {
-        ligaId: ligaId,
-        liganame: 'U10 Bezirksliga Oberpfalz',
-        games: [
-          {
-            matchId: 99991,
-            gameNumber: 1,
-            gameDay: 1,
-            date: '2025-11-01',
-            time: '10:00',
-            homeTeam: {
-              teamId: 111,
-              teamName: 'SV Postbauer U10',
-              clubId: 10,
-              clubName: 'SV Postbauer',
-            },
-            awayTeam: {
-              teamId: 222,
-              teamName: 'TSV Neumarkt U10',
-              clubId: 20,
-              clubName: 'TSV Neumarkt',
-            },
-            venue: {
-              name: 'Sporthalle Postbauer',
-              address: 'Hauptstraße 10, 92353 Postbauer-Heng',
-            },
-            status: 'scheduled',
-          }
-        ]
-      };
-
-      // Mock Spielplan Response
-      const mockSpielplanResponse: DBBSpielplanResponse = {
-        ligaId: ligaId,
-        liganame: 'U10 Bezirksliga Oberpfalz',
-        games: [
-          {
-            matchId: 99991,
-            gameNumber: 1,
-            gameDay: 1,
-            date: '2025-11-01',
-            time: '10:00',
-            homeTeam: {
-              teamId: 111,
-              teamName: 'SV Postbauer U10',
-              clubId: 10,
-              clubName: 'SV Postbauer',
-            },
-            awayTeam: {
-              teamId: 222,
-              teamName: 'TSV Neumarkt U10',
-              clubId: 20,
-              clubName: 'TSV Neumarkt',
-            },
-            venue: {
-              name: 'Sporthalle Postbauer',
-              address: 'Hauptstraße 10, 92353 Postbauer-Heng',
-            },
-            status: 'scheduled',
-          }
-        ]
+        data: {
+          ligaId: ligaId,
+          liganame: 'U10 Bezirksliga Oberpfalz',
+          spielplan: [
+            {
+              spielid: 99991,
+              nr: 1,
+              tag: 1,
+              datum: '2025-11-01',
+              uhrzeit: '10:00',
+              heimteamid: 111,
+              heimteamname: 'SV Postbauer U10',
+              gastteamid: 222,
+              gastteamname: 'TSV Neumarkt U10',
+              halle: 'Sporthalle Postbauer',
+              heimTore: null,
+              gastTore: null,
+            }
+          ]
+        }
       };
 
       // Setup fetch responses
@@ -148,7 +106,7 @@ describe('BBBSyncService Integration Tests', () => {
         })
         .mockResolvedValueOnce({
           ok: true,
-          json: async () => mockSpielplanResponse,  // Fix variable name
+          json: async () => spielplanResponse,
         });
 
       // Execute real sync - Skip Match Info für schnelleren Test
@@ -178,26 +136,30 @@ describe('BBBSyncService Integration Tests', () => {
     it('sollte CORS-Proxy-Fallback verwenden', async () => {
       const ligaId = 12345;
 
-      // First call fails (CORS), second succeeds via proxy
+      // In DEV mode: Direct fetch is skipped, first proxy fails, second succeeds
       mockFetch
         .mockResolvedValueOnce({
-          ok: false,  // Changed from throwing error to returning non-ok response
+          ok: false,
           status: 403,
-          statusText: 'CORS blocked'
+          statusText: 'First proxy blocked'
         } as Response)
         .mockResolvedValueOnce({
           ok: true,
           json: async () => ({
-            ligaId: ligaId,
-            liganame: 'Test Liga',
-            teams: []
+            data: {
+              ligaId: ligaId,
+              liganame: 'Test Liga',
+              teams: []
+            }
           }),
         } as Response);
 
       const result = await apiService.getTabelle(ligaId);
 
+      // Should use 2 proxies (first fails, second succeeds)
       expect(mockFetch).toHaveBeenCalledTimes(2);
-      expect(mockFetch).toHaveBeenNthCalledWith(2, 
+      // First call should be to corsproxy.io (first proxy in list)
+      expect(mockFetch).toHaveBeenNthCalledWith(1, 
         expect.stringContaining('corsproxy.io'),
         expect.any(Object)
       );
@@ -231,30 +193,34 @@ describe('BBBSyncService Integration Tests', () => {
         .mockResolvedValueOnce({
           ok: true,
           json: async () => ({
-            ligaId: ligaId,
-            liganame: 'Test Liga',
-            teams: [{
-              position: 1,
-              teamId: 111,
-              teamName: 'Team A',
-              clubId: 10,
-              clubName: 'Club A',
-              games: 5,
-              wins: 3,
-              losses: 2,
-              points: 6,
-              scoredPoints: 100,
-              concededPoints: 90,
-              pointsDifference: 10,
-            }]
+            data: {
+              ligaId: ligaId,
+              liganame: 'Test Liga',
+              teams: [{
+                platzierung: 1,
+                teamId: 111,
+                teamname: 'Team A',
+                vereinId: 10,
+                vereinname: 'Club A',
+                spiele: 5,
+                gewonnen: 3,
+                verloren: 2,
+                punkte: 6,
+                korbpunkteGemacht: 100,
+                korbpunkteGegen: 90,
+                differenz: 10,
+              }]
+            }
           }),
         } as Response)
         .mockResolvedValueOnce({
           ok: true,
           json: async () => ({
-            ligaId: ligaId,
-            liganame: 'Test Liga',
-            games: []  // Empty games array instead of error
+            data: {
+              ligaId: ligaId,
+              liganame: 'Test Liga',
+              spielplan: []
+            }
           }),
         } as Response);
 
@@ -268,9 +234,8 @@ describe('BBBSyncService Integration Tests', () => {
     });
 
     it('sollte bei Netzwerkfehlern alle Proxies durchprobieren', async () => {
-      // All requests fail (1 direct + 6 proxies)
+      // All 6 CORS proxies fail (direct fetch is skipped in DEV mode)
       mockFetch
-        .mockRejectedValueOnce(new Error('Direct failed'))
         .mockRejectedValueOnce(new Error('Proxy 1 failed'))
         .mockRejectedValueOnce(new Error('Proxy 2 failed'))
         .mockRejectedValueOnce(new Error('Proxy 3 failed'))
@@ -280,8 +245,8 @@ describe('BBBSyncService Integration Tests', () => {
 
       await expect(apiService.getTabelle(12345)).rejects.toThrow('All CORS proxies failed');
       
-      // Should have tried direct + all 6 proxies = 7 attempts
-      expect(mockFetch).toHaveBeenCalledTimes(7);
+      // Should have tried all 6 proxies (direct fetch is skipped in DEV)
+      expect(mockFetch).toHaveBeenCalledTimes(6);
     });
   });
 
@@ -289,22 +254,24 @@ describe('BBBSyncService Integration Tests', () => {
     it('sollte Duplikate vermeiden', async () => {
       const ligaId = 12345;
       const mockResponse = {
-        ligaId: ligaId,
-        liganame: 'Test Liga',
-        teams: [{
-          position: 1,
-          teamId: 111,
-          teamName: 'Team A',
-          clubId: 10,
-          clubName: 'Club A',
-          games: 5,
-          wins: 3,
-          losses: 2,
-          points: 6,
-          scoredPoints: 100,
-          concededPoints: 90,
-          pointsDifference: 10,
-        }]
+        data: {
+          ligaId: ligaId,
+          liganame: 'Test Liga',
+          teams: [{
+            platzierung: 1,
+            teamId: 111,
+            teamname: 'Team A',
+            vereinId: 10,
+            vereinname: 'Club A',
+            spiele: 5,
+            gewonnen: 3,
+            verloren: 2,
+            punkte: 6,
+            korbpunkteGemacht: 100,
+            korbpunkteGegen: 90,
+            differenz: 10,
+          }]
+        }
       };
 
       mockFetch.mockResolvedValue({

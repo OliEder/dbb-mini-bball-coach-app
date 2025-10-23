@@ -11,10 +11,11 @@ import {
   UserStep,
   VerbandStep,
   AltersklassenStep,
-  GebietStep,
-  LigenLoadingStep,
-  VereinStep
+  GebietStep
 } from './v2';
+import { VereinStepV3 } from './v2/VereinStepV3';
+import { TeamStepV3 } from './v2/TeamStepV3';
+import { CompletionStep } from './v2/CompletionStep';
 import type { WamLigaEintrag, DBBTabellenEintrag } from '@shared/types';
 
 export const OnboardingV2Container: React.FC = () => {
@@ -24,8 +25,9 @@ export const OnboardingV2Container: React.FC = () => {
     selectedVerband,
     selectedAltersklassen,
     selectedGebiet,
-    geladeneTeams,
     selectedVerein,
+    selectedClubId,
+    eigeneTeams,
     
     // Actions
     setStep,
@@ -38,7 +40,8 @@ export const OnboardingV2Container: React.FC = () => {
     setLigen,
     addTeamsForLiga,
     selectVerein,
-    setError
+    setError,
+    completeOnboarding
   } = useOnboardingV2Store();
   
   // Progress Bar berechnen
@@ -119,71 +122,66 @@ export const OnboardingV2Container: React.FC = () => {
         );
       
       case 'ligen-loading':
-        return (
-          <LigenLoadingStep
-            verbandId={selectedVerband!}
-            altersklassenIds={selectedAltersklassen}
-            gebietId={selectedGebiet!}
-            onNext={(ligen: WamLigaEintrag[], teams: Map<string, DBBTabellenEintrag[]>) => {
-              setLigen(ligen);
-              // Teams in Store speichern
-              teams.forEach((teamList, ligaId) => {
-                addTeamsForLiga(ligaId, teamList);
-              });
-              nextStep();
-            }}
-            onBack={previousStep}
-          />
-        );
+        // Nicht mehr nötig mit lokalen Daten! Direkt zu Verein
+        nextStep();
+        return null;
       
       case 'verein':
         return (
-          <VereinStep
-            teamsByLiga={geladeneTeams}
+          <VereinStepV3
+            selectedVerbaende={selectedVerband ? [selectedVerband] : []}
             initialSelection={selectedVerein}
-            onNext={(verein) => {
+            onNext={(verein, clubId) => {
               selectVerein(verein);
-              // Speichere auch die Teams des Vereins für den nächsten Schritt
-              const vereinTeams: DBBTabellenEintrag[] = [];
-              geladeneTeams.forEach(teams => {
-                teams.forEach(team => {
-                  if (team.clubName === verein.name || 
-                      team.clubId.toString() === verein.extern_verein_id) {
-                    vereinTeams.push(team);
-                  }
-                });
-              });
-              // TODO: Speichere vereinTeams im Store für Team-Select Step
+              // Speichere clubId für TeamStep
+              useOnboardingV2Store.setState({ selectedClubId: clubId });
               nextStep();
             }}
             onBack={previousStep}
           />
         );
       case 'team-select':
-      case 'sync':
-      case 'team-selection':
-        return (
-          <div className="max-w-lg mx-auto p-6 text-center">
-            <h2 className="text-2xl font-bold mb-4">In Entwicklung</h2>
-            <p className="text-gray-600 mb-6">
-              Dieser Schritt wird noch implementiert: {currentStep}
-            </p>
-            <div className="flex justify-center gap-4">
-              <button
-                onClick={previousStep}
-                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
-              >
-                ← Zurück
-              </button>
-              <button
-                onClick={() => setStep('welcome')}
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-              >
-                Neu starten
+        if (!selectedVerein || !selectedClubId) {
+          return (
+            <div className="max-w-lg mx-auto p-6 text-center">
+              <p className="text-gray-600 mb-4">Fehler: Verein nicht gewählt</p>
+              <button onClick={() => setStep('verein')} className="px-4 py-2 bg-blue-600 text-white rounded-md">
+                ← Zurück zur Vereinsauswahl
               </button>
             </div>
-          </div>
+          );
+        }
+        
+        return (
+          <TeamStepV3
+            clubId={selectedClubId}
+            clubName={selectedVerein.name}
+            selectedVerbaende={selectedVerband ? [selectedVerband] : []}
+            initialSelection={eigeneTeams}
+            onNext={(teams) => {
+              // Speichere ausgewählte Teams
+              teams.forEach(team => {
+                // Setze verein_id
+                team.verein_id = selectedVerein.verein_id;
+              });
+              
+              // Update Store
+              useOnboardingV2Store.setState({ eigeneTeams: teams });
+              
+              // Setze erstes Team als aktives Team
+              if (teams.length > 0) {
+                useOnboardingV2Store.setState({ aktivesTeam: teams[0] });
+              }
+              
+              nextStep();
+            }}
+            onBack={previousStep}
+          />
         );
+      
+      case 'sync':
+      case 'team-selection':
+        return <CompletionStep onComplete={completeOnboarding} />;
       
       default:
         return null;

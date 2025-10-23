@@ -11,6 +11,7 @@
     "test": "vitest",
     "test:json": "vitest --reporter=json --outputFile=test-results/vitest-results.json --run",
     "test:ui": "vitest --ui",
+    "test:ui:json": "vitest --ui --reporter=default --reporter=json --outputFile=test-results/vitest-results.json",
     "test:coverage": "vitest --coverage",
     "test:watch": "vitest --reporter=default --reporter=json --outputFile=test-results/vitest-results.json",
     "test:e2e": "playwright test",
@@ -42,6 +43,7 @@
     "zustand": "^5.0.8"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.11.0",
     "@eslint/js": "^9.38.0",
     "@pact-foundation/pact": "^16.0.2",
     "@playwright/test": "^1.56.1",

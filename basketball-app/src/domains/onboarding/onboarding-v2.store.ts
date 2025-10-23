@@ -57,6 +57,7 @@ interface OnboardingV2State {
   
   // User Selections
   selectedVerein: Verein | null;
+  selectedClubId: string | null;  // Für lokale Club-Daten (V3)
   eigeneTeams: Team[];  // Mehrfachauswahl möglich
   aktivesTeam: Team | null;  // Das aktuell zu verwaltende Team
   
@@ -144,6 +145,7 @@ const initialState: OnboardingV2State = {
   geladeneTeams: new Map(),
   geladeneVereine: [],
   selectedVerein: null,
+  selectedClubId: null,
   eigeneTeams: [],
   aktivesTeam: null,
   isLoadingVerbaende: false,
@@ -318,6 +320,7 @@ export const useOnboardingV2Store = create<OnboardingV2State & OnboardingV2Actio
         selectedAltersklassen: state.selectedAltersklassen,
         selectedGebiet: state.selectedGebiet,
         selectedVerein: state.selectedVerein,
+        selectedClubId: state.selectedClubId,
         eigeneTeams: state.eigeneTeams,
         aktivesTeam: state.aktivesTeam
       })

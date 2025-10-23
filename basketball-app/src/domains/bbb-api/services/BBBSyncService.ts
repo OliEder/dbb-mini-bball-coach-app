@@ -66,7 +66,7 @@ export class BBBSyncService {
 
     // 1. Liga erstellen/updaten
     const liga = await this.createOrUpdateLiga({
-      ligaId: tableResponse.ligaId,
+      ligaId: ligaId, // Use passed ligaId, not from response
       liganame: tableResponse.liganame,
     });
 

@@ -24,11 +24,15 @@ export default defineConfig({
       'node_modules',
       '**/dist/**',
       '**/*.config.*',
+      'e2e/**',  // E2E Tests werden von Playwright ausgeführt
+      '**/zu-loeschen/**',  // Archivierte Tests
     ],
   },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
+      '@domains': path.resolve(__dirname, './src/domains'),
+      '@shared': path.resolve(__dirname, './src/shared'),
     },
   },
 });

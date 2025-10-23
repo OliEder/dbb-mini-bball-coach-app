@@ -240,16 +240,18 @@ describe('VerbandStep', () => {
         />
       );
 
-      // Bundesligen sollte initial nicht sichtbar sein
-      expect(screen.queryByText('Bundesligen')).not.toBeInTheDocument();
+      // Bundesligen sollte initial nicht sichtbar sein (als Heading)
+      // Element ist im DOM, aber hidden durch <details>
+      const bundesligen = screen.getByRole('heading', { name: /Bundesligen/i });
+      expect(bundesligen).not.toBeVisible();
 
       // Details aufklappen
       const summary = screen.getByText(/Überregionale Verbände anzeigen/i);
       await user.click(summary);
 
-      // Jetzt sollten die Kategorien sichtbar sein
+      // Jetzt sollten die Kategorien sichtbar sein (als Heading)
       await waitFor(() => {
-        expect(screen.getByText('Bundesligen')).toBeInTheDocument();
+        expect(screen.getByRole('heading', { name: /Bundesligen/i })).toBeInTheDocument();
       });
     });
   });

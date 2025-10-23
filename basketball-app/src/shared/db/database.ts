@@ -126,6 +126,8 @@ export const db = new BasketballDatabase();
  */
 export async function initializeDatabase(): Promise<void> {
   try {
+    console.log('📦 Initialisiere Basketball Database...');
+    
     // Prüfe ob alte Version existiert
     const existingDbs = await indexedDB.databases();
     const basketballDb = existingDbs.find(db => db.name === DB_NAME);
@@ -136,11 +138,37 @@ export async function initializeDatabase(): Promise<void> {
       await resetDatabase();
     }
 
+    // Öffne Datenbank
     await db.open();
+    
+    // Validiere dass alle Tabellen existieren
+    const tables = db.tables.map(t => t.name);
+    console.log('🗃️ Verfügbare Tabellen:', tables);
+    
+    // Prüfe kritische Tabellen
+    const criticalTables = ['vereine', 'teams', 'spieler', 'spiele', 'ligen'];
+    const missingTables = criticalTables.filter(t => !tables.includes(t));
+    
+    if (missingTables.length > 0) {
+      console.error('❌ Fehlende Tabellen:', missingTables);
+      throw new Error(`Kritische Tabellen fehlen: ${missingTables.join(', ')}`);
+    }
+    
     console.log(`✅ Basketball PWA Database v${DB_VERSION}.0 initialized`);
+    console.log(`✅ ${tables.length} Tabellen verfügbar`);
+    
   } catch (error) {
     console.error('❌ Failed to initialize database:', error);
-    throw error;
+    console.log('🔄 Versuche Reset und Neustart...');
+    
+    try {
+      await resetDatabase();
+      await db.open();
+      console.log('✅ Database nach Reset erfolgreich initialisiert');
+    } catch (resetError) {
+      console.error('❌ Auch Reset fehlgeschlagen:', resetError);
+      throw resetError;
+    }
   }
 }
 

@@ -65,7 +65,8 @@ export interface Verein {
   verein_id: UUID;
   extern_verein_id?: string;  // clubId aus DBB API
   bbb_kontakt_id?: string;
-  verband_id?: number;  // 2 = Bayern
+  verband_id?: number;  // 2 = Bayern (Legacy - single ID)
+  verband_ids?: number[];  // Neue Struktur: Mehrere Verbände möglich
   name: string;
   kurzname?: string;
   ort?: string;
@@ -84,9 +85,13 @@ export interface Team {
   bbb_mannschafts_id?: string;
   name: string;
   altersklasse: Altersklasse;
+  altersklasse_id?: number;  // Altersklasse als ID (aus BBB API)
+  geschlecht?: 'male' | 'female' | 'mixed';  // Geschlecht des Teams
   saison: string;  // z.B. "2025/2026"
   trainer: string;
   team_typ: TeamTyp;  // 'eigen' oder 'gegner'
+  liga_id?: string;  // BBB Liga-ID (z.B. "12345")
+  liga_name?: string;  // BBB Liga-Name (z.B. "U10 Bezirksliga Oberpfalz")
   leistungsorientiert?: boolean;  // nur U12
   created_at: Date;
   updated_at?: Date;
@@ -664,4 +669,34 @@ export interface OnboardingState {
   spieler_csv?: File;
   trikot_csv?: File;
   bbb_url?: string;
+}
+
+// ==================== SERVICE INPUT TYPES ====================
+
+// CreateVereinInput
+export interface CreateVereinInput {
+  name: string;
+  kurzname?: string;
+  ort: string;  // REQUIRED
+  ist_eigener_verein: boolean;
+  verband_id?: number;
+  verband_ids?: number[];
+  extern_verein_id?: string;
+  bbb_kontakt_id?: string;
+}
+
+// CreateTeamInput
+export interface CreateTeamInput {
+  verein_id: UUID;
+  name: string;
+  altersklasse: Altersklasse;
+  altersklasse_id?: number;
+  geschlecht?: 'male' | 'female' | 'mixed';
+  saison: string;
+  trainer: string;
+  team_typ?: TeamTyp;  // Default: 'eigen'
+  liga_id?: string;
+  liga_name?: string;
+  leistungsorientiert?: boolean;
+  user_id?: UUID;
 }

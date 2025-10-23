@@ -7,17 +7,7 @@
 
 import { v4 as uuidv4 } from 'uuid';
 import { db } from '@/shared/db/database';
-import type { Team, UUID, Altersklasse } from '@/shared/types';
-
-export interface CreateTeamInput {
-  verein_id: UUID;
-  name: string;
-  altersklasse: Altersklasse;
-  saison: string;
-  trainer: string;
-  leistungsorientiert?: boolean;
-  bbb_mannschafts_id?: string;
-}
+import type { Team, UUID, CreateTeamInput } from '@/shared/types';
 
 export class TeamService {
   /**
@@ -29,11 +19,15 @@ export class TeamService {
       verein_id: input.verein_id,
       name: input.name,
       altersklasse: input.altersklasse,
+      altersklasse_id: input.altersklasse_id,
+      geschlecht: input.geschlecht,
       saison: input.saison,
       trainer: input.trainer,
-      team_typ: 'eigen',  // Eigenes Team per default
+      team_typ: input.team_typ ?? 'eigen',  // Default: 'eigen'
+      liga_id: input.liga_id,
+      liga_name: input.liga_name,
       leistungsorientiert: input.leistungsorientiert,
-      bbb_mannschafts_id: input.bbb_mannschafts_id,
+      user_id: input.user_id,
       created_at: new Date(),
     };
 

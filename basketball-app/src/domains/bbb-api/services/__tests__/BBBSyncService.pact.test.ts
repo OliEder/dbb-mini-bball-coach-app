@@ -56,24 +56,26 @@ describe('BBBSyncService PACT Tests v16', () => {
     it('sollte Tabellen-Daten gemäß Contract abrufen', async () => {
       const ligaId = 12345;
       
-      // Expected Response with Matchers
+      // Expected Response with Matchers (mit data-Wrapper und deutschen Feldnamen)
       const expectedResponse = {
-        ligaId: like(ligaId),
-        liganame: like('U10 Bezirksliga Oberpfalz'),
-        teams: eachLike({
-          position: like(1),
-          teamId: like(111),
-          teamName: like('SV Postbauer U10'),
-          clubId: like(10),
-          clubName: like('SV Postbauer'),
-          games: like(10),
-          wins: like(8),
-          losses: like(2),
-          points: like(16),
-          scoredPoints: like(450),
-          concededPoints: like(380),
-          pointsDifference: like(70),
-        }),
+        data: {
+          ligaId: like(ligaId),
+          liganame: like('U10 Bezirksliga Oberpfalz'),
+          teams: eachLike({
+            platzierung: like(1),
+            teamId: like(111),
+            teamname: like('SV Postbauer U10'),
+            vereinId: like(10),
+            vereinname: like('SV Postbauer'),
+            spiele: like(10),
+            gewonnen: like(8),
+            verloren: like(2),
+            punkte: like(16),
+            korbpunkteGemacht: like(450),
+            korbpunkteGegen: like(380),
+            differenz: like(70),
+          }),
+        },
       };
 
       await provider
@@ -111,34 +113,26 @@ describe('BBBSyncService PACT Tests v16', () => {
     it('sollte Spielplan-Daten gemäß Contract abrufen', async () => {
       const ligaId = 12345;
       
-      // Expected Response with Matchers
+      // Expected Response with Matchers (mit data-Wrapper und deutschen Feldnamen)
       const expectedResponse = {
-        ligaId: like(ligaId),
-        liganame: like('U10 Bezirksliga Oberpfalz'),
-        games: eachLike({
-          matchId: like(99991),
-          gameNumber: like(1),
-          gameDay: like(1),
-          date: like('2025-11-01'),
-          time: like('10:00'),
-          homeTeam: like({
-            teamId: 111,
-            teamName: 'SV Postbauer U10',
-            clubId: 10,
-            clubName: 'SV Postbauer',
+        data: {
+          ligaId: like(ligaId),
+          liganame: like('U10 Bezirksliga Oberpfalz'),
+          spielplan: eachLike({
+            spielid: like(99991),
+            nr: like(1),
+            tag: like(1),
+            datum: like('2025-11-01'),
+            uhrzeit: like('10:00'),
+            heimteamid: like(111),
+            heimteamname: like('SV Postbauer U10'),
+            gastteamid: like(222),
+            gastteamname: like('TSV Neumarkt U10'),
+            halle: like('Sporthalle Postbauer'),
+            heimTore: like(null),
+            gastTore: like(null),
           }),
-          awayTeam: like({
-            teamId: 222,
-            teamName: 'TSV Neumarkt U10',
-            clubId: 20,
-            clubName: 'TSV Neumarkt',
-          }),
-          venue: like({
-            name: 'Sporthalle Postbauer',
-            address: 'Hauptstraße 10',
-          }),
-          status: like('scheduled'),
-        }),
+        },
       };
 
       await provider
@@ -173,41 +167,27 @@ describe('BBBSyncService PACT Tests v16', () => {
     it('sollte Match-Info-Daten gemäß Contract abrufen', async () => {
       const matchId = 99991;
       
-      // Expected Response with Matchers
+      // Expected Response with Matchers (mit data-Wrapper und deutschen Feldnamen)
       const expectedResponse = {
-        matchId: like(matchId),
-        gameNumber: like(1),
-        date: like('2025-11-01'),
-        time: like('10:00'),
-        ligaId: like(12345),
-        homeTeam: like({
-          teamId: 111,
-          teamName: 'SV Postbauer U10',
-          clubId: 10,
-          clubName: 'SV Postbauer',
-          coach: 'Oliver Marcuseder',
-          players: eachLike({
-            playerId: 1001,
-            firstName: 'Max',
-            lastName: 'Mustermann',
-            jerseyNumber: 4,
-            tnaNumber: '123',
+        data: {
+          spielNr: like('1'),
+          datum: like('2025-11-01'),
+          uhrzeit: like('10:00'),
+          heimmannschaft: like('SV Postbauer U10'),
+          gastmannschaft: like('TSV Neumarkt U10'),
+          ort: like('Sporthalle Postbauer'),
+          heimErgebnis: like(null),
+          gastErgebnis: like(null),
+          heimSpielerList: eachLike({
+            spielerNr: like('10'),
+            vorname: like('Max'),
+            nachname: like('Mustermann'),
+            tnaLetzten3: like('123'),
           }),
-        }),
-        awayTeam: like({
-          teamId: 222,
-          teamName: 'TSV Neumarkt U10',
-          clubId: 20,
-          clubName: 'TSV Neumarkt',
-          coach: 'Hans Trainer',
-          players: [],
-        }),
-        venue: like({
-          name: 'Sporthalle Postbauer',
-          address: 'Hauptstraße 10',
-          city: 'Postbauer-Heng',
-          zipCode: '92353',
-        }),
+          gastSpielerList: like([]),
+          schiedsrichter1: like('Referee 1'),
+          schiedsrichter2: like('Referee 2'),
+        },
       };
 
       await provider

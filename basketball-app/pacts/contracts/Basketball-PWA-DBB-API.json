@@ -19,41 +19,49 @@
       },
       "response": {
         "body": {
-          "games": [
-            {
-              "awayTeam": {
-                "clubId": 20,
-                "clubName": "TSV Neumarkt",
-                "teamId": 222,
-                "teamName": "TSV Neumarkt U10"
-              },
-              "date": "2025-11-01",
-              "gameDay": 1,
-              "gameNumber": 1,
-              "homeTeam": {
-                "clubId": 10,
-                "clubName": "SV Postbauer",
-                "teamId": 111,
-                "teamName": "SV Postbauer U10"
-              },
-              "matchId": 99991,
-              "status": "scheduled",
-              "time": "10:00",
-              "venue": {
-                "address": "Hauptstraße 10",
-                "name": "Sporthalle Postbauer"
+          "data": {
+            "ligaId": 12345,
+            "liganame": "U10 Bezirksliga Oberpfalz",
+            "spielplan": [
+              {
+                "datum": "2025-11-01",
+                "gastTore": null,
+                "gastteamid": 222,
+                "gastteamname": "TSV Neumarkt U10",
+                "halle": "Sporthalle Postbauer",
+                "heimTore": null,
+                "heimteamid": 111,
+                "heimteamname": "SV Postbauer U10",
+                "nr": 1,
+                "spielid": 99991,
+                "tag": 1,
+                "uhrzeit": "10:00"
               }
-            }
-          ],
-          "ligaId": 12345,
-          "liganame": "U10 Bezirksliga Oberpfalz"
+            ]
+          }
         },
         "headers": {
           "Content-Type": "application/json"
         },
         "matchingRules": {
           "body": {
-            "$.games": {
+            "$.data.ligaId": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.data.liganame": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.data.spielplan": {
               "combine": "AND",
               "matchers": [
                 {
@@ -62,7 +70,7 @@
                 }
               ]
             },
-            "$.games[*].awayTeam": {
+            "$.data.spielplan[*].datum": {
               "combine": "AND",
               "matchers": [
                 {
@@ -70,7 +78,7 @@
                 }
               ]
             },
-            "$.games[*].date": {
+            "$.data.spielplan[*].gastTore": {
               "combine": "AND",
               "matchers": [
                 {
@@ -78,7 +86,7 @@
                 }
               ]
             },
-            "$.games[*].gameDay": {
+            "$.data.spielplan[*].gastteamid": {
               "combine": "AND",
               "matchers": [
                 {
@@ -86,7 +94,7 @@
                 }
               ]
             },
-            "$.games[*].gameNumber": {
+            "$.data.spielplan[*].gastteamname": {
               "combine": "AND",
               "matchers": [
                 {
@@ -94,7 +102,7 @@
                 }
               ]
             },
-            "$.games[*].homeTeam": {
+            "$.data.spielplan[*].halle": {
               "combine": "AND",
               "matchers": [
                 {
@@ -102,7 +110,7 @@
                 }
               ]
             },
-            "$.games[*].matchId": {
+            "$.data.spielplan[*].heimTore": {
               "combine": "AND",
               "matchers": [
                 {
@@ -110,7 +118,7 @@
                 }
               ]
             },
-            "$.games[*].status": {
+            "$.data.spielplan[*].heimteamid": {
               "combine": "AND",
               "matchers": [
                 {
@@ -118,7 +126,7 @@
                 }
               ]
             },
-            "$.games[*].time": {
+            "$.data.spielplan[*].heimteamname": {
               "combine": "AND",
               "matchers": [
                 {
@@ -126,7 +134,7 @@
                 }
               ]
             },
-            "$.games[*].venue": {
+            "$.data.spielplan[*].nr": {
               "combine": "AND",
               "matchers": [
                 {
@@ -134,7 +142,7 @@
                 }
               ]
             },
-            "$.ligaId": {
+            "$.data.spielplan[*].spielid": {
               "combine": "AND",
               "matchers": [
                 {
@@ -142,7 +150,15 @@
                 }
               ]
             },
-            "$.liganame": {
+            "$.data.spielplan[*].tag": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.data.spielplan[*].uhrzeit": {
               "combine": "AND",
               "matchers": [
                 {
@@ -171,31 +187,33 @@
       },
       "response": {
         "body": {
-          "ligaId": 12345,
-          "liganame": "U10 Bezirksliga Oberpfalz",
-          "teams": [
-            {
-              "clubId": 10,
-              "clubName": "SV Postbauer",
-              "concededPoints": 380,
-              "games": 10,
-              "losses": 2,
-              "points": 16,
-              "pointsDifference": 70,
-              "position": 1,
-              "scoredPoints": 450,
-              "teamId": 111,
-              "teamName": "SV Postbauer U10",
-              "wins": 8
-            }
-          ]
+          "data": {
+            "ligaId": 12345,
+            "liganame": "U10 Bezirksliga Oberpfalz",
+            "teams": [
+              {
+                "differenz": 70,
+                "gewonnen": 8,
+                "korbpunkteGegen": 380,
+                "korbpunkteGemacht": 450,
+                "platzierung": 1,
+                "punkte": 16,
+                "spiele": 10,
+                "teamId": 111,
+                "teamname": "SV Postbauer U10",
+                "vereinId": 10,
+                "vereinname": "SV Postbauer",
+                "verloren": 2
+              }
+            ]
+          }
         },
         "headers": {
           "Content-Type": "application/json"
         },
         "matchingRules": {
           "body": {
-            "$.ligaId": {
+            "$.data.ligaId": {
               "combine": "AND",
               "matchers": [
                 {
@@ -203,7 +221,7 @@
                 }
               ]
             },
-            "$.liganame": {
+            "$.data.liganame": {
               "combine": "AND",
               "matchers": [
                 {
@@ -211,7 +229,7 @@
                 }
               ]
             },
-            "$.teams": {
+            "$.data.teams": {
               "combine": "AND",
               "matchers": [
                 {
@@ -220,7 +238,7 @@
                 }
               ]
             },
-            "$.teams[*].clubId": {
+            "$.data.teams[*].differenz": {
               "combine": "AND",
               "matchers": [
                 {
@@ -228,7 +246,7 @@
                 }
               ]
             },
-            "$.teams[*].clubName": {
+            "$.data.teams[*].gewonnen": {
               "combine": "AND",
               "matchers": [
                 {
@@ -236,7 +254,7 @@
                 }
               ]
             },
-            "$.teams[*].concededPoints": {
+            "$.data.teams[*].korbpunkteGegen": {
               "combine": "AND",
               "matchers": [
                 {
@@ -244,7 +262,7 @@
                 }
               ]
             },
-            "$.teams[*].games": {
+            "$.data.teams[*].korbpunkteGemacht": {
               "combine": "AND",
               "matchers": [
                 {
@@ -252,7 +270,7 @@
                 }
               ]
             },
-            "$.teams[*].losses": {
+            "$.data.teams[*].platzierung": {
               "combine": "AND",
               "matchers": [
                 {
@@ -260,7 +278,7 @@
                 }
               ]
             },
-            "$.teams[*].points": {
+            "$.data.teams[*].punkte": {
               "combine": "AND",
               "matchers": [
                 {
@@ -268,7 +286,7 @@
                 }
               ]
             },
-            "$.teams[*].pointsDifference": {
+            "$.data.teams[*].spiele": {
               "combine": "AND",
               "matchers": [
                 {
@@ -276,7 +294,7 @@
                 }
               ]
             },
-            "$.teams[*].position": {
+            "$.data.teams[*].teamId": {
               "combine": "AND",
               "matchers": [
                 {
@@ -284,7 +302,7 @@
                 }
               ]
             },
-            "$.teams[*].scoredPoints": {
+            "$.data.teams[*].teamname": {
               "combine": "AND",
               "matchers": [
                 {
@@ -292,7 +310,7 @@
                 }
               ]
             },
-            "$.teams[*].teamId": {
+            "$.data.teams[*].vereinId": {
               "combine": "AND",
               "matchers": [
                 {
@@ -300,7 +318,7 @@
                 }
               ]
             },
-            "$.teams[*].teamName": {
+            "$.data.teams[*].vereinname": {
               "combine": "AND",
               "matchers": [
                 {
@@ -308,7 +326,7 @@
                 }
               ]
             },
-            "$.teams[*].wins": {
+            "$.data.teams[*].verloren": {
               "combine": "AND",
               "matchers": [
                 {
@@ -337,40 +355,26 @@
       },
       "response": {
         "body": {
-          "awayTeam": {
-            "clubId": 20,
-            "clubName": "TSV Neumarkt",
-            "coach": "Hans Trainer",
-            "players": [],
-            "teamId": 222,
-            "teamName": "TSV Neumarkt U10"
-          },
-          "date": "2025-11-01",
-          "gameNumber": 1,
-          "homeTeam": {
-            "clubId": 10,
-            "clubName": "SV Postbauer",
-            "coach": "Oliver Marcuseder",
-            "players": [
+          "data": {
+            "datum": "2025-11-01",
+            "gastErgebnis": null,
+            "gastSpielerList": [],
+            "gastmannschaft": "TSV Neumarkt U10",
+            "heimErgebnis": null,
+            "heimSpielerList": [
               {
-                "firstName": "Max",
-                "jerseyNumber": 4,
-                "lastName": "Mustermann",
-                "playerId": 1001,
-                "tnaNumber": "123"
+                "nachname": "Mustermann",
+                "spielerNr": "10",
+                "tnaLetzten3": "123",
+                "vorname": "Max"
               }
             ],
-            "teamId": 111,
-            "teamName": "SV Postbauer U10"
-          },
-          "ligaId": 12345,
-          "matchId": 99991,
-          "time": "10:00",
-          "venue": {
-            "address": "Hauptstraße 10",
-            "city": "Postbauer-Heng",
-            "name": "Sporthalle Postbauer",
-            "zipCode": "92353"
+            "heimmannschaft": "SV Postbauer U10",
+            "ort": "Sporthalle Postbauer",
+            "schiedsrichter1": "Referee 1",
+            "schiedsrichter2": "Referee 2",
+            "spielNr": "1",
+            "uhrzeit": "10:00"
           }
         },
         "headers": {
@@ -378,7 +382,7 @@
         },
         "matchingRules": {
           "body": {
-            "$.awayTeam": {
+            "$.data.datum": {
               "combine": "AND",
               "matchers": [
                 {
@@ -386,7 +390,7 @@
                 }
               ]
             },
-            "$.date": {
+            "$.data.gastErgebnis": {
               "combine": "AND",
               "matchers": [
                 {
@@ -394,7 +398,7 @@
                 }
               ]
             },
-            "$.gameNumber": {
+            "$.data.gastSpielerList": {
               "combine": "AND",
               "matchers": [
                 {
@@ -402,7 +406,7 @@
                 }
               ]
             },
-            "$.homeTeam": {
+            "$.data.gastmannschaft": {
               "combine": "AND",
               "matchers": [
                 {
@@ -410,7 +414,15 @@
                 }
               ]
             },
-            "$.homeTeam.players": {
+            "$.data.heimErgebnis": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.data.heimSpielerList": {
               "combine": "AND",
               "matchers": [
                 {
@@ -419,7 +431,7 @@
                 }
               ]
             },
-            "$.ligaId": {
+            "$.data.heimSpielerList[*].nachname": {
               "combine": "AND",
               "matchers": [
                 {
@@ -427,7 +439,7 @@
                 }
               ]
             },
-            "$.matchId": {
+            "$.data.heimSpielerList[*].spielerNr": {
               "combine": "AND",
               "matchers": [
                 {
@@ -435,7 +447,7 @@
                 }
               ]
             },
-            "$.time": {
+            "$.data.heimSpielerList[*].tnaLetzten3": {
               "combine": "AND",
               "matchers": [
                 {
@@ -443,7 +455,55 @@
                 }
               ]
             },
-            "$.venue": {
+            "$.data.heimSpielerList[*].vorname": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.data.heimmannschaft": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.data.ort": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.data.schiedsrichter1": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.data.schiedsrichter2": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.data.spielNr": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.data.uhrzeit": {
               "combine": "AND",
               "matchers": [
                 {

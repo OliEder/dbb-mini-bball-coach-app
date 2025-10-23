@@ -9,3 +9,4 @@ export { AltersklassenStep } from './AltersklassenStep';
 export { GebietStep } from './GebietStep';
 export { LigenLoadingStep } from './LigenLoadingStep';
 export { VereinStep } from './VereinStep';
+export { CompletionStep } from './CompletionStep';

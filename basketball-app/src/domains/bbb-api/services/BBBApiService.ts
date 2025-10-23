@@ -93,18 +93,23 @@ export class BBBApiService {
       return response;
     }
 
-    // Versuche direkt (mit kürzerem Timeout)
-    try {
-      const response = await fetch(url, { 
-        ...options, 
-        signal: AbortSignal.timeout(5000) 
-      });
-      if (response.ok) {
-        console.log('✅ Direct fetch success');
-        return response;
+    // Development: Skip direkten Fetch, nutze sofort CORS-Proxy
+    if (import.meta.env.DEV) {
+      console.log('🔄 DEV: Using CORS proxy immediately');
+    } else {
+      // Production: Versuche direkt (mit kürzerem Timeout)
+      try {
+        const response = await fetch(url, { 
+          ...options, 
+          signal: AbortSignal.timeout(2000) 
+        });
+        if (response.ok) {
+          console.log('✅ Direct fetch success');
+          return response;
+        }
+      } catch (error) {
+        console.warn('Direct fetch failed, trying CORS proxies', error);
       }
-    } catch (error) {
-      console.warn('Direct fetch failed, trying CORS proxies', error);
     }
 
     // Versuche CORS-Proxies mit besserer Fehlerbehandlung
@@ -170,7 +175,11 @@ export class BBBApiService {
       }
     );
 
-    return await response.json();
+    const apiResponse: any = await response.json();
+    
+    // Die API gibt ein Wrapper-Objekt zurück: { data: { ligaListe: {...} } }
+    // Aber das ist schon das korrekte Format für WamDataResponse
+    return apiResponse;
   }
 
   /**
@@ -250,26 +259,45 @@ export class BBBApiService {
       }
     );
     
-    const data = await response.json();
+    const apiResponse: any = await response.json();
     
-    // Validiere Tabellendaten
-    if (data.teams && Array.isArray(data.teams)) {
-      const validTeams = data.teams.filter((team: any) => {
-        const isValid = BBBApiService.validateTabellenEintrag(team);
-        if (!isValid) {
-          console.error('Invalid table entry:', team);
-        }
-        return isValid;
-      });
-      
-      if (validTeams.length !== data.teams.length) {
-        console.warn(`Filtered out ${data.teams.length - validTeams.length} invalid entries`);
+    // Die API gibt ein Wrapper-Objekt zurück: { data: { teams: [...] } }
+    const tableData = apiResponse.data || apiResponse;
+    
+    // Mappe API-Format zu unserem internen Format
+    const mappedTeams: DBBTabellenEintrag[] = (tableData.teams || []).map((team: any) => ({
+      position: team.platzierung,
+      teamId: team.teamId,
+      teamName: team.teamname || '',
+      clubId: team.teamId, // API liefert keine clubId, nutze teamId als Fallback
+      clubName: (team.teamname || '').split(' ')[0] || team.teamname || 'Unknown', // Safe split
+      games: team.spiele,
+      wins: team.gewonnen,
+      losses: team.verloren,
+      points: team.punkte,
+      scoredPoints: team.korbpunkteGemacht,
+      concededPoints: team.korbpunkteGegen,
+      pointsDifference: team.differenz
+    }));
+    
+    // Validiere gemappte Daten
+    const validTeams = mappedTeams.filter((team: any) => {
+      const isValid = BBBApiService.validateTabellenEintrag(team);
+      if (!isValid) {
+        console.error('Invalid table entry after mapping:', team);
       }
-      
-      data.teams = validTeams;
+      return isValid;
+    });
+    
+    if (validTeams.length !== mappedTeams.length) {
+      console.warn(`Filtered out ${mappedTeams.length - validTeams.length} invalid entries`);
     }
     
-    return data;
+    return {
+      ligaId: tableData.ligaId || ligaId,
+      liganame: tableData.liganame || '',
+      teams: validTeams
+    };
   }
 
   /**
@@ -284,7 +312,40 @@ export class BBBApiService {
         },
       }
     );
-    return await response.json();
+    
+    const apiResponse: any = await response.json();
+    
+    // Die API gibt ein Wrapper-Objekt zurück: { data: { spielplan: [...] } }
+    const spielplanData = apiResponse.data || apiResponse;
+    
+    // Mappe API-Format zu unserem internen Format
+    const mappedGames: DBBSpielplanEintrag[] = (spielplanData.spielplan || []).map((spiel: any) => ({
+      matchId: spiel.spielid,
+      gameNumber: spiel.nr,
+      gameDay: spiel.tag,
+      date: spiel.datum,
+      time: spiel.uhrzeit,
+      homeTeam: {
+        teamId: spiel.heimteamid,
+        teamName: spiel.heimteamname
+      },
+      awayTeam: {
+        teamId: spiel.gastteamid,
+        teamName: spiel.gastteamname
+      },
+      venue: spiel.halle ? {
+        name: spiel.halle
+      } : undefined,
+      status: spiel.heimTore !== null ? 'finished' : 'scheduled',
+      homeScore: spiel.heimTore,
+      awayScore: spiel.gastTore
+    }));
+    
+    return {
+      ligaId: spielplanData.ligaId || ligaId,
+      liganame: spielplanData.liganame || '',
+      games: mappedGames
+    };
   }
 
   /**
@@ -299,7 +360,55 @@ export class BBBApiService {
         },
       }
     );
-    return await response.json();
+    
+    const apiResponse: any = await response.json();
+    
+    // Die API gibt ein Wrapper-Objekt zurück: { data: { ... } }
+    const matchData = apiResponse.data || apiResponse;
+    
+    // Mappe API-Format zu unserem internen Format
+    return {
+      matchId: matchId,
+      gameNumber: parseInt(matchData.spielNr) || 0,
+      date: matchData.datum,
+      time: matchData.uhrzeit,
+      ligaId: 0, // Nicht verfügbar
+      homeTeam: {
+        teamId: 0, // Nicht verfügbar
+        teamName: matchData.heimmannschaft || '',
+        clubId: 0,
+        clubName: (matchData.heimmannschaft || '').split(' ')[0] || matchData.heimmannschaft || 'Unknown',
+        players: (matchData.heimSpielerList || []).map((s: any) => ({
+          playerId: parseInt(s.spielerNr) || 0,
+          firstName: s.vorname || '',
+          lastName: s.nachname || '',
+          tnaNumber: s.tnaLetzten3
+        }))
+      },
+      awayTeam: {
+        teamId: 0, // Nicht verfügbar
+        teamName: matchData.gastmannschaft || '',
+        clubId: 0,
+        clubName: (matchData.gastmannschaft || '').split(' ')[0] || matchData.gastmannschaft || 'Unknown',
+        players: (matchData.gastSpielerList || []).map((s: any) => ({
+          playerId: parseInt(s.spielerNr) || 0,
+          firstName: s.vorname || '',
+          lastName: s.nachname || '',
+          tnaNumber: s.tnaLetzten3
+        }))
+      },
+      venue: matchData.ort ? {
+        name: matchData.ort
+      } : undefined,
+      score: (matchData.heimErgebnis !== null && matchData.gastErgebnis !== null) ? {
+        home: matchData.heimErgebnis,
+        away: matchData.gastErgebnis
+      } : undefined,
+      referees: [
+        matchData.schiedsrichter1,
+        matchData.schiedsrichter2
+      ].filter(Boolean)
+    };
   }
 
   /**

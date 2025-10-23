@@ -3,6 +3,7 @@
  */
 
 import { db } from '@/shared/db/database';
+import { useRealApiMode } from '@/shared/utils/devMode';
 // TODO: BBBParserService fehlt - wird im Onboarding-Refactoring erstellt
 // import { bbbParserService } from '@/domains/bbb-api/services/BBBParserService';
 import type { Spiel } from '@/shared/types';
@@ -215,13 +216,18 @@ class TabellenService {
    * Priorität: 1. Berechnung aus Spielen, 2. DB-Daten, 3. Mock-Daten
    */
   async loadTabelleForTeam(teamId: string): Promise<TabellenEintrag[]> {
+    console.log('🔍 TabellenService.loadTabelleForTeam() - Start für Team:', teamId);
+    
     try {
       // Finde Spielplan für Team
       const spielplan = await db.spielplaene
         .where({ team_id: teamId })
         .first();
       
+      console.log('📋 Spielplan gefunden:', spielplan ? 'JA' : 'NEIN', spielplan);
+      
       if (!spielplan || !spielplan.liga_nr_offiziell) {
+        console.log('⚠️ Kein Spielplan gefunden - verwende Mock-Daten');
         return this.getMockTabellenDaten();
       }
       
@@ -230,7 +236,10 @@ class TabellenService {
         .where({ bbb_liga_id: spielplan.liga_nr_offiziell })
         .first();
       
+      console.log('🏀 Liga gefunden:', liga ? 'JA' : 'NEIN', liga);
+      
       if (!liga) {
+        console.log('⚠️ Keine Liga gefunden - verwende Mock-Daten');
         return this.getMockTabellenDaten();
       }
       
@@ -251,9 +260,10 @@ class TabellenService {
       }
       
       // PRIORITY 3: Mock-Daten (Fallback)
+      console.log('⚠️ Keine Tabellendaten verfügbar - verwende Mock-Daten');
       return this.getMockTabellenDaten();
     } catch (error) {
-      console.error('Error loading tabelle for team:', error);
+      console.error('❌ Error loading tabelle for team:', error);
       return this.getMockTabellenDaten();
     }
   }
@@ -330,12 +340,16 @@ class TabellenService {
    */
   async loadTabelleFromUrl(tabelleUrl: string): Promise<TabellenEintrag[]> {
     try {
-      // In DEV: Lade echte Testdaten
-      if (import.meta.env.DEV) {
-        // Simuliere Tabellen-Daten
+      // Check Dev Mode Setting
+      const shouldUseRealApi = useRealApiMode();
+      
+      if (!shouldUseRealApi) {
+        console.log('🎭 Dev Mode: Using Mock Data (Toggle in DevTools to use Real API)');
         return this.getMockTabellenDaten();
       }
 
+      console.log('⚡ Dev Mode: Using Real API');
+      
       // Production: Fetch via Proxy
       const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(tabelleUrl)}`;
       const response = await fetch(proxyUrl);
