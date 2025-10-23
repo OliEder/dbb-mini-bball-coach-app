@@ -40,6 +40,7 @@ export class TeamService {
       altersklasse: dto.altersklasse,
       saison: dto.saison,
       trainer: dto.trainer,
+      team_typ: 'eigen',  // Eigenes Team per default
       leistungsorientiert: dto.leistungsorientiert,
       bbb_mannschafts_id: dto.bbb_mannschafts_id,
       created_at: new Date()

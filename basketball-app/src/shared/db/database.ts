@@ -7,6 +7,7 @@
 
 import Dexie, { type EntityTable } from 'dexie';
 import type {
+  User,
   Verein,
   Team,
   Spieler,
@@ -32,13 +33,14 @@ import type {
 } from '../types';
 
 const DB_NAME = 'BasketballPWA';
-const DB_VERSION = 4; // Compound-Indizes hinzugefügt!
+const DB_VERSION = 5; // User-Tabelle + externe IDs + team_typ hinzugefügt!
 
 /**
  * Database Schema
  */
 class BasketballDatabase extends Dexie {
   // Tabellen-Definitionen
+  users!: EntityTable<User, 'user_id'>;
   vereine!: EntityTable<Verein, 'verein_id'>;
   teams!: EntityTable<Team, 'team_id'>;
   spieler!: EntityTable<Spieler, 'spieler_id'>;
@@ -65,14 +67,17 @@ class BasketballDatabase extends Dexie {
   constructor() {
     super(DB_NAME);
     
-    // Version 4: Compound-Indizes für Performance
+    // Version 5: User-Tabelle + Externe IDs + team_typ
     this.version(DB_VERSION).stores({
+      // ========== USER (TRAINER) ==========
+      users: 'user_id, name, email, created_at',
+      
       // ========== VEREINE & TEAMS ==========
-      vereine: 'verein_id, name, ist_eigener_verein, bbb_kontakt_id',
-      teams: 'team_id, verein_id, name, saison, altersklasse, bbb_mannschafts_id, [verein_id+name+saison]',
+      vereine: 'verein_id, extern_verein_id, name, ist_eigener_verein, bbb_kontakt_id',
+      teams: 'team_id, extern_team_id, verein_id, user_id, name, saison, altersklasse, team_typ, bbb_mannschafts_id, [verein_id+name+saison], [user_id+team_typ]',
       
       // ========== SPIELER ==========
-      spieler: 'spieler_id, team_id, verein_id, spieler_typ, [vorname+nachname], aktiv, tna_nr, mitgliedsnummer, [team_id+aktiv]',
+      spieler: 'spieler_id, extern_spieler_id, team_id, verein_id, spieler_typ, [vorname+nachname], aktiv, tna_nr, mitgliedsnummer, [team_id+aktiv], trikotnummer',
       bewertungen: 'bewertung_id, spieler_id, bewertungs_typ, saison, [saison+altersklasse], gueltig_ab',
       erziehungsberechtigte: 'erz_id, [vorname+nachname], email',
       spieler_erziehungsberechtigte: 'se_id, spieler_id, erz_id, ist_notfallkontakt',
@@ -82,11 +87,11 @@ class BasketballDatabase extends Dexie {
       ligen: 'liga_id, bbb_liga_id, saison, altersklasse, name',
       liga_teilnahmen: 'teilnahme_id, liga_id, verein_id, team_id',
       
-      // ========== SPIELPLAN & SPIELE (BBB-Integration) ==========
+      // ========== SPIELPLAN & SPIELE (BBB-Integration v5) ==========
       spielplaene: 'spielplan_id, team_id, saison, bbb_spielplan_url',
-      spiele: 'spiel_id, spielplan_id, team_id, datum, spielnr, spieltag, status, [team_id+datum], [spielplan_id+spielnr], [team_id+status]',
+      spiele: 'spiel_id, extern_spiel_id, liga_id, spielplan_id, team_id, heim_team_id, gast_team_id, datum, spielnr, spieltag, status, [team_id+datum], [spielplan_id+spielnr], [team_id+status], [liga_id+datum]',
       liga_ergebnisse: 'id, ligaid, spielnr, datum, [heimteam+gastteam]',
-      liga_tabellen: 'id, ligaid, teamname, [ligaid+platz]',
+      liga_tabellen: 'id, ligaid, teamname, [ligaid+platz], [ligaid+teamname]',
       
       // ========== TRIKOTS ==========
       trikots: 'trikot_id, team_id, art, status, nummer, [team_id+art]',
@@ -121,6 +126,8 @@ export const db = new BasketballDatabase();
  */
 export async function initializeDatabase(): Promise<void> {
   try {
+    console.log('📦 Initialisiere Basketball Database...');
+    
     // Prüfe ob alte Version existiert
     const existingDbs = await indexedDB.databases();
     const basketballDb = existingDbs.find(db => db.name === DB_NAME);
@@ -131,11 +138,37 @@ export async function initializeDatabase(): Promise<void> {
       await resetDatabase();
     }
 
+    // Öffne Datenbank
     await db.open();
+    
+    // Validiere dass alle Tabellen existieren
+    const tables = db.tables.map(t => t.name);
+    console.log('🗃️ Verfügbare Tabellen:', tables);
+    
+    // Prüfe kritische Tabellen
+    const criticalTables = ['vereine', 'teams', 'spieler', 'spiele', 'ligen'];
+    const missingTables = criticalTables.filter(t => !tables.includes(t));
+    
+    if (missingTables.length > 0) {
+      console.error('❌ Fehlende Tabellen:', missingTables);
+      throw new Error(`Kritische Tabellen fehlen: ${missingTables.join(', ')}`);
+    }
+    
     console.log(`✅ Basketball PWA Database v${DB_VERSION}.0 initialized`);
+    console.log(`✅ ${tables.length} Tabellen verfügbar`);
+    
   } catch (error) {
     console.error('❌ Failed to initialize database:', error);
-    throw error;
+    console.log('🔄 Versuche Reset und Neustart...');
+    
+    try {
+      await resetDatabase();
+      await db.open();
+      console.log('✅ Database nach Reset erfolgreich initialisiert');
+    } catch (resetError) {
+      console.error('❌ Auch Reset fehlgeschlagen:', resetError);
+      throw resetError;
+    }
   }
 }
 

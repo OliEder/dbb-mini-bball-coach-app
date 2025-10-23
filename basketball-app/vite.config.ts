@@ -60,21 +60,5 @@ export default defineConfig({
   // Optimizations für Dependencies
   optimizeDeps: {
     exclude: ['lucide-react'], // Kann Probleme mit Tree-Shaking haben
-  },
-  test: {
-    globals: true,
-    environment: 'jsdom',
-    setupFiles: './src/test/setup.ts',
-    cache: false,
-    coverage: {
-      provider: 'v8',
-      reporter: ['text', 'json', 'html'],
-      exclude: [
-        'node_modules/',
-        'src/test/',
-        '**/*.test.{ts,tsx}',
-        '**/*.spec.{ts,tsx}'
-      ]
-    }
   }
 });

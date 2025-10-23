@@ -1,0 +1,1155 @@
+{
+  "metadata": {
+    "chunkIndex": 17,
+    "totalChunks": 18,
+    "clubsInChunk": 14,
+    "range": {
+      "start": 1700,
+      "end": 1713
+    }
+  },
+  "clubs": [
+    {
+      "clubId": "3846",
+      "vereinsname": "WINGS Leverkusen",
+      "vereinsnummer": "2110009",
+      "verbaende": [
+        100
+      ],
+      "kontaktData": null,
+      "teams": [
+        {
+          "teamPermanentId": "163235",
+          "teamname": "WINGS Leverkusen",
+          "teamnameSmall": "LEV",
+          "teamAkjId": 1,
+          "teamAkj": "Senioren I",
+          "teamGenderId": 2,
+          "teamGender": "w",
+          "teamNumber": 1,
+          "seasons": [
+            {
+              "seasonId": 2025,
+              "seasonName": "2025/2026",
+              "ligen": [
+                {
+                  "teamCompetitionId": "430228",
+                  "ligaId": "51552",
+                  "liganame": "2. DBBL Nord",
+                  "akName": "Senioren",
+                  "geschlechtId": 2,
+                  "geschlecht": "weiblich"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "clubId": "4878",
+      "vereinsname": "WITT Oberpfalz Hunters",
+      "vereinsnummer": "2207016",
+      "verbaende": [
+        100
+      ],
+      "kontaktData": null,
+      "teams": [
+        {
+          "teamPermanentId": "314687",
+          "teamname": "WITT Oberpfalz Hunters",
+          "teamnameSmall": "BTOpf",
+          "teamAkjId": 16,
+          "teamAkj": "U16",
+          "teamGenderId": 1,
+          "teamGender": "m",
+          "teamNumber": 1,
+          "seasons": [
+            {
+              "seasonId": 2025,
+              "seasonName": "2025/2026",
+              "ligen": [
+                {
+                  "teamCompetitionId": "424489",
+                  "ligaId": "50998",
+                  "liganame": "JBBL-Gruppe 8",
+                  "akName": "U16",
+                  "geschlechtId": 1,
+                  "geschlecht": "männlich"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "clubId": "1493",
+      "vereinsname": "Wittlicher Turnverein 1883",
+      "vereinsnummer": "0871129",
+      "verbaende": [
+        8
+      ],
+      "kontaktData": null,
+      "teams": [
+        {
+          "teamPermanentId": "159275",
+          "teamname": "Wittlicher TV",
+          "teamnameSmall": "Wittl",
+          "teamAkjId": 1,
+          "teamAkj": "Senioren I",
+          "teamGenderId": 1,
+          "teamGender": "m",
+          "teamNumber": 1,
+          "seasons": [
+            {
+              "seasonId": 2025,
+              "seasonName": "2025/2026",
+              "ligen": [
+                {
+                  "teamCompetitionId": "402365",
+                  "ligaId": "48193",
+                  "liganame": "Landesliga Rheinland Herren",
+                  "akName": "Senioren",
+                  "geschlechtId": 1,
+                  "geschlecht": "männlich"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "teamPermanentId": "157426",
+          "teamname": "Wittlicher TV (aK)",
+          "teamnameSmall": "WIT",
+          "teamAkjId": 14,
+          "teamAkj": "U14",
+          "teamGenderId": 1,
+          "teamGender": "m",
+          "teamNumber": 1,
+          "seasons": [
+            {
+              "seasonId": 2025,
+              "seasonName": "2025/2026",
+              "ligen": [
+                {
+                  "teamCompetitionId": "416530",
+                  "ligaId": "50060",
+                  "liganame": "U14 männlich Trier VR2",
+                  "akName": "U14",
+                  "geschlechtId": 1,
+                  "geschlecht": "männlich"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "clubId": "1890",
+      "vereinsname": "WMTV Solingen 1861 e.V.",
+      "vereinsnummer": "1121406",
+      "verbaende": [
+        11
+      ],
+      "kontaktData": null,
+      "teams": [
+        {
+          "teamPermanentId": "321698",
+          "teamname": "WMTV Solingen",
+          "teamnameSmall": null,
+          "teamAkjId": 10,
+          "teamAkj": "U10",
+          "teamGenderId": 3,
+          "teamGender": "mix",
+          "teamNumber": 1,
+          "seasons": [
+            {
+              "seasonId": 2025,
+              "seasonName": "2025/2026",
+              "ligen": [
+                {
+                  "teamCompetitionId": "432818",
+                  "ligaId": "51950",
+                  "liganame": "Kreisliga U10o DNE + W Gr. B",
+                  "akName": "U10",
+                  "geschlechtId": 3,
+                  "geschlecht": "mix"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "clubId": "323",
+      "vereinsname": "WSG Fürstenwalde",
+      "vereinsnummer": "1418001",
+      "verbaende": [
+        14
+      ],
+      "kontaktData": null,
+      "teams": [
+        {
+          "teamPermanentId": "178049",
+          "teamname": "WSG Fürstenwalde",
+          "teamnameSmall": "Fuewa",
+          "teamAkjId": 1,
+          "teamAkj": "Senioren I",
+          "teamGenderId": 1,
+          "teamGender": "m",
+          "teamNumber": 1,
+          "seasons": [
+            {
+              "seasonId": 2025,
+              "seasonName": "2025/2026",
+              "ligen": [
+                {
+                  "teamCompetitionId": "421871",
+                  "ligaId": "50692",
+                  "liganame": "Oberliga Herren",
+                  "akName": "Senioren",
+                  "geschlechtId": 1,
+                  "geschlecht": "männlich"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "teamPermanentId": "178050",
+          "teamname": "WSG Fürstenwalde",
+          "teamnameSmall": "Fuewa",
+          "teamAkjId": 1,
+          "teamAkj": "Senioren I",
+          "teamGenderId": 2,
+          "teamGender": "w",
+          "teamNumber": 1,
+          "seasons": [
+            {
+              "seasonId": 2025,
+              "seasonName": "2025/2026",
+              "ligen": [
+                {
+                  "teamCompetitionId": "421887",
+                  "ligaId": "50695",
+                  "liganame": "Oberliga Damen ",
+                  "akName": "Senioren",
+                  "geschlechtId": 2,
+                  "geschlecht": "weiblich"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "teamPermanentId": "309608",
+          "teamname": "WSG Fürstenwalde",
+          "teamnameSmall": "Fuewa",
+          "teamAkjId": 18,
+          "teamAkj": "U18",
+          "teamGenderId": 1,
+          "teamGender": "m",
+          "teamNumber": 1,
+          "seasons": [
+            {
+              "seasonId": 2025,
+              "seasonName": "2025/2026",
+              "ligen": [
+                {
+                  "teamCompetitionId": "421900",
+                  "ligaId": "50697",
+                  "liganame": "Oberliga männlich U18",
+                  "akName": "U18",
+                  "geschlechtId": 1,
+                  "geschlecht": "männlich"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "teamPermanentId": "309609",
+          "teamname": "WSG Fürstenwalde",
+          "teamnameSmall": "Fuewa",
+          "teamAkjId": 16,
+          "teamAkj": "U16",
+          "teamGenderId": 1,
+          "teamGender": "m",
+          "teamNumber": 1,
+          "seasons": [
+            {
+              "seasonId": 2025,
+              "seasonName": "2025/2026",
+              "ligen": [
+                {
+                  "teamCompetitionId": "421908",
+                  "ligaId": "50698",
+                  "liganame": "Oberliga männlich U16",
+                  "akName": "U16",
+                  "geschlechtId": 1,
+                  "geschlecht": "männlich"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "teamPermanentId": "178053",
+          "teamname": "WSG Fürstenwalde",
+          "teamnameSmall": "Fuewa",
+          "teamAkjId": 14,
+          "teamAkj": "U14",
+          "teamGenderId": 1,
+          "teamGender": "m",
+          "teamNumber": 1,
+          "seasons": [
+            {
+              "seasonId": 2025,
+              "seasonName": "2025/2026",
+              "ligen": [
+                {
+                  "teamCompetitionId": "421921",
+                  "ligaId": "50700",
+                  "liganame": "Oberliga männlich U14",
+                  "akName": "U14",
+                  "geschlechtId": 1,
+                  "geschlecht": "männlich"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "teamPermanentId": "319055",
+          "teamname": "WSG Fürstenwalde (a.K.)",
+          "teamnameSmall": "Fuewa",
+          "teamAkjId": 14,
+          "teamAkj": "U14",
+          "teamGenderId": 2,
+          "teamGender": "w",
+          "teamNumber": 1,
+          "seasons": [
+            {
+              "seasonId": 2025,
+              "seasonName": "2025/2026",
+              "ligen": [
+                {
+                  "teamCompetitionId": "421928",
+                  "ligaId": "50701",
+                  "liganame": "Oberliga weiblich U14",
+                  "akName": "U14",
+                  "geschlechtId": 2,
+                  "geschlecht": "weiblich"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "teamPermanentId": "309606",
+          "teamname": "WSG Fürstenwalde 2",
+          "teamnameSmall": "Fuew2",
+          "teamAkjId": 1,
+          "teamAkj": "Senioren I",
+          "teamGenderId": 1,
+          "teamGender": "m",
+          "teamNumber": 2,
+          "seasons": [
+            {
+              "seasonId": 2025,
+              "seasonName": "2025/2026",
+              "ligen": [
+                {
+                  "teamCompetitionId": "422002",
+                  "ligaId": "50718",
+                  "liganame": "Bezirksliga Herren Süd ",
+                  "akName": "Senioren",
+                  "geschlechtId": 1,
+                  "geschlecht": "männlich"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "teamPermanentId": "309607",
+          "teamname": "WSG Fürstenwalde",
+          "teamnameSmall": "Fuewa",
+          "teamAkjId": 32,
+          "teamAkj": "Ü35",
+          "teamGenderId": 1,
+          "teamGender": "m",
+          "teamNumber": 1,
+          "seasons": [
+            {
+              "seasonId": 2025,
+              "seasonName": "2025/2026",
+              "ligen": [
+                {
+                  "teamCompetitionId": "424952",
+                  "ligaId": "50721",
+                  "liganame": "Bestenliga Herren Ü35",
+                  "akName": "Ü35",
+                  "geschlechtId": 1,
+                  "geschlecht": "männlich"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "teamPermanentId": "316750",
+          "teamname": "WSG Fürstenwalde",
+          "teamnameSmall": "Fuewa",
+          "teamAkjId": 40,
+          "teamAkj": "Ü40",
+          "teamGenderId": 1,
+          "teamGender": "m",
+          "teamNumber": 1,
+          "seasons": [
+            {
+              "seasonId": 2025,
+              "seasonName": "2025/2026",
+              "ligen": [
+                {
+                  "teamCompetitionId": "422005",
+                  "ligaId": "50720",
+                  "liganame": "Bestenliga Herren Ü40",
+                  "akName": "Ü40",
+                  "geschlechtId": 1,
+                  "geschlecht": "männlich"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "teamPermanentId": "309611",
+          "teamname": "WSG Fürstenwalde",
+          "teamnameSmall": "Fuewa",
+          "teamAkjId": 12,
+          "teamAkj": "U12",
+          "teamGenderId": 1,
+          "teamGender": "m",
+          "teamNumber": 1,
+          "seasons": [
+            {
+              "seasonId": 2025,
+              "seasonName": "2025/2026",
+              "ligen": [
+                {
+                  "teamCompetitionId": "425735",
+                  "ligaId": "51156",
+                  "liganame": "Bestenliga männlich U12",
+                  "akName": "U12",
+                  "geschlechtId": 1,
+                  "geschlecht": "männlich"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "teamPermanentId": "321069",
+          "teamname": "WSG Fürstenwalde",
+          "teamnameSmall": "Fuew1",
+          "teamAkjId": 11,
+          "teamAkj": "U11",
+          "teamGenderId": 3,
+          "teamGender": "mix",
+          "teamNumber": 1,
+          "seasons": [
+            {
+              "seasonId": 2025,
+              "seasonName": "2025/2026",
+              "ligen": [
+                {
+                  "teamCompetitionId": "425631",
+                  "ligaId": "51149",
+                  "liganame": "Fortgeschrittene Liga U11 mix",
+                  "akName": "U11",
+                  "geschlechtId": 3,
+                  "geschlecht": "mix"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "clubId": "720",
+      "vereinsname": "WSV Glonn",
+      "vereinsnummer": "0213017",
+      "verbaende": [
+        2
+      ],
+      "kontaktData": null,
+      "teams": [
+        {
+          "teamPermanentId": "164098",
+          "teamname": "WSV Glonn",
+          "teamnameSmall": "Glonn",
+          "teamAkjId": 1,
+          "teamAkj": "Senioren I",
+          "teamGenderId": 1,
+          "teamGender": "m",
+          "teamNumber": 1,
+          "seasons": [
+            {
+              "seasonId": 2025,
+              "seasonName": "2025/2026",
+              "ligen": [
+                {
+                  "teamCompetitionId": "423742",
+                  "ligaId": "50935",
+                  "liganame": "Bezirksklasse Herren Südost  (SO-BKH) 25/26",
+                  "akName": "Senioren",
+                  "geschlechtId": 1,
+                  "geschlecht": "männlich"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "teamPermanentId": "319476",
+          "teamname": "WSV Glonn",
+          "teamnameSmall": null,
+          "teamAkjId": 1,
+          "teamAkj": "Senioren I",
+          "teamGenderId": 2,
+          "teamGender": "w",
+          "teamNumber": 1,
+          "seasons": [
+            {
+              "seasonId": 2025,
+              "seasonName": "2025/2026",
+              "ligen": [
+                {
+                  "teamCompetitionId": "427255",
+                  "ligaId": "51285",
+                  "liganame": "Kreisliga Damen Südost (kü-kld-so) 25/26",
+                  "akName": "Senioren",
+                  "geschlechtId": 2,
+                  "geschlecht": "weiblich"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "teamPermanentId": "206420",
+          "teamname": "WSV Glonn",
+          "teamnameSmall": "WSV G",
+          "teamAkjId": 16,
+          "teamAkj": "U16",
+          "teamGenderId": 1,
+          "teamGender": "m",
+          "teamNumber": 1,
+          "seasons": [
+            {
+              "seasonId": 2025,
+              "seasonName": "2025/2026",
+              "ligen": [
+                {
+                  "teamCompetitionId": "425950",
+                  "ligaId": "51167",
+                  "liganame": "Kreisliga u16m Südost  (SO-KL16M) 25/26",
+                  "akName": "U16",
+                  "geschlechtId": 1,
+                  "geschlecht": "männlich"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "teamPermanentId": "314800",
+          "teamname": "WSV Glonn",
+          "teamnameSmall": null,
+          "teamAkjId": 16,
+          "teamAkj": "U16",
+          "teamGenderId": 2,
+          "teamGender": "w",
+          "teamNumber": 1,
+          "seasons": [
+            {
+              "seasonId": 2025,
+              "seasonName": "2025/2026",
+              "ligen": [
+                {
+                  "teamCompetitionId": "426878",
+                  "ligaId": "51247",
+                  "liganame": "West - Kreisliga u16w-D (we-kl16w-d) 2025/26",
+                  "akName": "U16",
+                  "geschlechtId": 2,
+                  "geschlecht": "weiblich"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "teamPermanentId": "206418",
+          "teamname": "WSV Glonn",
+          "teamnameSmall": "Glonn",
+          "teamAkjId": 14,
+          "teamAkj": "U14",
+          "teamGenderId": 1,
+          "teamGender": "m",
+          "teamNumber": 1,
+          "seasons": [
+            {
+              "seasonId": 2025,
+              "seasonName": "2025/2026",
+              "ligen": [
+                {
+                  "teamCompetitionId": "426025",
+                  "ligaId": "51176",
+                  "liganame": "Kreisliga u14m Südost Gruppe West (SO-KL14M-W) 25/26",
+                  "akName": "U14",
+                  "geschlechtId": 1,
+                  "geschlecht": "männlich"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "teamPermanentId": "206416",
+          "teamname": "WSV Glonn",
+          "teamnameSmall": "GLO",
+          "teamAkjId": 12,
+          "teamAkj": "U12",
+          "teamGenderId": 1,
+          "teamGender": "m",
+          "teamNumber": 1,
+          "seasons": [
+            {
+              "seasonId": 2025,
+              "seasonName": "2025/2026",
+              "ligen": [
+                {
+                  "teamCompetitionId": "426747",
+                  "ligaId": "51237",
+                  "liganame": "KL u12m Südost Gruppe West (SO-KL12-W) 25/26",
+                  "akName": "U12",
+                  "geschlechtId": 1,
+                  "geschlecht": "männlich"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "teamPermanentId": "312070",
+          "teamname": "WSV Glonn 2",
+          "teamnameSmall": "WSVG",
+          "teamAkjId": 1,
+          "teamAkj": "Senioren I",
+          "teamGenderId": 1,
+          "teamGender": "m",
+          "teamNumber": 2,
+          "seasons": [
+            {
+              "seasonId": 2025,
+              "seasonName": "2025/2026",
+              "ligen": [
+                {
+                  "teamCompetitionId": "423782",
+                  "ligaId": "50937",
+                  "liganame": "Kreisklasse Herren Südost (SO-KKH) 25/26",
+                  "akName": "Senioren",
+                  "geschlechtId": 1,
+                  "geschlecht": "männlich"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "clubId": "173",
+      "vereinsname": "WSV Mehrstetten",
+      "vereinsnummer": "0134078",
+      "verbaende": [
+        1
+      ],
+      "kontaktData": null,
+      "teams": [
+        {
+          "teamPermanentId": "319712",
+          "teamname": "WSV Mehrstetten a.K.",
+          "teamnameSmall": "Mehr",
+          "teamAkjId": 18,
+          "teamAkj": "U18",
+          "teamGenderId": 1,
+          "teamGender": "m",
+          "teamNumber": 1,
+          "seasons": [
+            {
+              "seasonId": 2025,
+              "seasonName": "2025/2026",
+              "ligen": [
+                {
+                  "teamCompetitionId": "409135",
+                  "ligaId": "49058",
+                  "liganame": "BBW4 U18-Bezirksliga Nordost",
+                  "akName": "U18",
+                  "geschlechtId": 1,
+                  "geschlecht": "männlich"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "clubId": "2005",
+      "vereinsname": "WSV Neustrelitz",
+      "vereinsnummer": "1210009",
+      "verbaende": [
+        12
+      ],
+      "kontaktData": null,
+      "teams": [
+        {
+          "teamPermanentId": "167798",
+          "teamname": "WSV Neustrelitz",
+          "teamnameSmall": "NST1",
+          "teamAkjId": 18,
+          "teamAkj": "U18",
+          "teamGenderId": 3,
+          "teamGender": "mix",
+          "teamNumber": 1,
+          "seasons": [
+            {
+              "seasonId": 2025,
+              "seasonName": "2025/2026",
+              "ligen": [
+                {
+                  "teamCompetitionId": "427983",
+                  "ligaId": "50731",
+                  "liganame": "Vorrunde U18 Ost mix",
+                  "akName": "U18",
+                  "geschlechtId": 3,
+                  "geschlecht": "mix"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "teamPermanentId": "167799",
+          "teamname": "WSV Neustrelitz",
+          "teamnameSmall": null,
+          "teamAkjId": 16,
+          "teamAkj": "U16",
+          "teamGenderId": 3,
+          "teamGender": "mix",
+          "teamNumber": 1,
+          "seasons": [
+            {
+              "seasonId": 2025,
+              "seasonName": "2025/2026",
+              "ligen": [
+                {
+                  "teamCompetitionId": "422110",
+                  "ligaId": "50733",
+                  "liganame": "Vorrunde U16 Ost mix",
+                  "akName": "U16",
+                  "geschlechtId": 3,
+                  "geschlecht": "mix"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "teamPermanentId": "167797",
+          "teamname": "WSV Neustrelitz",
+          "teamnameSmall": "NST1",
+          "teamAkjId": 1,
+          "teamAkj": "Senioren I",
+          "teamGenderId": 1,
+          "teamGender": "m",
+          "teamNumber": 1,
+          "seasons": [
+            {
+              "seasonId": 2025,
+              "seasonName": "2025/2026",
+              "ligen": [
+                {
+                  "teamCompetitionId": "422169",
+                  "ligaId": "50746",
+                  "liganame": "Landesliga Herren Ost",
+                  "akName": "Senioren",
+                  "geschlechtId": 1,
+                  "geschlecht": "männlich"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "clubId": "4135",
+      "vereinsname": "Würzburg Baskets Akademie e.V.",
+      "vereinsnummer": "0250573",
+      "verbaende": [
+        2
+      ],
+      "kontaktData": null,
+      "teams": [
+        {
+          "teamPermanentId": "290989",
+          "teamname": "Würzburg Baskets Akademie",
+          "teamnameSmall": "Würzb",
+          "teamAkjId": 14,
+          "teamAkj": "U14",
+          "teamGenderId": 1,
+          "teamGender": "m",
+          "teamNumber": 1,
+          "seasons": [
+            {
+              "seasonId": 2025,
+              "seasonName": "2025/2026",
+              "ligen": [
+                {
+                  "teamCompetitionId": "414447",
+                  "ligaId": "49763",
+                  "liganame": "Bayernliga U14 männlich Einteilungsrunde Nord",
+                  "akName": "U14",
+                  "geschlechtId": 1,
+                  "geschlecht": "männlich"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "clubId": "3595",
+      "vereinsname": "Xanten Romans e.V.",
+      "vereinsnummer": "1120712",
+      "verbaende": [
+        11
+      ],
+      "kontaktData": null,
+      "teams": [
+        {
+          "teamPermanentId": "160194",
+          "teamname": "Xanten Romans",
+          "teamnameSmall": "XAR",
+          "teamAkjId": 18,
+          "teamAkj": "U18",
+          "teamGenderId": 1,
+          "teamGender": "m",
+          "teamNumber": 1,
+          "seasons": [
+            {
+              "seasonId": 2025,
+              "seasonName": "2025/2026",
+              "ligen": [
+                {
+                  "teamCompetitionId": "428032",
+                  "ligaId": "51357",
+                  "liganame": "Jugendkreisliga U18 männlich (JKLU18M)",
+                  "akName": "U18",
+                  "geschlechtId": 1,
+                  "geschlecht": "männlich"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "teamPermanentId": "160211",
+          "teamname": "Xanten Romans",
+          "teamnameSmall": "XAR",
+          "teamAkjId": 16,
+          "teamAkj": "U16",
+          "teamGenderId": 1,
+          "teamGender": "m",
+          "teamNumber": 1,
+          "seasons": [
+            {
+              "seasonId": 2025,
+              "seasonName": "2025/2026",
+              "ligen": [
+                {
+                  "teamCompetitionId": "428057",
+                  "ligaId": "51359",
+                  "liganame": "Jugendkreisliga U16 männlich A (JKLU16MA)",
+                  "akName": "U16",
+                  "geschlechtId": 1,
+                  "geschlecht": "männlich"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "teamPermanentId": "160232",
+          "teamname": "Xanten Romans",
+          "teamnameSmall": "XAR",
+          "teamAkjId": 14,
+          "teamAkj": "U14",
+          "teamGenderId": 3,
+          "teamGender": "mix",
+          "teamNumber": 1,
+          "seasons": [
+            {
+              "seasonId": 2025,
+              "seasonName": "2025/2026",
+              "ligen": [
+                {
+                  "teamCompetitionId": "428017",
+                  "ligaId": "51356",
+                  "liganame": "Jugendkreisliga U14 offen (JKLU14O)",
+                  "akName": "U14",
+                  "geschlechtId": 3,
+                  "geschlecht": "mix"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "teamPermanentId": "160252",
+          "teamname": "Xanten Romans",
+          "teamnameSmall": "XAR",
+          "teamAkjId": 12,
+          "teamAkj": "U12",
+          "teamGenderId": 3,
+          "teamGender": "mix",
+          "teamNumber": 1,
+          "seasons": [
+            {
+              "seasonId": 2025,
+              "seasonName": "2025/2026",
+              "ligen": [
+                {
+                  "teamCompetitionId": "428004",
+                  "ligaId": "51355",
+                  "liganame": "Jugendkreisliga U12 offen (JKLU12O)",
+                  "akName": "U12",
+                  "geschlechtId": 3,
+                  "geschlecht": "mix"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "clubId": "4257",
+      "vereinsname": "YEG Hassel 1993 e.V.",
+      "vereinsnummer": "1140710",
+      "verbaende": [
+        11
+      ],
+      "kontaktData": null,
+      "teams": [
+        {
+          "teamPermanentId": "161904",
+          "teamname": "YEG Hassel",
+          "teamnameSmall": "YEG",
+          "teamAkjId": 1,
+          "teamAkj": "Senioren I",
+          "teamGenderId": 1,
+          "teamGender": "m",
+          "teamNumber": 1,
+          "seasons": [
+            {
+              "seasonId": 2025,
+              "seasonName": "2025/2026",
+              "ligen": [
+                {
+                  "teamCompetitionId": "413315",
+                  "ligaId": "49686",
+                  "liganame": "Landesliga 07 Herren (LL07H)",
+                  "akName": "Senioren",
+                  "geschlechtId": 1,
+                  "geschlecht": "männlich"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "teamPermanentId": "317158",
+          "teamname": "YEG Hassel 2",
+          "teamnameSmall": "YEG",
+          "teamAkjId": 1,
+          "teamAkj": "Senioren I",
+          "teamGenderId": 1,
+          "teamGender": "m",
+          "teamNumber": 2,
+          "seasons": [
+            {
+              "seasonId": 2025,
+              "seasonName": "2025/2026",
+              "ligen": [
+                {
+                  "teamCompetitionId": "425895",
+                  "ligaId": "51166",
+                  "liganame": "Kreisliga Herren Gruppe B",
+                  "akName": "Senioren",
+                  "geschlechtId": 1,
+                  "geschlecht": "männlich"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "teamPermanentId": "319052",
+          "teamname": "YEG Hassel 1993 e.V.",
+          "teamnameSmall": "YEG",
+          "teamAkjId": 18,
+          "teamAkj": "U18",
+          "teamGenderId": 1,
+          "teamGender": "m",
+          "teamNumber": 1,
+          "seasons": [
+            {
+              "seasonId": 2025,
+              "seasonName": "2025/2026",
+              "ligen": [
+                {
+                  "teamCompetitionId": "425492",
+                  "ligaId": "51140",
+                  "liganame": "Kreisliga U18 männlich Gruppe B",
+                  "akName": "U18",
+                  "geschlechtId": 1,
+                  "geschlecht": "männlich"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "clubId": "3948",
+      "vereinsname": "Young Gladiators Trier",
+      "vereinsnummer": "2205002",
+      "verbaende": [
+        100
+      ],
+      "kontaktData": null,
+      "teams": [
+        {
+          "teamPermanentId": "163343",
+          "teamname": "Young Gladiators Trier",
+          "teamnameSmall": "Trier",
+          "teamAkjId": 16,
+          "teamAkj": "U16",
+          "teamGenderId": 1,
+          "teamGender": "m",
+          "teamNumber": 1,
+          "seasons": [
+            {
+              "seasonId": 2025,
+              "seasonName": "2025/2026",
+              "ligen": [
+                {
+                  "teamCompetitionId": "425531",
+                  "ligaId": "50996",
+                  "liganame": "JBBL-Gruppe 6",
+                  "akName": "U16",
+                  "geschlechtId": 1,
+                  "geschlecht": "männlich"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "clubId": "5094",
+      "vereinsname": "Young Lions Wuppertal",
+      "vereinsnummer": "2204018",
+      "verbaende": [
+        100
+      ],
+      "kontaktData": null,
+      "teams": [
+        {
+          "teamPermanentId": "317709",
+          "teamname": "Young Lions Wuppertal",
+          "teamnameSmall": "Wupp",
+          "teamAkjId": 16,
+          "teamAkj": "U16",
+          "teamGenderId": 1,
+          "teamGender": "m",
+          "teamNumber": 1,
+          "seasons": [
+            {
+              "seasonId": 2025,
+              "seasonName": "2025/2026",
+              "ligen": [
+                {
+                  "teamCompetitionId": "427846",
+                  "ligaId": "50995",
+                  "liganame": "JBBL-Gruppe 5",
+                  "akName": "U16",
+                  "geschlechtId": 1,
+                  "geschlecht": "männlich"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "clubId": "4494",
+      "vereinsname": "YOUNG RASTA DRAGONS",
+      "vereinsnummer": "1903019",
+      "verbaende": [
+        100
+      ],
+      "kontaktData": null,
+      "teams": [
+        {
+          "teamPermanentId": "309793",
+          "teamname": "Young Rasta Dragons",
+          "teamnameSmall": "Rasta",
+          "teamAkjId": 19,
+          "teamAkj": "U19",
+          "teamGenderId": 1,
+          "teamGender": "m",
+          "teamNumber": 1,
+          "seasons": [
+            {
+              "seasonId": 2025,
+              "seasonName": "2025/2026",
+              "ligen": [
+                {
+                  "teamCompetitionId": "425549",
+                  "ligaId": "51021",
+                  "liganame": "NBBL B - Gruppe Nord",
+                  "akName": "U19",
+                  "geschlechtId": 1,
+                  "geschlecht": "männlich"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

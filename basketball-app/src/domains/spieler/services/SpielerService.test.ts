@@ -36,6 +36,7 @@ describe('SpielerService', () => {
       altersklasse: 'U10',
       saison: '2025/2026',
       trainer: 'Test Trainer',
+      team_typ: 'eigen',
       created_at: new Date(),
     };
     await db.teams.add(testTeam);
@@ -66,7 +67,8 @@ describe('SpielerService', () => {
     });
 
     it('sollte einen Gegenspieler ohne Team erstellen können', async () => {
-      const gegnerData: Omit<Spieler, 'spieler_id' | 'created_at'> = {
+      // Gegenspieler haben kein team_id, nur verein_id
+      const gegnerData: Omit<Spieler, 'spieler_id' | 'created_at' | 'team_id'> & { team_id?: string } = {
         vorname: 'Felix',
         nachname: 'Gegner',
         spieler_typ: 'gegner',
@@ -74,11 +76,12 @@ describe('SpielerService', () => {
         aktiv: true,
       };
 
-      const spieler = await spielerService.createSpieler(gegnerData);
+      const spieler = await spielerService.createSpieler(gegnerData as any);
 
       expect(spieler).toBeDefined();
       expect(spieler.spieler_typ).toBe('gegner');
       expect(spieler.team_id).toBeUndefined();
+      expect(spieler.verein_id).toBe(testVerein.verein_id);
     });
 
     it('sollte Validierungsfehler bei fehlenden Pflichtfeldern werfen', async () => {
