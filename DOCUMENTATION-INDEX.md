@@ -1,6 +1,6 @@
 # Basketball PWA - Dokumentations-Index
 
-**Letzte Aktualisierung:** 12. Oktober 2025  
+**Letzte Aktualisierung:** 22. Oktober 2025  
 **Projekt-Status:** In Entwicklung  
 **Schema-Version:** v4.0
 
@@ -53,6 +53,28 @@ Dieser Index bietet eine strukturierte Übersicht über alle projektrelevanten D
 
 ---
 
+## 🏀 Crawler & Daten-Import
+
+### **Club & Team Crawler**
+
+| Dokument | Beschreibung | Status |
+|----------|--------------|--------|
+| [docs/CRAWLER-V2-EXPLAINED.md](docs/CRAWLER-V2-EXPLAINED.md) | **Basis-Logik** - Detaillierte Erklärung v2 Crawler | ✅ Aktuell |
+| [docs/CRAWLER-BULK.md](docs/CRAWLER-BULK.md) | Bulk Crawler für Deutschland-weite Daten | ✅ Aktuell |
+| [docs/CRAWLER-COMPARISON.md](docs/CRAWLER-COMPARISON.md) | Vergleich: Incremental vs Bulk Crawler | ✅ Aktuell |
+| [docs/SPLIT-CLUBS.md](docs/SPLIT-CLUBS.md) | Split-Script: clubs-germany.json → Chunks | ✅ Aktuell |
+| [docs/STATISCHE-VERBAENDE.md](docs/STATISCHE-VERBAENDE.md) | Verbands-ID Struktur (Referenz) | ✅ Aktuell |
+
+**Scripts:**
+```bash
+npm run crawl:clubs:bulk      # Deutschland-weiter Bulk Crawl
+npm run crawl:clubs           # Incremental Crawl (einzelner Verband)
+npm run split:clubs           # Split in Chunks (Lazy Loading)
+npm run update:verbaende      # Update Verbands-Konstanten
+```
+
+---
+
 ## 🎓 Fachliche Anforderungen
 
 | Dokument | Beschreibung | Status | Zielgruppe |
@@ -85,7 +107,8 @@ Dieser Index bietet eine strukturierte Übersicht über alle projektrelevanten D
 ```
 Basketball-Apps/
 ├── DOCUMENTATION-INDEX.md          # Dieser Index
-├── BEREINIGUNG-PROTOKOLL.md        # Bereinigungslog
+├── DOCS-CLEANUP-COMPLETE.md        # Cleanup-Protokoll (22.10.2025)
+├── .env
 ├── .gitignore
 │
 ├── docs/                           # 📚 Projekt-Dokumentation
@@ -106,12 +129,22 @@ Basketball-Apps/
 │   │   ├── App-Start-Flows.md
 │   │   └── projekt-zusammenfassng-userflow.md
 │   │
-│   └── archive/                    # Archivierte Dokumente
-│       ├── README.md
-│       └── basketball-pwa-spec-v1.md
+│   ├── CRAWLER-V2-EXPLAINED.md     # Crawler Basis-Logik
+│   ├── CRAWLER-BULK.md             # Bulk Crawler
+│   ├── CRAWLER-COMPARISON.md       # Crawler-Vergleich
+│   ├── SPLIT-CLUBS.md              # Split-Script
+│   ├── STATISCHE-VERBAENDE.md      # Verbands-IDs
+│   │
+│   └── archive/                    # 📦 Archivierte Dokumente
+│       ├── README.md               # Archiv-Index
+│       ├── migrations/             # Abgeschlossene Migrations
+│       ├── cleanup/                # Refactoring-Protokolle
+│       ├── crawler/                # Alte Crawler-Planungen
+│       ├── packages/               # Package-Management Historie
+│       ├── security/               # Security-Fixes
+│       └── fixes/                  # Bug-Fixes
 │
 ├── basketball-app/                 # 🏀 Haupt-Applikation
-│   │
 │   ├── src/                        # Production Code
 │   │   ├── domains/               # Domain-Driven Design
 │   │   │   ├── onboarding/
@@ -135,10 +168,17 @@ Basketball-Apps/
 │   ├── STATUS.md                   # Implementierungs-Status
 │   └── README.md
 │
-└── to-delete/                      # ⚠️ Zu löschende Dateien
-    ├── README.md
-    ├── app-start_onboarding_flow_v3.md
-    └── test.md
+├── scripts/                        # 🔧 Crawler & Tools
+│   ├── crawl-clubs-bulk.js        # Bulk Crawler
+│   ├── crawl-clubs.js             # Incremental Crawler
+│   ├── split-clubs-data.js        # Split-Script
+│   └── update-verbaende.js        # Verbands-Update
+│
+├── data/                           # 📊 Crawler-Daten
+│   └── clubs-germany.json         # Club-Datenbank
+│
+└── archive/                        # 🗄️ Code-Backups
+    └── *.backup
 ```
 
 ---
@@ -151,6 +191,8 @@ Siehe [basketball-app/STATUS.md](basketball-app/STATUS.md) für detaillierten En
 - ✅ Build-Setup (TypeScript, Vite, PWA)
 - ✅ Datenbank-Schema v4.0 (24 Tabellen, Dexie/IndexedDB, Compound-Indizes)
 - ✅ WCAG 2.0 AA Compliance
+- ✅ React 19.2.0 Migration
+- ✅ Club Crawler (Bulk & Incremental)
 - 🚧 Onboarding Flow (in Arbeit)
 - ⏳ Dashboard
 - ⏳ BBB-Integration
@@ -176,6 +218,20 @@ Siehe [basketball-app/STATUS.md](basketball-app/STATUS.md) für detaillierten En
 
 ---
 
+## 📦 Archivierte Dokumentation
+
+Siehe [docs/archive/README.md](docs/archive/README.md) für vollständige Übersicht.
+
+**Kategorien:**
+- **migrations/** - Abgeschlossene Migrations (React 19, Onboarding V2, Dependencies, Verbände-Optimierung)
+- **cleanup/** - Refactoring-Protokolle
+- **crawler/** - Alte Crawler-Planungen
+- **packages/** - Package-Management Historie
+- **security/** - Security-Fix Dokumentationen
+- **fixes/** - Spezifische Bug-Fixes
+
+---
+
 ## 🔍 Dokumenten-Suche
 
 ### Nach Thema
@@ -189,6 +245,12 @@ Siehe [basketball-app/STATUS.md](basketball-app/STATUS.md) für detaillierten En
 - [docs/architecture/basketball-erd.mermaid](docs/architecture/basketball-erd.mermaid)
 - [docs/architecture/datenbank-schema-update_v3.md](docs/architecture/datenbank-schema-update_v3.md)
 - [basketball-app/prototypes/schema-designer.tsx](basketball-app/prototypes/schema-designer.tsx) (interaktiv)
+
+**Crawler & Daten:**
+- [docs/CRAWLER-V2-EXPLAINED.md](docs/CRAWLER-V2-EXPLAINED.md)
+- [docs/CRAWLER-BULK.md](docs/CRAWLER-BULK.md)
+- [docs/SPLIT-CLUBS.md](docs/SPLIT-CLUBS.md)
+- [docs/STATISCHE-VERBAENDE.md](docs/STATISCHE-VERBAENDE.md)
 
 **BBB-Integration:**
 - [docs/userflows/app-start_onboarding_flow_v3.1.md](docs/userflows/app-start_onboarding_flow_v3.1.md) (Abschnitt 3)
@@ -204,14 +266,16 @@ Siehe [basketball-app/STATUS.md](basketball-app/STATUS.md) für detaillierten En
 
 ---
 
-## 🗑️ Bereinigte Dateien
+## 🗑️ Dokumentations-Cleanup
 
-### Gelöscht/Zu löschen (in `/to-delete/`)
-- `app-start_onboarding_flow_v3.md` - Leere Datei (0 B)
-- `test.md` - Encoding-Fehler, redundanter Inhalt
+**Letzte Bereinigung:** 22. Oktober 2025
 
-### Archiviert (in `/docs/archive/`)
-- `basketball-pwa-spec-v1.md` - Alte Spezifikations-Version
+- ✅ 15 Dokumente archiviert/reorganisiert
+- ✅ Root-Verzeichnis bereinigt (93% Reduktion)
+- ✅ Archive strukturiert nach Kategorien
+- ✅ Alle historischen Dokumente erhalten
+
+Details: [DOCS-CLEANUP-COMPLETE.md](DOCS-CLEANUP-COMPLETE.md)
 
 ---
 
@@ -219,7 +283,6 @@ Siehe [basketball-app/STATUS.md](basketball-app/STATUS.md) für detaillierten En
 
 ### Zu prüfen:
 - `docs/architecture/datenstruktur.puml` - Überschneidung mit `basketball-erd.mermaid`?
-- Altes leeres `/archive/` Verzeichnis kann gelöscht werden
 
 ### Offene Punkte:
 - Dokumentation für Test-Strategie erstellen
@@ -234,11 +297,13 @@ Siehe [basketball-app/STATUS.md](basketball-app/STATUS.md) für detaillierten En
    - Test-Strategie dokumentieren
    - BBB-Parser API dokumentieren
    - Deployment-Guide erstellen
+   - Split-Clubs Integration dokumentieren
 
 2. **Entwicklung:**
    - Onboarding Flow abschließen
    - Dashboard implementieren
    - BBB-Integration testen
+   - Lazy Loading für Club-Chunks
 
 3. **Qualitätssicherung:**
    - Unit-Tests für kritische Pfade
@@ -253,13 +318,15 @@ Siehe [basketball-app/STATUS.md](basketball-app/STATUS.md) für detaillierten En
 - [🧪 Prototypen](basketball-app/prototypes/README.md)
 - [📊 Projekt-Status](basketball-app/STATUS.md)
 - [🏀 Basketball-App](basketball-app/)
-- [🗑️ Bereinigungsprotokoll](BEREINIGUNG-PROTOKOLL.md)
+- [🔧 Crawler Scripts](scripts/)
+- [📦 Archiv](docs/archive/README.md)
+- [🗑️ Cleanup-Protokoll](DOCS-CLEANUP-COMPLETE.md)
 
 ---
 
 **Letzte Änderungen:**
+- 22. Oktober 2025: Dokumentations-Cleanup & Archivierung
+- 22. Oktober 2025: Crawler-Dokumentation hinzugefügt
+- 22. Oktober 2025: Archive strukturiert (migrations, cleanup, crawler, packages, security, fixes)
 - 12. Oktober 2025: Ordnerstruktur komplett reorganisiert
-- 12. Oktober 2025: `/docs/` Ordner mit Unterstruktur erstellt
-- 12. Oktober 2025: `/prototypes/` außerhalb von `/src/` verschoben
-- 12. Oktober 2025: Alle Pfade aktualisiert
 - 12. Oktober 2025: Schema Designer auf v4.0 aktualisiert
