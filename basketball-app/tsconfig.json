@@ -31,5 +31,10 @@
     "types": ["vite/client"]
   },
   "include": ["src"],
+  "exclude": [
+    "src/**/archive/**",
+    "src/**/__tests__/**/*.test.ts",
+    "src/**/__tests__/**/*.test.tsx"
+  ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

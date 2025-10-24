@@ -1175,6 +1175,16 @@ Meine Frage:
 
 ### Änderungs-Historie
 ```
+v2.0.0-dev (24.10.2025)
+- ✅ TypeScript Build-Fehler behoben (DBBSpielplanEintrag Import)
+- ✅ Input-Types zentralisiert (CreateVereinInput, CreateTeamInput)
+- ✅ CORS-Proxy-Fix: IMMER Proxies nutzen (nicht nur DEV)
+- ✅ Mock-Daten aus Production-Fallback entfernt
+- ✅ Liga-Sync Error-Handling verbessert (blockierend + Logging)
+- ✅ Dashboard UI: Status-Banner für leere Tabelle
+- 📝 Umfassende Bug-Fix-Dokumentation erstellt
+- ⚠️ E2E-Tests müssen echte API-Calls nutzen (nicht Mocks)
+
 v2.0.0-dev (23.10.2025)
 - ✅ Konsolidierte Dokumentation erstellt
 - ✅ ClubDataLoader Service implementiert

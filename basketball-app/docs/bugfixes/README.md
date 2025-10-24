@@ -8,6 +8,7 @@ Hier werden alle behobenen Bugs mit Root Cause, Lösung und Prevention-Tipps dok
 
 | Datum | Dokument | Betroffene Komponente | Status |
 |-------|----------|----------------------|--------|
+| 2025-10-24 | [TYPE-CORS-MOCK-FIXES.md](./2025-10-24-TYPE-CORS-MOCK-FIXES.md) | TypeScript, API, Tests | ✅ Behoben |
 | 2025-10-23 | [BBB-SYNC-INTEGRATION-TESTS.md](./2025-10-23-BBB-SYNC-INTEGRATION-TESTS.md) | BBBSyncService Tests | ✅ Behoben |
 
 ---
