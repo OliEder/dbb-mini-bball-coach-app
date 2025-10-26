@@ -16,7 +16,7 @@ export default defineConfig({
                 theme_color: '#1e3a8a',
                 background_color: '#ffffff',
                 display: 'standalone',
-                start_url: '/',
+                start_url: '/dbb-mini-bball-coach-app/',
                 icons: [] // Noch keine Icons
             },
             workbox: {

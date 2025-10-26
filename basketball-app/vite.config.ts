@@ -8,7 +8,7 @@ export default defineConfig(() => {
   // Base path für GitHub Pages
   // Wenn auf olieder.github.io deployed: '/'
   // Wenn auf olieder.github.io/repo-name deployed: '/repo-name/'
-  const base = process.env.BASE_URL || '/';
+  const base = process.env.BASE_URL || '/dbb-mini-bball-coach-app/';
   
   return {
     base,
