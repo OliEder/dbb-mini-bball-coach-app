@@ -71,9 +71,8 @@ export default defineConfig(() => {
           skipWaiting: true
         },
         devOptions: {
-          enabled: false,
-          navigateFallback: 'index.html',
-          suppressWarnings: true
+          enabled: false,  // Service Worker in Development deaktiviert
+          type: 'module'
         }
       })
     ],
