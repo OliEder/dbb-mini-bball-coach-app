@@ -5,6 +5,8 @@ import path from 'path';
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  // GitHub Pages base path für dein Repository
+  base: process.env.BASE_URL || '/dbb-mini-bball-coach-app/',
   plugins: [
     react(),
     VitePWA({

@@ -1,0 +1,15 @@
+# Basketball Team Manager PWA
+# https://olieeder.github.io/dbb-mini-bball-coach-app/
+
+User-agent: *
+Allow: /
+
+# PWA Assets
+Allow: /assets/
+Allow: /manifest.json
+Allow: /sw.js
+
+# No need to crawl source maps
+Disallow: /*.map
+
+Sitemap: https://olieeder.github.io/dbb-mini-bball-coach-app/sitemap.xml
