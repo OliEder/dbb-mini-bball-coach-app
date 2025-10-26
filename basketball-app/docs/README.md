@@ -6,9 +6,9 @@
 
 ## 🎯 Wichtigste Dokumente
 
-### Für neue Chat-Sessions
-**[development/QUICKSTART.md](./development/QUICKSTART.md)** 🚀  
-Template und Best Practices für Chat-Wechsel
+### ⚠️ Für neue Chat-Sessions - MUST READ!
+**[development/TYPESCRIPT-GUIDE.md](./development/TYPESCRIPT-GUIDE.md)** 🔴  
+**WICHTIG:** Vermeidet die häufigsten TypeScript-Fehler! (z.B. `team.id` → `team.team_id`)
 
 ### Vollständige Projekt-Doku
 **[development/PROJECT-STATUS.md](./development/PROJECT-STATUS.md)** ⭐  
@@ -31,8 +31,8 @@ docs/
 ├── README.md                     ← Diese Datei (Übersicht)
 │
 ├── development/                  ← Aktive Entwicklungs-Doku
+│   ├── TYPESCRIPT-GUIDE.md           🔴 TypeScript Best Practices (MUST READ!)
 │   ├── PROJECT-STATUS.md             ⭐ Hauptdokumentation
-│   ├── QUICKSTART.md                 🚀 Chat-Template
 │   ├── TECHNICAL-DECISIONS.md        🧠 TDRs
 │   ├── TEST-STATUS.md                🧪 Test-Analyse
 │   ├── DBB-API-EVALUATION.md         📡 API-Bewertung
@@ -41,7 +41,8 @@ docs/
 │
 ├── bugfixes/                     ← Bug-Fix Dokumentation
 │   ├── README.md                     📋 Übersicht & Template
-│   └── 2025-10-23-BBB-SYNC-*.md      🐛 Bug-Fix Details
+│   ├── 2025-10-23-BBB-SYNC-*.md      🐛 Bug-Fix Details
+│   └── 2025-10-26-BBB-SYNC-FIX.md    🔧 API Response Format Fix
 │
 └── archive/                      ← Alte/veraltete Dokumente
     └── [Historische Dokumente]

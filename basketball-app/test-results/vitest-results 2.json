@@ -1,0 +1,3656 @@
+{
+    "numTotalTestSuites": 137,
+    "numPassedTestSuites": 135,
+    "numFailedTestSuites": 2,
+    "numPendingTestSuites": 0,
+    "numTotalTests": 291,
+    "numPassedTests": 290,
+    "numFailedTests": 0,
+    "numPendingTests": 1,
+    "numTodoTests": 0,
+    "snapshot": {
+        "added": 0,
+        "failure": false,
+        "filesAdded": 0,
+        "filesRemoved": 0,
+        "filesRemovedList": [],
+        "filesUnmatched": 0,
+        "filesUpdated": 0,
+        "matched": 0,
+        "total": 0,
+        "unchecked": 0,
+        "uncheckedKeysByFile": [],
+        "unmatched": 0,
+        "updated": 0,
+        "didUpdate": false
+    },
+    "startTime": 1760480614982,
+    "success": false,
+    "testResults": [
+        {
+            "assertionResults": [],
+            "startTime": 1760480614982,
+            "endTime": 1760480614982,
+            "status": "failed",
+            "message": "Failed to resolve import \"@playwright/test\" from \"e2e/bbb-integration.spec.ts\". Does the file exist?",
+            "name": "/Users/oliver-marcuseder/Documents/00-Privat/Basketball-Apps/basketball-app/e2e/bbb-integration.spec.ts"
+        },
+        {
+            "assertionResults": [],
+            "startTime": 1760480614982,
+            "endTime": 1760480614982,
+            "status": "failed",
+            "message": "Failed to resolve import \"@playwright/test\" from \"e2e/onboarding.spec.ts\". Does the file exist?",
+            "name": "/Users/oliver-marcuseder/Documents/00-Privat/Basketball-Apps/basketball-app/e2e/onboarding.spec.ts"
+        },
+        {
+            "assertionResults": [
+                {
+                    "ancestorTitles": [
+                        "extractLigaIdFromUrl",
+                        "Query Parameter Extraktion"
+                    ],
+                    "fullName": "extractLigaIdFromUrl Query Parameter Extraktion sollte liga_id aus Query-Parametern extrahieren",
+                    "status": "passed",
+                    "title": "sollte liga_id aus Query-Parametern extrahieren",
+                    "duration": 2.248209000000031,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "extractLigaIdFromUrl",
+                        "Query Parameter Extraktion"
+                    ],
+                    "fullName": "extractLigaIdFromUrl Query Parameter Extraktion sollte verschiedene Parameter-Namen unterstützen",
+                    "status": "passed",
+                    "title": "sollte verschiedene Parameter-Namen unterstützen",
+                    "duration": 0.8396669999999631,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "extractLigaIdFromUrl",
+                        "Path-basierte Extraktion"
+                    ],
+                    "fullName": "extractLigaIdFromUrl Path-basierte Extraktion sollte Liga-ID aus URL-Pfad extrahieren",
+                    "status": "passed",
+                    "title": "sollte Liga-ID aus URL-Pfad extrahieren",
+                    "duration": 1.134208000000001,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "extractLigaIdFromUrl",
+                        "Fehlerbehandlung"
+                    ],
+                    "fullName": "extractLigaIdFromUrl Fehlerbehandlung sollte null bei ungültigen Eingaben zurückgeben",
+                    "status": "passed",
+                    "title": "sollte null bei ungültigen Eingaben zurückgeben",
+                    "duration": 0.43029200000000856,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "extractLigaIdFromUrl",
+                        "Komplexe URLs"
+                    ],
+                    "fullName": "extractLigaIdFromUrl Komplexe URLs sollte Liga-ID aus komplexen BBB URLs extrahieren",
+                    "status": "passed",
+                    "title": "sollte Liga-ID aus komplexen BBB URLs extrahieren",
+                    "duration": 0.29562500000002956,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "extractLigaIdFromUrl",
+                        "Komplexe URLs"
+                    ],
+                    "fullName": "extractLigaIdFromUrl Komplexe URLs sollte Liga-ID aus Team-Statistik URLs extrahieren",
+                    "status": "passed",
+                    "title": "sollte Liga-ID aus Team-Statistik URLs extrahieren",
+                    "duration": 0.2179580000000101,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "normalizeBBBUrl"
+                    ],
+                    "fullName": "normalizeBBBUrl sollte Protocol hinzufügen wenn fehlt",
+                    "status": "passed",
+                    "title": "sollte Protocol hinzufügen wenn fehlt",
+                    "duration": 0.2658339999999839,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "normalizeBBBUrl"
+                    ],
+                    "fullName": "normalizeBBBUrl sollte print Parameter entfernen",
+                    "status": "passed",
+                    "title": "sollte print Parameter entfernen",
+                    "duration": 0.17029200000001765,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "normalizeBBBUrl"
+                    ],
+                    "fullName": "normalizeBBBUrl sollte trailing slash entfernen",
+                    "status": "passed",
+                    "title": "sollte trailing slash entfernen",
+                    "duration": 0.18333300000000463,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "normalizeBBBUrl"
+                    ],
+                    "fullName": "normalizeBBBUrl sollte leere Strings handhaben",
+                    "status": "passed",
+                    "title": "sollte leere Strings handhaben",
+                    "duration": 0.059790999999961514,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBUrls"
+                    ],
+                    "fullName": "BBBUrls sollte korrekte API URLs generieren",
+                    "status": "passed",
+                    "title": "sollte korrekte API URLs generieren",
+                    "duration": 0.08645799999999326,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBUrls"
+                    ],
+                    "fullName": "BBBUrls sollte korrekte HTML URLs generieren",
+                    "status": "passed",
+                    "title": "sollte korrekte HTML URLs generieren",
+                    "duration": 0.11087500000002137,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "isBBBUrl"
+                    ],
+                    "fullName": "isBBBUrl sollte BBB URLs erkennen",
+                    "status": "passed",
+                    "title": "sollte BBB URLs erkennen",
+                    "duration": 0.1313329999999837,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "isBBBUrl"
+                    ],
+                    "fullName": "isBBBUrl sollte nicht-BBB URLs ablehnen",
+                    "status": "passed",
+                    "title": "sollte nicht-BBB URLs ablehnen",
+                    "duration": 0.21704199999999219,
+                    "failureMessages": [],
+                    "meta": {}
+                }
+            ],
+            "startTime": 1760480618351,
+            "endTime": 1760480618357.217,
+            "status": "passed",
+            "message": "",
+            "name": "/Users/oliver-marcuseder/Documents/00-Privat/Basketball-Apps/basketball-app/src/shared/utils/urlUtils.test.ts"
+        },
+        {
+            "assertionResults": [
+                {
+                    "ancestorTitles": [
+                        "SpielerService Integration Tests",
+                        "Contract: createSpieler → Database"
+                    ],
+                    "fullName": "SpielerService Integration Tests Contract: createSpieler → Database sollte Contract für vollständigen Spieler erfüllen",
+                    "status": "passed",
+                    "title": "sollte Contract für vollständigen Spieler erfüllen",
+                    "duration": 31.313083000000006,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "SpielerService Integration Tests",
+                        "Contract: createSpieler → Database"
+                    ],
+                    "fullName": "SpielerService Integration Tests Contract: createSpieler → Database sollte Contract für minimalen Spieler erfüllen",
+                    "status": "passed",
+                    "title": "sollte Contract für minimalen Spieler erfüllen",
+                    "duration": 12.357500000000016,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "SpielerService Integration Tests",
+                        "Contract: getSpielerByTeam → Database"
+                    ],
+                    "fullName": "SpielerService Integration Tests Contract: getSpielerByTeam → Database sollte alle Spieler eines Teams zurückgeben",
+                    "status": "passed",
+                    "title": "sollte alle Spieler eines Teams zurückgeben",
+                    "duration": 11.455832999999984,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "SpielerService Integration Tests",
+                        "Contract: getSpielerByTeam → Database"
+                    ],
+                    "fullName": "SpielerService Integration Tests Contract: getSpielerByTeam → Database sollte Filter korrekt an Database weitergeben",
+                    "status": "passed",
+                    "title": "sollte Filter korrekt an Database weitergeben",
+                    "duration": 7.806374999999889,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "SpielerService Integration Tests",
+                        "Contract: updateSpieler → Database"
+                    ],
+                    "fullName": "SpielerService Integration Tests Contract: updateSpieler → Database sollte partielle Updates korrekt durchführen",
+                    "status": "passed",
+                    "title": "sollte partielle Updates korrekt durchführen",
+                    "duration": 18.58304200000009,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "SpielerService Integration Tests",
+                        "Contract: updateSpieler → Database"
+                    ],
+                    "fullName": "SpielerService Integration Tests Contract: updateSpieler → Database sollte Fehler bei nicht existierendem Spieler werfen",
+                    "status": "passed",
+                    "title": "sollte Fehler bei nicht existierendem Spieler werfen",
+                    "duration": 5.9034580000000005,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "SpielerService Integration Tests",
+                        "Contract: deleteSpieler → Database"
+                    ],
+                    "fullName": "SpielerService Integration Tests Contract: deleteSpieler → Database sollte Spieler aus Database entfernen",
+                    "status": "passed",
+                    "title": "sollte Spieler aus Database entfernen",
+                    "duration": 6.943249999999921,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "SpielerService Integration Tests",
+                        "Contract: Concurrent Operations"
+                    ],
+                    "fullName": "SpielerService Integration Tests Contract: Concurrent Operations sollte gleichzeitige Operationen korrekt verarbeiten",
+                    "status": "passed",
+                    "title": "sollte gleichzeitige Operationen korrekt verarbeiten",
+                    "duration": 12.550749999999994,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "SpielerService Integration Tests",
+                        "Contract: Data Integrity"
+                    ],
+                    "fullName": "SpielerService Integration Tests Contract: Data Integrity sollte Datenintegrität bei komplexen Szenarien wahren",
+                    "status": "passed",
+                    "title": "sollte Datenintegrität bei komplexen Szenarien wahren",
+                    "duration": 11.614417000000003,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "SpielerService Integration Tests",
+                        "Contract: Error Handling"
+                    ],
+                    "fullName": "SpielerService Integration Tests Contract: Error Handling sollte Validierungsfehler korrekt propagieren",
+                    "status": "passed",
+                    "title": "sollte Validierungsfehler korrekt propagieren",
+                    "duration": 10.144000000000005,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "SpielerService Integration Tests",
+                        "Contract: Error Handling"
+                    ],
+                    "fullName": "SpielerService Integration Tests Contract: Error Handling sollte Database-Fehler korrekt behandeln",
+                    "status": "passed",
+                    "title": "sollte Database-Fehler korrekt behandeln",
+                    "duration": 4.328874999999925,
+                    "failureMessages": [],
+                    "meta": {}
+                }
+            ],
+            "startTime": 1760480617399,
+            "endTime": 1760480617533.3289,
+            "status": "passed",
+            "message": "",
+            "name": "/Users/oliver-marcuseder/Documents/00-Privat/Basketball-Apps/basketball-app/src/domains/spieler/services/SpielerService.integration.test.ts"
+        },
+        {
+            "assertionResults": [
+                {
+                    "ancestorTitles": [
+                        "SpielerService",
+                        "createSpieler"
+                    ],
+                    "fullName": "SpielerService createSpieler sollte einen Spieler erfolgreich erstellen",
+                    "status": "passed",
+                    "title": "sollte einen Spieler erfolgreich erstellen",
+                    "duration": 16.252208999999993,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "SpielerService",
+                        "createSpieler"
+                    ],
+                    "fullName": "SpielerService createSpieler sollte einen Gegenspieler ohne Team erstellen können",
+                    "status": "passed",
+                    "title": "sollte einen Gegenspieler ohne Team erstellen können",
+                    "duration": 5.005957999999964,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "SpielerService",
+                        "createSpieler"
+                    ],
+                    "fullName": "SpielerService createSpieler sollte Validierungsfehler bei fehlenden Pflichtfeldern werfen",
+                    "status": "passed",
+                    "title": "sollte Validierungsfehler bei fehlenden Pflichtfeldern werfen",
+                    "duration": 4.983624999999961,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "SpielerService",
+                        "getSpielerById"
+                    ],
+                    "fullName": "SpielerService getSpielerById sollte einen Spieler anhand der ID finden",
+                    "status": "passed",
+                    "title": "sollte einen Spieler anhand der ID finden",
+                    "duration": 7.224833999999987,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "SpielerService",
+                        "getSpielerById"
+                    ],
+                    "fullName": "SpielerService getSpielerById sollte null zurückgeben bei nicht existierender ID",
+                    "status": "passed",
+                    "title": "sollte null zurückgeben bei nicht existierender ID",
+                    "duration": 14.784334000000001,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "SpielerService",
+                        "getSpielerByTeam"
+                    ],
+                    "fullName": "SpielerService getSpielerByTeam sollte alle Spieler eines Teams zurückgeben",
+                    "status": "passed",
+                    "title": "sollte alle Spieler eines Teams zurückgeben",
+                    "duration": 5.380999999999972,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "SpielerService",
+                        "getSpielerByTeam"
+                    ],
+                    "fullName": "SpielerService getSpielerByTeam sollte nur aktive Spieler zurückgeben wenn Filter gesetzt",
+                    "status": "passed",
+                    "title": "sollte nur aktive Spieler zurückgeben wenn Filter gesetzt",
+                    "duration": 5.960084000000052,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "SpielerService",
+                        "updateSpieler"
+                    ],
+                    "fullName": "SpielerService updateSpieler sollte einen Spieler aktualisieren",
+                    "status": "passed",
+                    "title": "sollte einen Spieler aktualisieren",
+                    "duration": 6.677666999999985,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "SpielerService",
+                        "updateSpieler"
+                    ],
+                    "fullName": "SpielerService updateSpieler sollte Fehler werfen bei nicht existierender ID",
+                    "status": "passed",
+                    "title": "sollte Fehler werfen bei nicht existierender ID",
+                    "duration": 6.6351249999999595,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "SpielerService",
+                        "deleteSpieler"
+                    ],
+                    "fullName": "SpielerService deleteSpieler sollte einen Spieler löschen",
+                    "status": "passed",
+                    "title": "sollte einen Spieler löschen",
+                    "duration": 8.586625000000026,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "SpielerService",
+                        "deleteSpieler"
+                    ],
+                    "fullName": "SpielerService deleteSpieler sollte Fehler werfen bei nicht existierender ID",
+                    "status": "passed",
+                    "title": "sollte Fehler werfen bei nicht existierender ID",
+                    "duration": 4.130042000000003,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "SpielerService",
+                        "countAktiveSpieler"
+                    ],
+                    "fullName": "SpielerService countAktiveSpieler sollte die Anzahl aktiver Spieler zurückgeben",
+                    "status": "passed",
+                    "title": "sollte die Anzahl aktiver Spieler zurückgeben",
+                    "duration": 4.942332999999962,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "SpielerService",
+                        "getSpielerByMitgliedsnummer"
+                    ],
+                    "fullName": "SpielerService getSpielerByMitgliedsnummer sollte Spieler anhand der Mitgliedsnummer finden",
+                    "status": "passed",
+                    "title": "sollte Spieler anhand der Mitgliedsnummer finden",
+                    "duration": 3.732040999999981,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "SpielerService",
+                        "getSpielerByMitgliedsnummer"
+                    ],
+                    "fullName": "SpielerService getSpielerByMitgliedsnummer sollte null zurückgeben wenn nicht gefunden",
+                    "status": "passed",
+                    "title": "sollte null zurückgeben wenn nicht gefunden",
+                    "duration": 9.695500000000038,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "SpielerService",
+                        "searchSpieler"
+                    ],
+                    "fullName": "SpielerService searchSpieler sollte Spieler nach Vorname suchen",
+                    "status": "passed",
+                    "title": "sollte Spieler nach Vorname suchen",
+                    "duration": 8.553499999999985,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "SpielerService",
+                        "searchSpieler"
+                    ],
+                    "fullName": "SpielerService searchSpieler sollte Spieler nach Nachname suchen",
+                    "status": "passed",
+                    "title": "sollte Spieler nach Nachname suchen",
+                    "duration": 5.322291000000064,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "SpielerService",
+                        "searchSpieler"
+                    ],
+                    "fullName": "SpielerService searchSpieler sollte case-insensitive suchen",
+                    "status": "passed",
+                    "title": "sollte case-insensitive suchen",
+                    "duration": 5.6445830000000115,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "SpielerService",
+                        "searchSpieler"
+                    ],
+                    "fullName": "SpielerService searchSpieler sollte leere Liste bei keinem Treffer zurückgeben",
+                    "status": "passed",
+                    "title": "sollte leere Liste bei keinem Treffer zurückgeben",
+                    "duration": 5.594791999999984,
+                    "failureMessages": [],
+                    "meta": {}
+                }
+            ],
+            "startTime": 1760480616770,
+            "endTime": 1760480616899.5947,
+            "status": "passed",
+            "message": "",
+            "name": "/Users/oliver-marcuseder/Documents/00-Privat/Basketball-Apps/basketball-app/src/domains/spieler/services/SpielerService.test.ts"
+        },
+        {
+            "assertionResults": [
+                {
+                    "ancestorTitles": [
+                        "SpielService Integration Tests",
+                        "Contract: createSpiel → Database"
+                    ],
+                    "fullName": "SpielService Integration Tests Contract: createSpiel → Database sollte Contract für vollständiges Spiel erfüllen",
+                    "status": "passed",
+                    "title": "sollte Contract für vollständiges Spiel erfüllen",
+                    "duration": 35.17820899999998,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "SpielService Integration Tests",
+                        "Contract: createSpiel → Database"
+                    ],
+                    "fullName": "SpielService Integration Tests Contract: createSpiel → Database sollte Contract für minimales Spiel erfüllen",
+                    "status": "passed",
+                    "title": "sollte Contract für minimales Spiel erfüllen",
+                    "duration": 9.523166999999944,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "SpielService Integration Tests",
+                        "Contract: getSpieleByTeam → Database"
+                    ],
+                    "fullName": "SpielService Integration Tests Contract: getSpieleByTeam → Database sollte alle Spiele eines Teams chronologisch sortiert zurückgeben",
+                    "status": "passed",
+                    "title": "sollte alle Spiele eines Teams chronologisch sortiert zurückgeben",
+                    "duration": 15.85029099999997,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "SpielService Integration Tests",
+                        "Contract: getSpieleByTeam → Database"
+                    ],
+                    "fullName": "SpielService Integration Tests Contract: getSpieleByTeam → Database sollte Filter korrekt an Database weitergeben",
+                    "status": "passed",
+                    "title": "sollte Filter korrekt an Database weitergeben",
+                    "duration": 9.287249999999972,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "SpielService Integration Tests",
+                        "Contract: getNextSpiel → Database"
+                    ],
+                    "fullName": "SpielService Integration Tests Contract: getNextSpiel → Database sollte das nächste zukünftige Spiel finden",
+                    "status": "passed",
+                    "title": "sollte das nächste zukünftige Spiel finden",
+                    "duration": 11.221666000000027,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "SpielService Integration Tests",
+                        "Contract: BBB-Integration"
+                    ],
+                    "fullName": "SpielService Integration Tests Contract: BBB-Integration sollte Spiel anhand BBB-Spielnummer finden",
+                    "status": "passed",
+                    "title": "sollte Spiel anhand BBB-Spielnummer finden",
+                    "duration": 8.273957999999993,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "SpielService Integration Tests",
+                        "Contract: Team-Statistiken"
+                    ],
+                    "fullName": "SpielService Integration Tests Contract: Team-Statistiken sollte Statistiken korrekt berechnen",
+                    "status": "passed",
+                    "title": "sollte Statistiken korrekt berechnen",
+                    "duration": 9.574666999999977,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "SpielService Integration Tests",
+                        "Contract: Concurrent Operations"
+                    ],
+                    "fullName": "SpielService Integration Tests Contract: Concurrent Operations sollte gleichzeitige Operationen korrekt verarbeiten",
+                    "status": "passed",
+                    "title": "sollte gleichzeitige Operationen korrekt verarbeiten",
+                    "duration": 11.356499999999983,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "SpielService Integration Tests",
+                        "Contract: Data Integrity"
+                    ],
+                    "fullName": "SpielService Integration Tests Contract: Data Integrity sollte Datenintegrität bei komplexen Workflows wahren",
+                    "status": "passed",
+                    "title": "sollte Datenintegrität bei komplexen Workflows wahren",
+                    "duration": 9.410333000000037,
+                    "failureMessages": [],
+                    "meta": {}
+                }
+            ],
+            "startTime": 1760480617387,
+            "endTime": 1760480617507.4104,
+            "status": "passed",
+            "message": "",
+            "name": "/Users/oliver-marcuseder/Documents/00-Privat/Basketball-Apps/basketball-app/src/domains/spielplan/services/SpielService.integration.test.ts"
+        },
+        {
+            "assertionResults": [
+                {
+                    "ancestorTitles": [
+                        "SpielService",
+                        "createSpiel"
+                    ],
+                    "fullName": "SpielService createSpiel sollte ein Heimspiel erfolgreich erstellen",
+                    "status": "passed",
+                    "title": "sollte ein Heimspiel erfolgreich erstellen",
+                    "duration": 21.17408400000005,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "SpielService",
+                        "createSpiel"
+                    ],
+                    "fullName": "SpielService createSpiel sollte ein Auswärtsspiel erstellen können",
+                    "status": "passed",
+                    "title": "sollte ein Auswärtsspiel erstellen können",
+                    "duration": 13.293165999999928,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "SpielService",
+                        "createSpiel"
+                    ],
+                    "fullName": "SpielService createSpiel sollte Validierungsfehler bei fehlenden Pflichtfeldern werfen",
+                    "status": "passed",
+                    "title": "sollte Validierungsfehler bei fehlenden Pflichtfeldern werfen",
+                    "duration": 18.162083999999936,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "SpielService",
+                        "getSpielById"
+                    ],
+                    "fullName": "SpielService getSpielById sollte ein Spiel anhand der ID finden",
+                    "status": "passed",
+                    "title": "sollte ein Spiel anhand der ID finden",
+                    "duration": 10.540666999999985,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "SpielService",
+                        "getSpielById"
+                    ],
+                    "fullName": "SpielService getSpielById sollte null zurückgeben bei nicht existierender ID",
+                    "status": "passed",
+                    "title": "sollte null zurückgeben bei nicht existierender ID",
+                    "duration": 5.241250000000036,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "SpielService",
+                        "getSpieleByTeam"
+                    ],
+                    "fullName": "SpielService getSpieleByTeam sollte alle Spiele eines Teams zurückgeben",
+                    "status": "passed",
+                    "title": "sollte alle Spiele eines Teams zurückgeben",
+                    "duration": 11.015667000000008,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "SpielService",
+                        "getSpieleByTeam"
+                    ],
+                    "fullName": "SpielService getSpieleByTeam sollte nur Heimspiele zurückgeben wenn Filter gesetzt",
+                    "status": "passed",
+                    "title": "sollte nur Heimspiele zurückgeben wenn Filter gesetzt",
+                    "duration": 9.356083000000012,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "SpielService",
+                        "getSpieleByTeam"
+                    ],
+                    "fullName": "SpielService getSpieleByTeam sollte nach Status filtern",
+                    "status": "passed",
+                    "title": "sollte nach Status filtern",
+                    "duration": 6.2662090000000035,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "SpielService",
+                        "getNextSpiel"
+                    ],
+                    "fullName": "SpielService getNextSpiel sollte das nächste anstehende Spiel zurückgeben",
+                    "status": "passed",
+                    "title": "sollte das nächste anstehende Spiel zurückgeben",
+                    "duration": 15.338082999999983,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "SpielService",
+                        "getNextSpiel"
+                    ],
+                    "fullName": "SpielService getNextSpiel sollte null zurückgeben wenn keine zukünftigen Spiele",
+                    "status": "passed",
+                    "title": "sollte null zurückgeben wenn keine zukünftigen Spiele",
+                    "duration": 11.31337499999995,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "SpielService",
+                        "updateSpiel"
+                    ],
+                    "fullName": "SpielService updateSpiel sollte ein Spiel aktualisieren",
+                    "status": "passed",
+                    "title": "sollte ein Spiel aktualisieren",
+                    "duration": 7.317250000000058,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "SpielService",
+                        "updateSpiel"
+                    ],
+                    "fullName": "SpielService updateSpiel sollte Fehler werfen bei nicht existierender ID",
+                    "status": "passed",
+                    "title": "sollte Fehler werfen bei nicht existierender ID",
+                    "duration": 5.384124999999926,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "SpielService",
+                        "deleteSpiel"
+                    ],
+                    "fullName": "SpielService deleteSpiel sollte ein Spiel löschen",
+                    "status": "passed",
+                    "title": "sollte ein Spiel löschen",
+                    "duration": 12.170583000000079,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "SpielService",
+                        "getSpielBySpielNummer"
+                    ],
+                    "fullName": "SpielService getSpielBySpielNummer sollte Spiel anhand der BBB-Spielnummer finden",
+                    "status": "passed",
+                    "title": "sollte Spiel anhand der BBB-Spielnummer finden",
+                    "duration": 12.900457999999958,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "SpielService",
+                        "getSpielBySpielNummer"
+                    ],
+                    "fullName": "SpielService getSpielBySpielNummer sollte null zurückgeben wenn nicht gefunden",
+                    "status": "passed",
+                    "title": "sollte null zurückgeben wenn nicht gefunden",
+                    "duration": 10.581458999999995,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "SpielService",
+                        "countSpieleByStatus"
+                    ],
+                    "fullName": "SpielService countSpieleByStatus sollte Spiele nach Status zählen",
+                    "status": "passed",
+                    "title": "sollte Spiele nach Status zählen",
+                    "duration": 7.426459000000023,
+                    "failureMessages": [],
+                    "meta": {}
+                }
+            ],
+            "startTime": 1760480617673,
+            "endTime": 1760480617851.4265,
+            "status": "passed",
+            "message": "",
+            "name": "/Users/oliver-marcuseder/Documents/00-Privat/Basketball-Apps/basketball-app/src/domains/spielplan/services/SpielService.test.ts"
+        },
+        {
+            "assertionResults": [
+                {
+                    "ancestorTitles": [
+                        "TeamService",
+                        "createTeam"
+                    ],
+                    "fullName": "TeamService createTeam should create a new team with valid input",
+                    "status": "passed",
+                    "title": "should create a new team with valid input",
+                    "duration": 19.99041699999998,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "TeamService",
+                        "createTeam"
+                    ],
+                    "fullName": "TeamService createTeam should create team with optional leistungsorientiert flag",
+                    "status": "passed",
+                    "title": "should create team with optional leistungsorientiert flag",
+                    "duration": 7.638167000000067,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "TeamService",
+                        "createTeam"
+                    ],
+                    "fullName": "TeamService createTeam should persist team to database",
+                    "status": "passed",
+                    "title": "should persist team to database",
+                    "duration": 9.008666000000062,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "TeamService",
+                        "getTeamById"
+                    ],
+                    "fullName": "TeamService getTeamById should return team when it exists",
+                    "status": "passed",
+                    "title": "should return team when it exists",
+                    "duration": 12.713082999999983,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "TeamService",
+                        "getTeamById"
+                    ],
+                    "fullName": "TeamService getTeamById should return undefined when team does not exist",
+                    "status": "passed",
+                    "title": "should return undefined when team does not exist",
+                    "duration": 14.191291999999976,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "TeamService",
+                        "getTeamsByVerein"
+                    ],
+                    "fullName": "TeamService getTeamsByVerein should return all teams of a verein",
+                    "status": "passed",
+                    "title": "should return all teams of a verein",
+                    "duration": 7.99516600000004,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "TeamService",
+                        "getTeamsByVerein"
+                    ],
+                    "fullName": "TeamService getTeamsByVerein should return empty array when verein has no teams",
+                    "status": "passed",
+                    "title": "should return empty array when verein has no teams",
+                    "duration": 5.653334000000086,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "TeamService",
+                        "getTeamsBySaison"
+                    ],
+                    "fullName": "TeamService getTeamsBySaison should return all teams of a specific saison",
+                    "status": "passed",
+                    "title": "should return all teams of a specific saison",
+                    "duration": 7.5840409999999565,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "TeamService",
+                        "updateTeam"
+                    ],
+                    "fullName": "TeamService updateTeam should update team properties",
+                    "status": "passed",
+                    "title": "should update team properties",
+                    "duration": 9.814249999999902,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "TeamService",
+                        "deleteTeam"
+                    ],
+                    "fullName": "TeamService deleteTeam should delete team from database",
+                    "status": "passed",
+                    "title": "should delete team from database",
+                    "duration": 9.83933300000001,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "TeamService",
+                        "deleteTeam"
+                    ],
+                    "fullName": "TeamService deleteTeam should cascade delete related data",
+                    "status": "passed",
+                    "title": "should cascade delete related data",
+                    "duration": 7.536707999999976,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "TeamService",
+                        "isTeamNameTaken"
+                    ],
+                    "fullName": "TeamService isTeamNameTaken should return true if team name exists in same verein and saison",
+                    "status": "passed",
+                    "title": "should return true if team name exists in same verein and saison",
+                    "duration": 5.002417000000037,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "TeamService",
+                        "isTeamNameTaken"
+                    ],
+                    "fullName": "TeamService isTeamNameTaken should return false if team name does not exist",
+                    "status": "passed",
+                    "title": "should return false if team name does not exist",
+                    "duration": 7.39591699999994,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "TeamService",
+                        "isTeamNameTaken"
+                    ],
+                    "fullName": "TeamService isTeamNameTaken should allow same name in different saison",
+                    "status": "passed",
+                    "title": "should allow same name in different saison",
+                    "duration": 8.065958000000023,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "TeamService",
+                        "countPlayers"
+                    ],
+                    "fullName": "TeamService countPlayers should return correct player count",
+                    "status": "passed",
+                    "title": "should return correct player count",
+                    "duration": 11.777375000000006,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "TeamService",
+                        "countGames"
+                    ],
+                    "fullName": "TeamService countGames should return correct game count",
+                    "status": "passed",
+                    "title": "should return correct game count",
+                    "duration": 5.290083000000095,
+                    "failureMessages": [],
+                    "meta": {}
+                }
+            ],
+            "startTime": 1760480617780,
+            "endTime": 1760480617929.29,
+            "status": "passed",
+            "message": "",
+            "name": "/Users/oliver-marcuseder/Documents/00-Privat/Basketball-Apps/basketball-app/src/domains/team/services/TeamService.test.ts"
+        },
+        {
+            "assertionResults": [
+                {
+                    "ancestorTitles": [
+                        "CSVImportService",
+                        "generateSpielerTemplate"
+                    ],
+                    "fullName": "CSVImportService generateSpielerTemplate should generate valid CSV template",
+                    "status": "passed",
+                    "title": "should generate valid CSV template",
+                    "duration": 17.232332999999983,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "CSVImportService",
+                        "generateSpielerTemplate"
+                    ],
+                    "fullName": "CSVImportService generateSpielerTemplate should include erziehungsberechtigte fields",
+                    "status": "passed",
+                    "title": "should include erziehungsberechtigte fields",
+                    "duration": 3.599125000000015,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "CSVImportService",
+                        "generateSpielerTemplate"
+                    ],
+                    "fullName": "CSVImportService generateSpielerTemplate should include example row",
+                    "status": "passed",
+                    "title": "should include example row",
+                    "duration": 3.539459000000022,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "CSVImportService",
+                        "generateTrikotTemplate"
+                    ],
+                    "fullName": "CSVImportService generateTrikotTemplate should generate valid CSV template",
+                    "status": "passed",
+                    "title": "should generate valid CSV template",
+                    "duration": 5.7355420000000095,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "CSVImportService",
+                        "generateTrikotTemplate"
+                    ],
+                    "fullName": "CSVImportService generateTrikotTemplate should include example rows",
+                    "status": "passed",
+                    "title": "should include example rows",
+                    "duration": 13.959499999999991,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "CSVImportService",
+                        "generateTrikotTemplate"
+                    ],
+                    "fullName": "CSVImportService generateTrikotTemplate should show Wendejersey and Hose examples",
+                    "status": "passed",
+                    "title": "should show Wendejersey and Hose examples",
+                    "duration": 4.829416999999978,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "CSVImportService",
+                        "importSpieler"
+                    ],
+                    "fullName": "CSVImportService importSpieler should import spieler from valid CSV",
+                    "status": "passed",
+                    "title": "should import spieler from valid CSV",
+                    "duration": 15.570667000000014,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "CSVImportService",
+                        "importSpieler"
+                    ],
+                    "fullName": "CSVImportService importSpieler should validate required fields",
+                    "status": "passed",
+                    "title": "should validate required fields",
+                    "duration": 3.6437500000000114,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "CSVImportService",
+                        "importSpieler"
+                    ],
+                    "fullName": "CSVImportService importSpieler should parse geburtsdatum correctly",
+                    "status": "passed",
+                    "title": "should parse geburtsdatum correctly",
+                    "duration": 7.051250000000039,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "CSVImportService",
+                        "importSpieler"
+                    ],
+                    "fullName": "CSVImportService importSpieler should warn on invalid geburtsdatum",
+                    "status": "passed",
+                    "title": "should warn on invalid geburtsdatum",
+                    "duration": 7.635542000000044,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "CSVImportService",
+                        "importSpieler"
+                    ],
+                    "fullName": "CSVImportService importSpieler should parse konfektionsgroessen as numbers",
+                    "status": "passed",
+                    "title": "should parse konfektionsgroessen as numbers",
+                    "duration": 4.291082999999958,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "CSVImportService",
+                        "importSpieler"
+                    ],
+                    "fullName": "CSVImportService importSpieler should set spieler_typ to eigenes_team",
+                    "status": "passed",
+                    "title": "should set spieler_typ to eigenes_team",
+                    "duration": 3.8196669999999813,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "CSVImportService",
+                        "importSpieler"
+                    ],
+                    "fullName": "CSVImportService importSpieler should set aktiv to true by default",
+                    "status": "passed",
+                    "title": "should set aktiv to true by default",
+                    "duration": 4.7068329999999605,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "CSVImportService",
+                        "importSpieler"
+                    ],
+                    "fullName": "CSVImportService importSpieler should assign correct team_id",
+                    "status": "passed",
+                    "title": "should assign correct team_id",
+                    "duration": 5.69379200000003,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "CSVImportService",
+                        "importSpieler"
+                    ],
+                    "fullName": "CSVImportService importSpieler should trim whitespace from names",
+                    "status": "passed",
+                    "title": "should trim whitespace from names",
+                    "duration": 12.85445900000002,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "CSVImportService",
+                        "importSpieler"
+                    ],
+                    "fullName": "CSVImportService importSpieler should handle empty optional fields",
+                    "status": "passed",
+                    "title": "should handle empty optional fields",
+                    "duration": 4.620792000000051,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "CSVImportService",
+                        "importSpieler - Erziehungsberechtigte"
+                    ],
+                    "fullName": "CSVImportService importSpieler - Erziehungsberechtigte should create erziehungsberechtigte when email provided",
+                    "status": "passed",
+                    "title": "should create erziehungsberechtigte when email provided",
+                    "duration": 6.726083000000017,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "CSVImportService",
+                        "importSpieler - Erziehungsberechtigte"
+                    ],
+                    "fullName": "CSVImportService importSpieler - Erziehungsberechtigte should warn when erziehungsberechtigte has no phone",
+                    "status": "passed",
+                    "title": "should warn when erziehungsberechtigte has no phone",
+                    "duration": 4.334666999999968,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "CSVImportService",
+                        "importSpieler - Erziehungsberechtigte"
+                    ],
+                    "fullName": "CSVImportService importSpieler - Erziehungsberechtigte should reuse erziehungsberechtigte with same email",
+                    "status": "passed",
+                    "title": "should reuse erziehungsberechtigte with same email",
+                    "duration": 4.862957999999935,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "CSVImportService",
+                        "importSpieler - Erziehungsberechtigte"
+                    ],
+                    "fullName": "CSVImportService importSpieler - Erziehungsberechtigte should create spieler_erziehungsberechtigte relationship",
+                    "status": "passed",
+                    "title": "should create spieler_erziehungsberechtigte relationship",
+                    "duration": 4.622292000000016,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "CSVImportService",
+                        "importTrikots"
+                    ],
+                    "fullName": "CSVImportService importTrikots should import trikots from valid CSV",
+                    "status": "passed",
+                    "title": "should import trikots from valid CSV",
+                    "duration": 4.908208000000059,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "CSVImportService",
+                        "importTrikots"
+                    ],
+                    "fullName": "CSVImportService importTrikots should validate required art field",
+                    "status": "passed",
+                    "title": "should validate required art field",
+                    "duration": 6.252500000000055,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "CSVImportService",
+                        "importTrikots"
+                    ],
+                    "fullName": "CSVImportService importTrikots should validate art values",
+                    "status": "passed",
+                    "title": "should validate art values",
+                    "duration": 6.124957999999992,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "CSVImportService",
+                        "importTrikots"
+                    ],
+                    "fullName": "CSVImportService importTrikots should validate groesse field",
+                    "status": "passed",
+                    "title": "should validate groesse field",
+                    "duration": 5.046959000000015,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "CSVImportService",
+                        "importTrikots"
+                    ],
+                    "fullName": "CSVImportService importTrikots should validate eu_groesse range",
+                    "status": "passed",
+                    "title": "should validate eu_groesse range",
+                    "duration": 3.1855000000000473,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "CSVImportService",
+                        "importTrikots"
+                    ],
+                    "fullName": "CSVImportService importTrikots should parse eu_groesse as number",
+                    "status": "passed",
+                    "title": "should parse eu_groesse as number",
+                    "duration": 3.346749999999929,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "CSVImportService",
+                        "importTrikots"
+                    ],
+                    "fullName": "CSVImportService importTrikots should set status to verfügbar",
+                    "status": "passed",
+                    "title": "should set status to verfügbar",
+                    "duration": 3.9327919999999494,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "CSVImportService",
+                        "importTrikots"
+                    ],
+                    "fullName": "CSVImportService importTrikots should handle optional nummer field",
+                    "status": "passed",
+                    "title": "should handle optional nummer field",
+                    "duration": 3.828875000000039,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "CSVImportService",
+                        "importTrikots"
+                    ],
+                    "fullName": "CSVImportService importTrikots should handle optional farbe fields",
+                    "status": "passed",
+                    "title": "should handle optional farbe fields",
+                    "duration": 6.368832999999995,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "CSVImportService",
+                        "importTrikots"
+                    ],
+                    "fullName": "CSVImportService importTrikots should trim whitespace",
+                    "status": "passed",
+                    "title": "should trim whitespace",
+                    "duration": 5.932583000000022,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "CSVImportService",
+                        "Error Handling"
+                    ],
+                    "fullName": "CSVImportService Error Handling should handle malformed CSV gracefully",
+                    "status": "passed",
+                    "title": "should handle malformed CSV gracefully",
+                    "duration": 6.674125000000004,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "CSVImportService",
+                        "Error Handling"
+                    ],
+                    "fullName": "CSVImportService Error Handling should handle empty CSV file",
+                    "status": "passed",
+                    "title": "should handle empty CSV file",
+                    "duration": 3.7098330000000033,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "CSVImportService",
+                        "Error Handling"
+                    ],
+                    "fullName": "CSVImportService Error Handling should handle CSV with only headers",
+                    "status": "passed",
+                    "title": "should handle CSV with only headers",
+                    "duration": 3.460040999999933,
+                    "failureMessages": [],
+                    "meta": {}
+                }
+            ],
+            "startTime": 1760480616657,
+            "endTime": 1760480616859.46,
+            "status": "passed",
+            "message": "",
+            "name": "/Users/oliver-marcuseder/Documents/00-Privat/Basketball-Apps/basketball-app/src/domains/onboarding/services/CSVImportService.test.ts"
+        },
+        {
+            "assertionResults": [
+                {
+                    "ancestorTitles": [
+                        "BBBParserService - Integration with real JSP files",
+                        "Real JSP File Parsing"
+                    ],
+                    "fullName": "BBBParserService - Integration with real JSP files Real JSP File Parsing should have test JSP files available",
+                    "status": "passed",
+                    "title": "should have test JSP files available",
+                    "duration": 1.248958000000016,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService - Integration with real JSP files",
+                        "Real JSP File Parsing"
+                    ],
+                    "fullName": "BBBParserService - Integration with real JSP files Real JSP File Parsing should extract liga information from real spielplan HTML",
+                    "status": "passed",
+                    "title": "should extract liga information from real spielplan HTML",
+                    "duration": 0.3124169999999822,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService - Integration with real JSP files",
+                        "Real JSP File Parsing"
+                    ],
+                    "fullName": "BBBParserService - Integration with real JSP files Real JSP File Parsing should parse teams from real spielplan HTML",
+                    "status": "passed",
+                    "title": "should parse teams from real spielplan HTML",
+                    "duration": 0.27350000000001273,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService - Integration with real JSP files",
+                        "Real JSP File Parsing"
+                    ],
+                    "fullName": "BBBParserService - Integration with real JSP files Real JSP File Parsing should parse spiele from real spielplan HTML",
+                    "status": "passed",
+                    "title": "should parse spiele from real spielplan HTML",
+                    "duration": 0.18895800000007057,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService - Integration with real JSP files",
+                        "Real JSP File Parsing"
+                    ],
+                    "fullName": "BBBParserService - Integration with real JSP files Real JSP File Parsing should handle tabelle JSP file",
+                    "status": "passed",
+                    "title": "should handle tabelle JSP file",
+                    "duration": 0.11458300000003874,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService - Integration with real JSP files",
+                        "Real JSP File Parsing"
+                    ],
+                    "fullName": "BBBParserService - Integration with real JSP files Real JSP File Parsing should handle ergebnisse JSP file",
+                    "status": "passed",
+                    "title": "should handle ergebnisse JSP file",
+                    "duration": 0.15887499999996635,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService - Integration with real JSP files",
+                        "HTML Structure Validation"
+                    ],
+                    "fullName": "BBBParserService - Integration with real JSP files HTML Structure Validation spielplan should have table structure",
+                    "status": "passed",
+                    "title": "spielplan should have table structure",
+                    "duration": 0.14408300000002328,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService - Integration with real JSP files",
+                        "HTML Structure Validation"
+                    ],
+                    "fullName": "BBBParserService - Integration with real JSP files HTML Structure Validation tabelle should have statistical data structure",
+                    "status": "passed",
+                    "title": "tabelle should have statistical data structure",
+                    "duration": 0.08716699999990851,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService - Integration with real JSP files",
+                        "HTML Structure Validation"
+                    ],
+                    "fullName": "BBBParserService - Integration with real JSP files HTML Structure Validation ergebnisse should have score data",
+                    "status": "passed",
+                    "title": "ergebnisse should have score data",
+                    "duration": 0.14829199999996945,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService - Integration with real JSP files",
+                        "Data Consistency Checks"
+                    ],
+                    "fullName": "BBBParserService - Integration with real JSP files Data Consistency Checks all JSP files should reference same liga",
+                    "status": "passed",
+                    "title": "all JSP files should reference same liga",
+                    "duration": 0.3018329999999878,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService - Integration with real JSP files",
+                        "Data Consistency Checks"
+                    ],
+                    "fullName": "BBBParserService - Integration with real JSP files Data Consistency Checks JSP files should contain German basketball terminology",
+                    "status": "passed",
+                    "title": "JSP files should contain German basketball terminology",
+                    "duration": 0.1322499999999991,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService - Integration with real JSP files",
+                        "Data Consistency Checks"
+                    ],
+                    "fullName": "BBBParserService - Integration with real JSP files Data Consistency Checks JSP files should contain date information",
+                    "status": "passed",
+                    "title": "JSP files should contain date information",
+                    "duration": 0.11895899999990434,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService - Integration with real JSP files",
+                        "Data Consistency Checks"
+                    ],
+                    "fullName": "BBBParserService - Integration with real JSP files Data Consistency Checks JSP files should contain time information",
+                    "status": "passed",
+                    "title": "JSP files should contain time information",
+                    "duration": 0.10308299999996962,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService - Integration with real JSP files",
+                        "Encoding and Character Handling"
+                    ],
+                    "fullName": "BBBParserService - Integration with real JSP files Encoding and Character Handling should handle German umlauts correctly",
+                    "status": "passed",
+                    "title": "should handle German umlauts correctly",
+                    "duration": 0.7275829999999814,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService - Integration with real JSP files",
+                        "Encoding and Character Handling"
+                    ],
+                    "fullName": "BBBParserService - Integration with real JSP files Encoding and Character Handling should handle special characters in team names",
+                    "status": "passed",
+                    "title": "should handle special characters in team names",
+                    "duration": 0.1636670000000322,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService - Integration with real JSP files",
+                        "File Size and Performance"
+                    ],
+                    "fullName": "BBBParserService - Integration with real JSP files File Size and Performance spielplan JSP should be reasonable size (< 1MB)",
+                    "status": "passed",
+                    "title": "spielplan JSP should be reasonable size (< 1MB)",
+                    "duration": 0.28166700000008404,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService - Integration with real JSP files",
+                        "File Size and Performance"
+                    ],
+                    "fullName": "BBBParserService - Integration with real JSP files File Size and Performance tabelle JSP should be reasonable size",
+                    "status": "passed",
+                    "title": "tabelle JSP should be reasonable size",
+                    "duration": 0.10704199999997854,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService - Integration with real JSP files",
+                        "File Size and Performance"
+                    ],
+                    "fullName": "BBBParserService - Integration with real JSP files File Size and Performance ergebnisse JSP should be reasonable size",
+                    "status": "passed",
+                    "title": "ergebnisse JSP should be reasonable size",
+                    "duration": 0.0847079999999778,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService - Integration with real JSP files",
+                        "BBB URL Patterns"
+                    ],
+                    "fullName": "BBBParserService - Integration with real JSP files BBB URL Patterns spielplan URL should match expected pattern",
+                    "status": "passed",
+                    "title": "spielplan URL should match expected pattern",
+                    "duration": 0.09004200000003948,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService - Integration with real JSP files",
+                        "BBB URL Patterns"
+                    ],
+                    "fullName": "BBBParserService - Integration with real JSP files BBB URL Patterns should extract meaningful data from real files",
+                    "status": "passed",
+                    "title": "should extract meaningful data from real files",
+                    "duration": 43.98924999999997,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService - Integration with real JSP files",
+                        "⭐ NEW: Parse real tabelle.jsp file"
+                    ],
+                    "fullName": "BBBParserService - Integration with real JSP files ⭐ NEW: Parse real tabelle.jsp file should parse teams from real tabelle.jsp file",
+                    "status": "passed",
+                    "title": "should parse teams from real tabelle.jsp file",
+                    "duration": 22.35679099999993,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService - Integration with real JSP files",
+                        "⭐ NEW: Parse real tabelle.jsp file"
+                    ],
+                    "fullName": "BBBParserService - Integration with real JSP files ⭐ NEW: Parse real tabelle.jsp file should parse specific teams correctly from tabelle.jsp",
+                    "status": "passed",
+                    "title": "should parse specific teams correctly from tabelle.jsp",
+                    "duration": 8.035958999999934,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService - Integration with real JSP files",
+                        "⭐ NEW: Parse real tabelle.jsp file"
+                    ],
+                    "fullName": "BBBParserService - Integration with real JSP files ⭐ NEW: Parse real tabelle.jsp file should handle teams with and without numbers",
+                    "status": "passed",
+                    "title": "should handle teams with and without numbers",
+                    "duration": 7.136708000000112,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService - Integration with real JSP files",
+                        "⭐ NEW: Parse real tabelle.jsp file"
+                    ],
+                    "fullName": "BBBParserService - Integration with real JSP files ⭐ NEW: Parse real tabelle.jsp file should have unique team names",
+                    "status": "passed",
+                    "title": "should have unique team names",
+                    "duration": 7.516416000000049,
+                    "failureMessages": [],
+                    "meta": {}
+                }
+            ],
+            "startTime": 1760480618050,
+            "endTime": 1760480618143.5164,
+            "status": "passed",
+            "message": "",
+            "name": "/Users/oliver-marcuseder/Documents/00-Privat/Basketball-Apps/basketball-app/src/domains/bbb/services/BBBParserService.integration.test.ts"
+        },
+        {
+            "assertionResults": [
+                {
+                    "ancestorTitles": [
+                        "BBBParserService",
+                        "extractLigaId"
+                    ],
+                    "fullName": "BBBParserService extractLigaId should extract liga_id from spielplan URL",
+                    "status": "passed",
+                    "title": "should extract liga_id from spielplan URL",
+                    "duration": 1.470708000000002,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService",
+                        "extractLigaId"
+                    ],
+                    "fullName": "BBBParserService extractLigaId should extract liga_id from tabelle URL",
+                    "status": "passed",
+                    "title": "should extract liga_id from tabelle URL",
+                    "duration": 0.3832090000000221,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService",
+                        "extractLigaId"
+                    ],
+                    "fullName": "BBBParserService extractLigaId should extract liga_id from ergebnisse URL",
+                    "status": "passed",
+                    "title": "should extract liga_id from ergebnisse URL",
+                    "duration": 0.4267080000000192,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService",
+                        "extractLigaId"
+                    ],
+                    "fullName": "BBBParserService extractLigaId should return null for invalid URL",
+                    "status": "passed",
+                    "title": "should return null for invalid URL",
+                    "duration": 0.24670900000000984,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService",
+                        "extractLigaId"
+                    ],
+                    "fullName": "BBBParserService extractLigaId should return null for malformed URL",
+                    "status": "passed",
+                    "title": "should return null for malformed URL",
+                    "duration": 0.11179199999997991,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService",
+                        "extractLigaId"
+                    ],
+                    "fullName": "BBBParserService extractLigaId should handle URL with multiple query parameters",
+                    "status": "passed",
+                    "title": "should handle URL with multiple query parameters",
+                    "duration": 0.365208999999993,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService",
+                        "extractLigaId"
+                    ],
+                    "fullName": "BBBParserService extractLigaId should extract ligaId parameter (camelCase variant)",
+                    "status": "passed",
+                    "title": "should extract ligaId parameter (camelCase variant)",
+                    "duration": 0.233791999999994,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService",
+                        "extractLigaId"
+                    ],
+                    "fullName": "BBBParserService extractLigaId should extract LIGA_ID parameter (uppercase variant)",
+                    "status": "passed",
+                    "title": "should extract LIGA_ID parameter (uppercase variant)",
+                    "duration": 0.3018329999999878,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService",
+                        "extractLigaId"
+                    ],
+                    "fullName": "BBBParserService extractLigaId should prefer liga_id over other variants",
+                    "status": "passed",
+                    "title": "should prefer liga_id over other variants",
+                    "duration": 0.37337500000001,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService",
+                        "buildUrls"
+                    ],
+                    "fullName": "BBBParserService buildUrls should build all three URLs from liga_id",
+                    "status": "passed",
+                    "title": "should build all three URLs from liga_id",
+                    "duration": 0.27583400000003166,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService",
+                        "buildUrls"
+                    ],
+                    "fullName": "BBBParserService buildUrls should include print parameter",
+                    "status": "passed",
+                    "title": "should include print parameter",
+                    "duration": 0.07824999999996862,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService",
+                        "buildUrls"
+                    ],
+                    "fullName": "BBBParserService buildUrls should use correct base URL",
+                    "status": "passed",
+                    "title": "should use correct base URL",
+                    "duration": 0.12945799999999963,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService",
+                        "parseLigaName (private method access via mock)"
+                    ],
+                    "fullName": "BBBParserService parseLigaName (private method access via mock) should parse liga information from mock data",
+                    "status": "passed",
+                    "title": "should parse liga information from mock data",
+                    "duration": 28.961584000000016,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService",
+                        "parseTeamName (via mock data)"
+                    ],
+                    "fullName": "BBBParserService parseTeamName (via mock data) should parse team names with numbers correctly",
+                    "status": "passed",
+                    "title": "should parse team names with numbers correctly",
+                    "duration": 14.716249999999945,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService",
+                        "parseTeamName (via mock data)"
+                    ],
+                    "fullName": "BBBParserService parseTeamName (via mock data) should separate verein name from team number",
+                    "status": "passed",
+                    "title": "should separate verein name from team number",
+                    "duration": 8.240333000000078,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService",
+                        "parseSpieleFromTable (via mock data)"
+                    ],
+                    "fullName": "BBBParserService parseSpieleFromTable (via mock data) should parse spiele with all required fields",
+                    "status": "passed",
+                    "title": "should parse spiele with all required fields",
+                    "duration": 7.931958000000009,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService",
+                        "parseSpieleFromTable (via mock data)"
+                    ],
+                    "fullName": "BBBParserService parseSpieleFromTable (via mock data) should have unique spielnummern",
+                    "status": "passed",
+                    "title": "should have unique spielnummern",
+                    "duration": 7.8904999999999745,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService",
+                        "parseSpieleFromTable (via mock data)"
+                    ],
+                    "fullName": "BBBParserService parseSpieleFromTable (via mock data) should parse datum in ISO format YYYY-MM-DD",
+                    "status": "passed",
+                    "title": "should parse datum in ISO format YYYY-MM-DD",
+                    "duration": 16.409832999999935,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService",
+                        "parseSpieleFromTable (via mock data)"
+                    ],
+                    "fullName": "BBBParserService parseSpieleFromTable (via mock data) should parse uhrzeit in HH:MM format",
+                    "status": "passed",
+                    "title": "should parse uhrzeit in HH:MM format",
+                    "duration": 7.447624999999903,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService",
+                        "parseLigaFromUrl - Integration"
+                    ],
+                    "fullName": "BBBParserService parseLigaFromUrl - Integration should return complete parse result",
+                    "status": "passed",
+                    "title": "should return complete parse result",
+                    "duration": 6.827583000000004,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService",
+                        "parseLigaFromUrl - Integration"
+                    ],
+                    "fullName": "BBBParserService parseLigaFromUrl - Integration should throw error for invalid liga_id",
+                    "status": "passed",
+                    "title": "should throw error for invalid liga_id",
+                    "duration": 0.8329170000000659,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService",
+                        "parseLigaFromUrl - Integration"
+                    ],
+                    "fullName": "BBBParserService parseLigaFromUrl - Integration should include region if parseable",
+                    "status": "passed",
+                    "title": "should include region if parseable",
+                    "duration": 6.306165999999962,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService",
+                        "parseLigaFromUrl - Integration"
+                    ],
+                    "fullName": "BBBParserService parseLigaFromUrl - Integration should include spielklasse if parseable",
+                    "status": "passed",
+                    "title": "should include spielklasse if parseable",
+                    "duration": 15.655040999999983,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService",
+                        "Mock Data Consistency"
+                    ],
+                    "fullName": "BBBParserService Mock Data Consistency should have consistent team names across spiele",
+                    "status": "passed",
+                    "title": "should have consistent team names across spiele",
+                    "duration": 7.176459000000023,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService",
+                        "Mock Data Consistency"
+                    ],
+                    "fullName": "BBBParserService Mock Data Consistency should have realistic spieltage (1-22)",
+                    "status": "passed",
+                    "title": "should have realistic spieltage (1-22)",
+                    "duration": 4.785958999999934,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService",
+                        "Mock Data Consistency"
+                    ],
+                    "fullName": "BBBParserService Mock Data Consistency should have realistic spielnummern (1000-9999)",
+                    "status": "passed",
+                    "title": "should have realistic spielnummern (1000-9999)",
+                    "duration": 6.822750000000042,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService",
+                        "Edge Cases"
+                    ],
+                    "fullName": "BBBParserService Edge Cases should handle empty liga_id gracefully",
+                    "status": "passed",
+                    "title": "should handle empty liga_id gracefully",
+                    "duration": 0.3396669999999631,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService",
+                        "Edge Cases"
+                    ],
+                    "fullName": "BBBParserService Edge Cases should handle URL without protocol",
+                    "status": "passed",
+                    "title": "should handle URL without protocol",
+                    "duration": 0.11762499999997544,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService",
+                        "Edge Cases"
+                    ],
+                    "fullName": "BBBParserService Edge Cases should handle liga_id with leading zeros",
+                    "status": "passed",
+                    "title": "should handle liga_id with leading zeros",
+                    "duration": 0.2430419999999458,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService",
+                        "URL Generation"
+                    ],
+                    "fullName": "BBBParserService URL Generation should generate valid URLs",
+                    "status": "passed",
+                    "title": "should generate valid URLs",
+                    "duration": 0.6377499999999827,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService",
+                        "URL Generation"
+                    ],
+                    "fullName": "BBBParserService URL Generation should use different paths for each URL type",
+                    "status": "passed",
+                    "title": "should use different paths for each URL type",
+                    "duration": 0.0805000000000291,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService",
+                        "URL Generation"
+                    ],
+                    "fullName": "BBBParserService URL Generation should include viewDescKey for spielplan and tabelle",
+                    "status": "passed",
+                    "title": "should include viewDescKey for spielplan and tabelle",
+                    "duration": 0.053541999999993095,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService",
+                        "parseTabelleHtml - NEW: Parse teams from Tabelle first"
+                    ],
+                    "fullName": "BBBParserService parseTabelleHtml - NEW: Parse teams from Tabelle first should parse teams from tabelle HTML",
+                    "status": "passed",
+                    "title": "should parse teams from tabelle HTML",
+                    "duration": 0.9649580000000242,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService",
+                        "parseTabelleHtml - NEW: Parse teams from Tabelle first"
+                    ],
+                    "fullName": "BBBParserService parseTabelleHtml - NEW: Parse teams from Tabelle first should handle teams without numbers correctly",
+                    "status": "passed",
+                    "title": "should handle teams without numbers correctly",
+                    "duration": 0.4506659999999556,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService",
+                        "parseTabelleHtml - NEW: Parse teams from Tabelle first"
+                    ],
+                    "fullName": "BBBParserService parseTabelleHtml - NEW: Parse teams from Tabelle first should handle teams with numbers correctly",
+                    "status": "passed",
+                    "title": "should handle teams with numbers correctly",
+                    "duration": 0.48662500000000364,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService",
+                        "parseTabelleHtml - NEW: Parse teams from Tabelle first"
+                    ],
+                    "fullName": "BBBParserService parseTabelleHtml - NEW: Parse teams from Tabelle first should skip header rows",
+                    "status": "passed",
+                    "title": "should skip header rows",
+                    "duration": 0.7665840000000799,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService",
+                        "parseTabelleHtml - NEW: Parse teams from Tabelle first"
+                    ],
+                    "fullName": "BBBParserService parseTabelleHtml - NEW: Parse teams from Tabelle first should skip title rows with sportViewTitle class",
+                    "status": "passed",
+                    "title": "should skip title rows with sportViewTitle class",
+                    "duration": 0.6770419999999149,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService",
+                        "parseTabelleHtml - NEW: Parse teams from Tabelle first"
+                    ],
+                    "fullName": "BBBParserService parseTabelleHtml - NEW: Parse teams from Tabelle first should skip rows without sportItemEven or sportItemOdd class",
+                    "status": "passed",
+                    "title": "should skip rows without sportItemEven or sportItemOdd class",
+                    "duration": 0.6912499999999682,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService",
+                        "parseTabelleHtml - NEW: Parse teams from Tabelle first"
+                    ],
+                    "fullName": "BBBParserService parseTabelleHtml - NEW: Parse teams from Tabelle first should validate team names (min 3 chars, no numbers-only)",
+                    "status": "passed",
+                    "title": "should validate team names (min 3 chars, no numbers-only)",
+                    "duration": 0.7361250000000155,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService",
+                        "parseTabelleHtml - NEW: Parse teams from Tabelle first"
+                    ],
+                    "fullName": "BBBParserService parseTabelleHtml - NEW: Parse teams from Tabelle first should return empty array for invalid HTML",
+                    "status": "passed",
+                    "title": "should return empty array for invalid HTML",
+                    "duration": 0.6473750000000109,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService",
+                        "parseTabelleHtml - NEW: Parse teams from Tabelle first"
+                    ],
+                    "fullName": "BBBParserService parseTabelleHtml - NEW: Parse teams from Tabelle first should handle empty table",
+                    "status": "passed",
+                    "title": "should handle empty table",
+                    "duration": 0.26233300000001236,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService",
+                        "parseLigaFromUrl - NEW: Should fetch Tabelle first"
+                    ],
+                    "fullName": "BBBParserService parseLigaFromUrl - NEW: Should fetch Tabelle first should parse tabelle before spielplan in mock data",
+                    "status": "passed",
+                    "title": "should parse tabelle before spielplan in mock data",
+                    "duration": 6.5790419999999585,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService",
+                        "parseErgebnisseFromHtml - NEW: Parse vollständige Spiele from ergebnisse.jsp"
+                    ],
+                    "fullName": "BBBParserService parseErgebnisseFromHtml - NEW: Parse vollständige Spiele from ergebnisse.jsp should parse vollständige Spiele from ergebnisse HTML",
+                    "status": "passed",
+                    "title": "should parse vollständige Spiele from ergebnisse HTML",
+                    "duration": 1.1989169999999376,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService",
+                        "parseErgebnisseFromHtml - NEW: Parse vollständige Spiele from ergebnisse.jsp"
+                    ],
+                    "fullName": "BBBParserService parseErgebnisseFromHtml - NEW: Parse vollständige Spiele from ergebnisse.jsp should handle multiple scores",
+                    "status": "passed",
+                    "title": "should handle multiple scores",
+                    "duration": 1.2004170000000158,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService",
+                        "parseErgebnisseFromHtml - NEW: Parse vollständige Spiele from ergebnisse.jsp"
+                    ],
+                    "fullName": "BBBParserService parseErgebnisseFromHtml - NEW: Parse vollständige Spiele from ergebnisse.jsp should skip header rows",
+                    "status": "passed",
+                    "title": "should skip header rows",
+                    "duration": 0.8047500000000127,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService",
+                        "parseErgebnisseFromHtml - NEW: Parse vollständige Spiele from ergebnisse.jsp"
+                    ],
+                    "fullName": "BBBParserService parseErgebnisseFromHtml - NEW: Parse vollständige Spiele from ergebnisse.jsp should handle missing scores gracefully",
+                    "status": "passed",
+                    "title": "should handle missing scores gracefully",
+                    "duration": 0.6570420000000468,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService",
+                        "parseErgebnisseFromHtml - NEW: Parse vollständige Spiele from ergebnisse.jsp"
+                    ],
+                    "fullName": "BBBParserService parseErgebnisseFromHtml - NEW: Parse vollständige Spiele from ergebnisse.jsp should return empty array for no results",
+                    "status": "passed",
+                    "title": "should return empty array for no results",
+                    "duration": 0.40374999999994543,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService",
+                        "parseErgebnisseFromHtml - NEW: Parse vollständige Spiele from ergebnisse.jsp"
+                    ],
+                    "fullName": "BBBParserService parseErgebnisseFromHtml - NEW: Parse vollständige Spiele from ergebnisse.jsp should handle different score formats",
+                    "status": "passed",
+                    "title": "should handle different score formats",
+                    "duration": 0.6245420000000195,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService",
+                        "parseSpielplanHtml - Liga Name Parsing"
+                    ],
+                    "fullName": "BBBParserService parseSpielplanHtml - Liga Name Parsing should parse liga name from sportViewTitle",
+                    "status": "passed",
+                    "title": "should parse liga name from sportViewTitle",
+                    "duration": 4.713292000000024,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService",
+                        "parseTabellenDaten - NEW: Parse und validiere Tabellen-Statistiken"
+                    ],
+                    "fullName": "BBBParserService parseTabellenDaten - NEW: Parse und validiere Tabellen-Statistiken should parse complete tabelle with all fields",
+                    "status": "passed",
+                    "title": "should parse complete tabelle with all fields",
+                    "duration": 1.1078330000000278,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService",
+                        "parseTabellenDaten - NEW: Parse und validiere Tabellen-Statistiken"
+                    ],
+                    "fullName": "BBBParserService parseTabellenDaten - NEW: Parse und validiere Tabellen-Statistiken should parse multiple teams correctly",
+                    "status": "passed",
+                    "title": "should parse multiple teams correctly",
+                    "duration": 3.0832080000000133,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService",
+                        "parseTabellenDaten - NEW: Parse und validiere Tabellen-Statistiken"
+                    ],
+                    "fullName": "BBBParserService parseTabellenDaten - NEW: Parse und validiere Tabellen-Statistiken should validate siege + niederlagen = spiele",
+                    "status": "passed",
+                    "title": "should validate siege + niederlagen = spiele",
+                    "duration": 0.6801249999999754,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService",
+                        "parseTabellenDaten - NEW: Parse und validiere Tabellen-Statistiken"
+                    ],
+                    "fullName": "BBBParserService parseTabellenDaten - NEW: Parse und validiere Tabellen-Statistiken should validate diff = koerbe_plus - koerbe_minus",
+                    "status": "passed",
+                    "title": "should validate diff = koerbe_plus - koerbe_minus",
+                    "duration": 0.6529580000000124,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService",
+                        "parseTabellenDaten - NEW: Parse und validiere Tabellen-Statistiken"
+                    ],
+                    "fullName": "BBBParserService parseTabellenDaten - NEW: Parse und validiere Tabellen-Statistiken should validate punkte = siege * 2",
+                    "status": "passed",
+                    "title": "should validate punkte = siege * 2",
+                    "duration": 0.5373749999999973,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService",
+                        "parseTabellenDaten - NEW: Parse und validiere Tabellen-Statistiken"
+                    ],
+                    "fullName": "BBBParserService parseTabellenDaten - NEW: Parse und validiere Tabellen-Statistiken should handle team without games (0 spiele)",
+                    "status": "passed",
+                    "title": "should handle team without games (0 spiele)",
+                    "duration": 0.8268749999999727,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService",
+                        "parseTabellenDaten - NEW: Parse und validiere Tabellen-Statistiken"
+                    ],
+                    "fullName": "BBBParserService parseTabellenDaten - NEW: Parse und validiere Tabellen-Statistiken should skip header rows",
+                    "status": "passed",
+                    "title": "should skip header rows",
+                    "duration": 0.8250420000000531,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService",
+                        "parseTabellenDaten - NEW: Parse und validiere Tabellen-Statistiken"
+                    ],
+                    "fullName": "BBBParserService parseTabellenDaten - NEW: Parse und validiere Tabellen-Statistiken should handle negative diff correctly",
+                    "status": "passed",
+                    "title": "should handle negative diff correctly",
+                    "duration": 0.6052089999999453,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService",
+                        "parseTabellenDaten - NEW: Parse und validiere Tabellen-Statistiken"
+                    ],
+                    "fullName": "BBBParserService parseTabellenDaten - NEW: Parse und validiere Tabellen-Statistiken should return empty array for invalid HTML",
+                    "status": "passed",
+                    "title": "should return empty array for invalid HTML",
+                    "duration": 0.2702920000000404,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService",
+                        "parseTabellenDaten - NEW: Parse und validiere Tabellen-Statistiken"
+                    ],
+                    "fullName": "BBBParserService parseTabellenDaten - NEW: Parse und validiere Tabellen-Statistiken should return empty array for empty table",
+                    "status": "passed",
+                    "title": "should return empty array for empty table",
+                    "duration": 0.23583300000007057,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService",
+                        "parseTabellenDaten - NEW: Parse und validiere Tabellen-Statistiken"
+                    ],
+                    "fullName": "BBBParserService parseTabellenDaten - NEW: Parse und validiere Tabellen-Statistiken should handle teams with numbers in name correctly",
+                    "status": "passed",
+                    "title": "should handle teams with numbers in name correctly",
+                    "duration": 0.54037500000004,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBParserService",
+                        "parseTabellenDaten - NEW: Parse und validiere Tabellen-Statistiken"
+                    ],
+                    "fullName": "BBBParserService parseTabellenDaten - NEW: Parse und validiere Tabellen-Statistiken should validate all entries have consistent data",
+                    "status": "passed",
+                    "title": "should validate all entries have consistent data",
+                    "duration": 0.987459000000058,
+                    "failureMessages": [],
+                    "meta": {}
+                }
+            ],
+            "startTime": 1760480616973,
+            "endTime": 1760480617151.9875,
+            "status": "passed",
+            "message": "",
+            "name": "/Users/oliver-marcuseder/Documents/00-Privat/Basketball-Apps/basketball-app/src/domains/bbb/services/BBBParserService.test.ts"
+        },
+        {
+            "assertionResults": [
+                {
+                    "ancestorTitles": [
+                        "VereinService",
+                        "createVerein"
+                    ],
+                    "fullName": "VereinService createVerein should create a new verein with required fields",
+                    "status": "passed",
+                    "title": "should create a new verein with required fields",
+                    "duration": 12.35983299999998,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "VereinService",
+                        "createVerein"
+                    ],
+                    "fullName": "VereinService createVerein should create verein with optional fields",
+                    "status": "passed",
+                    "title": "should create verein with optional fields",
+                    "duration": 3.832749999999976,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "VereinService",
+                        "createVerein"
+                    ],
+                    "fullName": "VereinService createVerein should persist verein to database",
+                    "status": "passed",
+                    "title": "should persist verein to database",
+                    "duration": 4.3004999999999995,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "VereinService",
+                        "createVerein"
+                    ],
+                    "fullName": "VereinService createVerein should generate unique verein_id",
+                    "status": "passed",
+                    "title": "should generate unique verein_id",
+                    "duration": 5.871708000000012,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "VereinService",
+                        "createVerein"
+                    ],
+                    "fullName": "VereinService createVerein should set ist_eigener_verein to true by default",
+                    "status": "passed",
+                    "title": "should set ist_eigener_verein to true by default",
+                    "duration": 8.031082999999967,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "VereinService",
+                        "getVereinById"
+                    ],
+                    "fullName": "VereinService getVereinById should find verein by ID",
+                    "status": "passed",
+                    "title": "should find verein by ID",
+                    "duration": 3.5159160000000043,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "VereinService",
+                        "getVereinById"
+                    ],
+                    "fullName": "VereinService getVereinById should return undefined for non-existent ID",
+                    "status": "passed",
+                    "title": "should return undefined for non-existent ID",
+                    "duration": 2.864500000000021,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "VereinService",
+                        "getAllVereine"
+                    ],
+                    "fullName": "VereinService getAllVereine should return empty array when no vereine exist",
+                    "status": "passed",
+                    "title": "should return empty array when no vereine exist",
+                    "duration": 3.106207999999981,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "VereinService",
+                        "getAllVereine"
+                    ],
+                    "fullName": "VereinService getAllVereine should return all vereine",
+                    "status": "passed",
+                    "title": "should return all vereine",
+                    "duration": 3.9142909999999915,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "VereinService",
+                        "getAllVereine"
+                    ],
+                    "fullName": "VereinService getAllVereine should return both eigene and gegner vereine",
+                    "status": "passed",
+                    "title": "should return both eigene and gegner vereine",
+                    "duration": 3.90704199999999,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "VereinService",
+                        "getEigeneVereine"
+                    ],
+                    "fullName": "VereinService getEigeneVereine should return only eigene vereine",
+                    "status": "passed",
+                    "title": "should return only eigene vereine",
+                    "duration": 4.230209000000002,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "VereinService",
+                        "getEigeneVereine"
+                    ],
+                    "fullName": "VereinService getEigeneVereine should return empty array when no eigene vereine exist",
+                    "status": "passed",
+                    "title": "should return empty array when no eigene vereine exist",
+                    "duration": 2.8799589999999853,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "VereinService",
+                        "getGegnerVereine"
+                    ],
+                    "fullName": "VereinService getGegnerVereine should return only gegner vereine",
+                    "status": "passed",
+                    "title": "should return only gegner vereine",
+                    "duration": 3.2495830000000296,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "VereinService",
+                        "searchVereine"
+                    ],
+                    "fullName": "VereinService searchVereine should find vereine by name",
+                    "status": "passed",
+                    "title": "should find vereine by name",
+                    "duration": 3.5172919999999976,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "VereinService",
+                        "searchVereine"
+                    ],
+                    "fullName": "VereinService searchVereine should find vereine by ort",
+                    "status": "passed",
+                    "title": "should find vereine by ort",
+                    "duration": 4.148207999999954,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "VereinService",
+                        "searchVereine"
+                    ],
+                    "fullName": "VereinService searchVereine should find vereine by kurzname",
+                    "status": "passed",
+                    "title": "should find vereine by kurzname",
+                    "duration": 3.133416999999895,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "VereinService",
+                        "searchVereine"
+                    ],
+                    "fullName": "VereinService searchVereine should be case-insensitive",
+                    "status": "passed",
+                    "title": "should be case-insensitive",
+                    "duration": 3.0744999999999436,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "VereinService",
+                        "searchVereine"
+                    ],
+                    "fullName": "VereinService searchVereine should find partial matches",
+                    "status": "passed",
+                    "title": "should find partial matches",
+                    "duration": 3.1960419999999203,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "VereinService",
+                        "searchVereine"
+                    ],
+                    "fullName": "VereinService searchVereine should return empty array for no matches",
+                    "status": "passed",
+                    "title": "should return empty array for no matches",
+                    "duration": 3.1264999999999645,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "VereinService",
+                        "searchVereine"
+                    ],
+                    "fullName": "VereinService searchVereine should find multiple matches",
+                    "status": "passed",
+                    "title": "should find multiple matches",
+                    "duration": 2.9960829999999987,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "VereinService",
+                        "updateVerein"
+                    ],
+                    "fullName": "VereinService updateVerein should update verein fields",
+                    "status": "passed",
+                    "title": "should update verein fields",
+                    "duration": 3.6428339999999935,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "VereinService",
+                        "updateVerein"
+                    ],
+                    "fullName": "VereinService updateVerein should update only provided fields",
+                    "status": "passed",
+                    "title": "should update only provided fields",
+                    "duration": 5.309541000000081,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "VereinService",
+                        "updateVerein"
+                    ],
+                    "fullName": "VereinService updateVerein should update ist_eigener_verein flag",
+                    "status": "passed",
+                    "title": "should update ist_eigener_verein flag",
+                    "duration": 3.9077080000000706,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "VereinService",
+                        "deleteVerein"
+                    ],
+                    "fullName": "VereinService deleteVerein should delete verein without teams",
+                    "status": "passed",
+                    "title": "should delete verein without teams",
+                    "duration": 6.013207999999963,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "VereinService",
+                        "deleteVerein"
+                    ],
+                    "fullName": "VereinService deleteVerein should throw error when verein has teams",
+                    "status": "passed",
+                    "title": "should throw error when verein has teams",
+                    "duration": 4.290209000000004,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "VereinService",
+                        "isVereinNameTaken"
+                    ],
+                    "fullName": "VereinService isVereinNameTaken should return true if name and ort combination exists",
+                    "status": "passed",
+                    "title": "should return true if name and ort combination exists",
+                    "duration": 4.417417,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "VereinService",
+                        "isVereinNameTaken"
+                    ],
+                    "fullName": "VereinService isVereinNameTaken should return false if name and ort combination does not exist",
+                    "status": "passed",
+                    "title": "should return false if name and ort combination does not exist",
+                    "duration": 5.4541659999999865,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "VereinService",
+                        "isVereinNameTaken"
+                    ],
+                    "fullName": "VereinService isVereinNameTaken should allow same name in different ort",
+                    "status": "passed",
+                    "title": "should allow same name in different ort",
+                    "duration": 3.1522910000001048,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "VereinService",
+                        "isVereinNameTaken"
+                    ],
+                    "fullName": "VereinService isVereinNameTaken should return false for empty database",
+                    "status": "passed",
+                    "title": "should return false for empty database",
+                    "duration": 4.148625000000038,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "VereinService",
+                        "countTeams"
+                    ],
+                    "fullName": "VereinService countTeams should return 0 for verein without teams",
+                    "status": "passed",
+                    "title": "should return 0 for verein without teams",
+                    "duration": 2.895375000000058,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "VereinService",
+                        "countTeams"
+                    ],
+                    "fullName": "VereinService countTeams should return correct team count",
+                    "status": "passed",
+                    "title": "should return correct team count",
+                    "duration": 4.744292000000087,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "VereinService",
+                        "countTeams"
+                    ],
+                    "fullName": "VereinService countTeams should only count teams for specific verein",
+                    "status": "passed",
+                    "title": "should only count teams for specific verein",
+                    "duration": 3.5629169999999704,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "VereinService",
+                        "Edge Cases"
+                    ],
+                    "fullName": "VereinService Edge Cases should handle empty name gracefully",
+                    "status": "passed",
+                    "title": "should handle empty name gracefully",
+                    "duration": 2.64879099999996,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "VereinService",
+                        "Edge Cases"
+                    ],
+                    "fullName": "VereinService Edge Cases should handle special characters in name",
+                    "status": "passed",
+                    "title": "should handle special characters in name",
+                    "duration": 2.589917000000014,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "VereinService",
+                        "Edge Cases"
+                    ],
+                    "fullName": "VereinService Edge Cases should handle German umlauts",
+                    "status": "passed",
+                    "title": "should handle German umlauts",
+                    "duration": 2.4241670000000113,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "VereinService",
+                        "Edge Cases"
+                    ],
+                    "fullName": "VereinService Edge Cases should handle long names",
+                    "status": "passed",
+                    "title": "should handle long names",
+                    "duration": 2.525916000000052,
+                    "failureMessages": [],
+                    "meta": {}
+                }
+            ],
+            "startTime": 1760480616054,
+            "endTime": 1760480616202.526,
+            "status": "passed",
+            "message": "",
+            "name": "/Users/oliver-marcuseder/Documents/00-Privat/Basketball-Apps/basketball-app/src/domains/verein/services/VereinService.test.ts"
+        },
+        {
+            "assertionResults": [
+                {
+                    "ancestorTitles": [
+                        "BBBApiService",
+                        "fetchWithFallback"
+                    ],
+                    "fullName": "BBBApiService fetchWithFallback sollte direkte Anfrage versuchen",
+                    "status": "passed",
+                    "title": "sollte direkte Anfrage versuchen",
+                    "duration": 4.24512500000003,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBApiService",
+                        "fetchWithFallback"
+                    ],
+                    "fullName": "BBBApiService fetchWithFallback sollte CORS-Proxies als Fallback verwenden",
+                    "status": "passed",
+                    "title": "sollte CORS-Proxies als Fallback verwenden",
+                    "duration": 4.7462079999999105,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBApiService",
+                        "fetchWithFallback"
+                    ],
+                    "fullName": "BBBApiService fetchWithFallback sollte Fehler werfen wenn alle Proxies fehlschlagen",
+                    "status": "passed",
+                    "title": "sollte Fehler werfen wenn alle Proxies fehlschlagen",
+                    "duration": 4.687958999999978,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBApiService",
+                        "filterLigen"
+                    ],
+                    "fullName": "BBBApiService filterLigen sollte vollständigen Filter mit Defaults erstellen",
+                    "status": "passed",
+                    "title": "sollte vollständigen Filter mit Defaults erstellen",
+                    "duration": 0.8467919999999367,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBApiService",
+                        "getTabelle"
+                    ],
+                    "fullName": "BBBApiService getTabelle sollte Tabellen-Daten abrufen",
+                    "status": "passed",
+                    "title": "sollte Tabellen-Daten abrufen",
+                    "duration": 0.43337499999995543,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBApiService",
+                        "getSpielplan"
+                    ],
+                    "fullName": "BBBApiService getSpielplan sollte Spielplan-Daten abrufen",
+                    "status": "passed",
+                    "title": "sollte Spielplan-Daten abrufen",
+                    "duration": 0.34600000000000364,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBApiService",
+                        "getMatchInfo"
+                    ],
+                    "fullName": "BBBApiService getMatchInfo sollte Match-Info-Daten abrufen",
+                    "status": "passed",
+                    "title": "sollte Match-Info-Daten abrufen",
+                    "duration": 0.3790409999999156,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBApiService",
+                        "batchProcess"
+                    ],
+                    "fullName": "BBBApiService batchProcess sollte Items in Batches verarbeiten",
+                    "status": "passed",
+                    "title": "sollte Items in Batches verarbeiten",
+                    "duration": 23.122625000000085,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBApiService",
+                        "batchProcess"
+                    ],
+                    "fullName": "BBBApiService batchProcess sollte Delay zwischen Batches einhalten",
+                    "status": "passed",
+                    "title": "sollte Delay zwischen Batches einhalten",
+                    "duration": 103.97920799999997,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBApiService",
+                        "batchProcess"
+                    ],
+                    "fullName": "BBBApiService batchProcess sollte Fehler in Batch-Items propagieren",
+                    "status": "passed",
+                    "title": "sollte Fehler in Batch-Items propagieren",
+                    "duration": 0.6426659999999629,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBApiService",
+                        "batchProcess"
+                    ],
+                    "fullName": "BBBApiService batchProcess sollte mit leerem Array umgehen können",
+                    "status": "passed",
+                    "title": "sollte mit leerem Array umgehen können",
+                    "duration": 0.45687500000008185,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBApiService",
+                        "batchProcess"
+                    ],
+                    "fullName": "BBBApiService batchProcess sollte mit großen Batch-Größen umgehen können",
+                    "status": "passed",
+                    "title": "sollte mit großen Batch-Größen umgehen können",
+                    "duration": 0.17216599999994742,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBApiService",
+                        "CORS Proxy URLs"
+                    ],
+                    "fullName": "BBBApiService CORS Proxy URLs sollte korrekte Proxy-URLs erstellen",
+                    "status": "passed",
+                    "title": "sollte korrekte Proxy-URLs erstellen",
+                    "duration": 0.17525000000000546,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBApiService",
+                        "validateTabellenEintrag"
+                    ],
+                    "fullName": "BBBApiService validateTabellenEintrag sollte gültigen Eintrag validieren",
+                    "status": "passed",
+                    "title": "sollte gültigen Eintrag validieren",
+                    "duration": 0.32541700000001583,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBApiService",
+                        "validateTabellenEintrag"
+                    ],
+                    "fullName": "BBBApiService validateTabellenEintrag sollte Einträge mit fehlenden Feldern ablehnen",
+                    "status": "passed",
+                    "title": "sollte Einträge mit fehlenden Feldern ablehnen",
+                    "duration": 0.20145800000000236,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBApiService",
+                        "validateTabellenEintrag"
+                    ],
+                    "fullName": "BBBApiService validateTabellenEintrag sollte Einträge mit falschen Typen ablehnen",
+                    "status": "passed",
+                    "title": "sollte Einträge mit falschen Typen ablehnen",
+                    "duration": 0.16795799999999872,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBApiService",
+                        "validateTabellenEintrag"
+                    ],
+                    "fullName": "BBBApiService validateTabellenEintrag sollte Plausibilitätsprüfungen durchführen",
+                    "status": "passed",
+                    "title": "sollte Plausibilitätsprüfungen durchführen",
+                    "duration": 0.12666699999999764,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBApiService",
+                        "validateTabellenEintrag"
+                    ],
+                    "fullName": "BBBApiService validateTabellenEintrag sollte falsche Punktedifferenz erkennen",
+                    "status": "passed",
+                    "title": "sollte falsche Punktedifferenz erkennen",
+                    "duration": 0.15208300000006147,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBApiService",
+                        "validateTabellenEintrag"
+                    ],
+                    "fullName": "BBBApiService validateTabellenEintrag sollte negative Werte ablehnen",
+                    "status": "passed",
+                    "title": "sollte negative Werte ablehnen",
+                    "duration": 0.21441700000002584,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBApiService",
+                        "validateTabellenEintrag"
+                    ],
+                    "fullName": "BBBApiService validateTabellenEintrag sollte leere Team-Namen ablehnen",
+                    "status": "passed",
+                    "title": "sollte leere Team-Namen ablehnen",
+                    "duration": 0.08629099999996015,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBApiService",
+                        "validateTabellenEintrag"
+                    ],
+                    "fullName": "BBBApiService validateTabellenEintrag sollte null und undefined ablehnen",
+                    "status": "passed",
+                    "title": "sollte null und undefined ablehnen",
+                    "duration": 0.10099999999999909,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBApiService",
+                        "validateTabellenEintrag"
+                    ],
+                    "fullName": "BBBApiService validateTabellenEintrag sollte Unentschieden korrekt berücksichtigen",
+                    "status": "passed",
+                    "title": "sollte Unentschieden korrekt berücksichtigen",
+                    "duration": 0.1371670000000904,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBApiService",
+                        "extractLigaId"
+                    ],
+                    "fullName": "BBBApiService extractLigaId sollte Liga-ID aus Standard-Parameter extrahieren",
+                    "status": "passed",
+                    "title": "sollte Liga-ID aus Standard-Parameter extrahieren",
+                    "duration": 0.14354100000002745,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBApiService",
+                        "extractLigaId"
+                    ],
+                    "fullName": "BBBApiService extractLigaId sollte Liga-ID aus alternativer Schreibweise extrahieren",
+                    "status": "passed",
+                    "title": "sollte Liga-ID aus alternativer Schreibweise extrahieren",
+                    "duration": 0.09420799999998053,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBApiService",
+                        "extractLigaId"
+                    ],
+                    "fullName": "BBBApiService extractLigaId sollte Liga-ID aus REST API URL extrahieren",
+                    "status": "passed",
+                    "title": "sollte Liga-ID aus REST API URL extrahieren",
+                    "duration": 0.09029199999997672,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBApiService",
+                        "extractLigaId"
+                    ],
+                    "fullName": "BBBApiService extractLigaId sollte Liga-ID aus komplexer URL mit mehreren Parametern extrahieren",
+                    "status": "passed",
+                    "title": "sollte Liga-ID aus komplexer URL mit mehreren Parametern extrahieren",
+                    "duration": 0.048874999999952706,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBApiService",
+                        "extractLigaId"
+                    ],
+                    "fullName": "BBBApiService extractLigaId sollte null zurückgeben wenn keine Liga-ID gefunden",
+                    "status": "passed",
+                    "title": "sollte null zurückgeben wenn keine Liga-ID gefunden",
+                    "duration": 0.8068749999999909,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBApiService",
+                        "extractLigaId"
+                    ],
+                    "fullName": "BBBApiService extractLigaId sollte ungültige Liga-IDs ablehnen",
+                    "status": "passed",
+                    "title": "sollte ungültige Liga-IDs ablehnen",
+                    "duration": 0.18416600000000471,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBApiService",
+                        "extractLigaId"
+                    ],
+                    "fullName": "BBBApiService extractLigaId sollte mit ungültigen URLs umgehen können",
+                    "status": "passed",
+                    "title": "sollte mit ungültigen URLs umgehen können",
+                    "duration": 0.25937499999997726,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBApiService",
+                        "Error Handling"
+                    ],
+                    "fullName": "BBBApiService Error Handling sollte Netzwerkfehler behandeln",
+                    "status": "passed",
+                    "title": "sollte Netzwerkfehler behandeln",
+                    "duration": 3.27316600000006,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBApiService",
+                        "Error Handling"
+                    ],
+                    "fullName": "BBBApiService Error Handling sollte Timeout behandeln",
+                    "status": "passed",
+                    "title": "sollte Timeout behandeln",
+                    "duration": 710.1532080000001,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBApiService",
+                        "Error Handling"
+                    ],
+                    "fullName": "BBBApiService Error Handling sollte ungültige JSON-Antworten behandeln",
+                    "status": "passed",
+                    "title": "sollte ungültige JSON-Antworten behandeln",
+                    "duration": 0.4072920000000977,
+                    "failureMessages": [],
+                    "meta": {}
+                }
+            ],
+            "startTime": 1760480615618,
+            "endTime": 1760480616480.4072,
+            "status": "passed",
+            "message": "",
+            "name": "/Users/oliver-marcuseder/Documents/00-Privat/Basketball-Apps/basketball-app/src/domains/bbb-api/services/__tests__/BBBApiService.test.ts"
+        },
+        {
+            "assertionResults": [
+                {
+                    "ancestorTitles": [
+                        "BBBSyncService Integration Tests",
+                        "Real API Response Handling"
+                    ],
+                    "fullName": "BBBSyncService Integration Tests Real API Response Handling sollte echte API-Antwortstrukturen korrekt verarbeiten",
+                    "status": "passed",
+                    "title": "sollte echte API-Antwortstrukturen korrekt verarbeiten",
+                    "duration": 20.551125000000013,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBSyncService Integration Tests",
+                        "Real API Response Handling"
+                    ],
+                    "fullName": "BBBSyncService Integration Tests Real API Response Handling sollte CORS-Proxy-Fallback verwenden",
+                    "status": "passed",
+                    "title": "sollte CORS-Proxy-Fallback verwenden",
+                    "duration": 3.9847500000000196,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBSyncService Integration Tests",
+                        "Real API Response Handling"
+                    ],
+                    "fullName": "BBBSyncService Integration Tests Real API Response Handling sollte Rate-Limiting respektieren",
+                    "status": "passed",
+                    "title": "sollte Rate-Limiting respektieren",
+                    "duration": 203.38741700000003,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBSyncService Integration Tests",
+                        "Error Recovery"
+                    ],
+                    "fullName": "BBBSyncService Integration Tests Error Recovery sollte partielle Fehler tolerieren",
+                    "status": "passed",
+                    "title": "sollte partielle Fehler tolerieren",
+                    "duration": 11.323290999999926,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBSyncService Integration Tests",
+                        "Error Recovery"
+                    ],
+                    "fullName": "BBBSyncService Integration Tests Error Recovery sollte bei Netzwerkfehlern alle Proxies durchprobieren",
+                    "status": "passed",
+                    "title": "sollte bei Netzwerkfehlern alle Proxies durchprobieren",
+                    "duration": 9.780750000000012,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBSyncService Integration Tests",
+                        "Data Consistency"
+                    ],
+                    "fullName": "BBBSyncService Integration Tests Data Consistency sollte Duplikate vermeiden",
+                    "status": "passed",
+                    "title": "sollte Duplikate vermeiden",
+                    "duration": 6.451124999999934,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBSyncService Integration Tests",
+                        "Data Consistency"
+                    ],
+                    "fullName": "BBBSyncService Integration Tests Data Consistency sollte Team-Typ korrekt setzen",
+                    "status": "passed",
+                    "title": "sollte Team-Typ korrekt setzen",
+                    "duration": 4.379125000000045,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBSyncService Integration Tests",
+                        "WAM Filter Integration"
+                    ],
+                    "fullName": "BBBSyncService Integration Tests WAM Filter Integration sollte Filter-Anfragen korrekt aufbauen",
+                    "status": "passed",
+                    "title": "sollte Filter-Anfragen korrekt aufbauen",
+                    "duration": 4.448416000000066,
+                    "failureMessages": [],
+                    "meta": {}
+                }
+            ],
+            "startTime": 1760480616049,
+            "endTime": 1760480616313.4485,
+            "status": "passed",
+            "message": "",
+            "name": "/Users/oliver-marcuseder/Documents/00-Privat/Basketball-Apps/basketball-app/src/domains/bbb-api/services/__tests__/BBBSyncService.integration.test.ts"
+        },
+        {
+            "assertionResults": [
+                {
+                    "ancestorTitles": [
+                        "BBBSyncService PACT Tests v16",
+                        "Liga Sync Contract"
+                    ],
+                    "fullName": "BBBSyncService PACT Tests v16 Liga Sync Contract sollte Tabellen-Daten gemäß Contract abrufen",
+                    "status": "passed",
+                    "title": "sollte Tabellen-Daten gemäß Contract abrufen",
+                    "duration": 22.771124999999984,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBSyncService PACT Tests v16",
+                        "Liga Sync Contract"
+                    ],
+                    "fullName": "BBBSyncService PACT Tests v16 Liga Sync Contract sollte Spielplan-Daten gemäß Contract abrufen",
+                    "status": "passed",
+                    "title": "sollte Spielplan-Daten gemäß Contract abrufen",
+                    "duration": 9.795416000000046,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBSyncService PACT Tests v16",
+                        "Liga Sync Contract"
+                    ],
+                    "fullName": "BBBSyncService PACT Tests v16 Liga Sync Contract sollte Match-Info-Daten gemäß Contract abrufen",
+                    "status": "passed",
+                    "title": "sollte Match-Info-Daten gemäß Contract abrufen",
+                    "duration": 9.25870800000007,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBSyncService PACT Tests v16",
+                        "Error Handling Contract"
+                    ],
+                    "fullName": "BBBSyncService PACT Tests v16 Error Handling Contract sollte 404 Fehler korrekt behandeln",
+                    "status": "passed",
+                    "title": "sollte 404 Fehler korrekt behandeln",
+                    "duration": 9.70433300000002,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBSyncService PACT Tests v16",
+                        "Error Handling Contract"
+                    ],
+                    "fullName": "BBBSyncService PACT Tests v16 Error Handling Contract sollte Rate-Limiting respektieren",
+                    "status": "passed",
+                    "title": "sollte Rate-Limiting respektieren",
+                    "duration": 7.021292000000017,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBSyncService PACT Tests v16",
+                        "WAM Filter Contract"
+                    ],
+                    "fullName": "BBBSyncService PACT Tests v16 WAM Filter Contract sollte Liga-Filter gemäß Contract senden",
+                    "status": "passed",
+                    "title": "sollte Liga-Filter gemäß Contract senden",
+                    "duration": 10.294208000000026,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBSyncService PACT Tests v16",
+                        "Full Sync Integration"
+                    ],
+                    "fullName": "BBBSyncService PACT Tests v16 Full Sync Integration sollte komplette Liga synchronisieren",
+                    "status": "skipped",
+                    "title": "sollte komplette Liga synchronisieren",
+                    "failureMessages": [],
+                    "meta": {}
+                }
+            ],
+            "startTime": 1760480618367,
+            "endTime": 1760480618436.2942,
+            "status": "passed",
+            "message": "",
+            "name": "/Users/oliver-marcuseder/Documents/00-Privat/Basketball-Apps/basketball-app/src/domains/bbb-api/services/__tests__/BBBSyncService.pact.test.ts"
+        },
+        {
+            "assertionResults": [
+                {
+                    "ancestorTitles": [
+                        "BBBSyncService",
+                        "syncLiga"
+                    ],
+                    "fullName": "BBBSyncService syncLiga sollte eine komplette Liga synchronisieren",
+                    "status": "passed",
+                    "title": "sollte eine komplette Liga synchronisieren",
+                    "duration": 32.97008299999993,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBSyncService",
+                        "syncLiga"
+                    ],
+                    "fullName": "BBBSyncService syncLiga sollte Fehler abfangen und loggen",
+                    "status": "passed",
+                    "title": "sollte Fehler abfangen und loggen",
+                    "duration": 14.004083000000037,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBSyncService",
+                        "markAsOwnTeam"
+                    ],
+                    "fullName": "BBBSyncService markAsOwnTeam sollte ein Team als \"eigen\" markieren",
+                    "status": "passed",
+                    "title": "sollte ein Team als \"eigen\" markieren",
+                    "duration": 7.567625000000021,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBSyncService",
+                        "markMultipleAsOwnTeams"
+                    ],
+                    "fullName": "BBBSyncService markMultipleAsOwnTeams sollte mehrere Teams als \"eigen\" markieren",
+                    "status": "passed",
+                    "title": "sollte mehrere Teams als \"eigen\" markieren",
+                    "duration": 6.928750000000036,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBSyncService",
+                        "syncTabelleAndTeams"
+                    ],
+                    "fullName": "BBBSyncService syncTabelleAndTeams sollte Tabellendaten korrekt speichern",
+                    "status": "passed",
+                    "title": "sollte Tabellendaten korrekt speichern",
+                    "duration": 6.928541999999993,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": [
+                        "BBBSyncService",
+                        "getLigenForSync"
+                    ],
+                    "fullName": "BBBSyncService getLigenForSync sollte mehrere Ligen nacheinander synchronisieren",
+                    "status": "passed",
+                    "title": "sollte mehrere Ligen nacheinander synchronisieren",
+                    "duration": 1512.849709,
+                    "failureMessages": [],
+                    "meta": {}
+                }
+            ],
+            "startTime": 1760480615650,
+            "endTime": 1760480617231.8496,
+            "status": "passed",
+            "message": "",
+            "name": "/Users/oliver-marcuseder/Documents/00-Privat/Basketball-Apps/basketball-app/src/domains/bbb-api/services/__tests__/BBBSyncService.test.ts"
+        }
+    ]
+}

@@ -1,0 +1,49 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e3]:
+  - generic [ref=e6]:
+    - heading "Basketball Team Manager - Einrichtung" [level=1] [ref=e7]
+    - generic [ref=e8]: Schritt 1 von 10
+  - generic [ref=e11]:
+    - generic [ref=e12]:
+      - heading "Willkommen beim Basketball Team Manager" [level=1] [ref=e13]
+      - paragraph [ref=e14]: Verwalten Sie Ihre Mini-Basketball Teams einfach und effizient
+    - generic [ref=e15]:
+      - heading "Was Sie mit dieser App können:" [level=2] [ref=e16]
+      - generic [ref=e17]:
+        - generic [ref=e18]:
+          - img [ref=e19]
+          - generic [ref=e24]:
+            - heading "Team-Verwaltung" [level=3] [ref=e25]
+            - paragraph [ref=e26]: Verwalten Sie Spieler, Trikots und Einsatzzeiten gemäß DBB-Regeln
+        - generic [ref=e27]:
+          - img [ref=e28]
+          - generic [ref=e33]:
+            - heading "Spielplan-Integration" [level=3] [ref=e34]
+            - paragraph [ref=e35]: Automatischer Import von Liga-Daten und Spielplänen aus basketball-bund.net
+        - generic [ref=e36]:
+          - img [ref=e37]
+          - generic [ref=e44]:
+            - heading "Live-Spieltag" [level=3] [ref=e45]
+            - paragraph [ref=e46]: Einsatzplanung und Live-Tracking während des Spiels mit DBB-Regelvalidierung
+    - generic [ref=e47]:
+      - heading "Der Einrichtungsprozess" [level=2] [ref=e48]
+      - list [ref=e49]:
+        - listitem [ref=e50]:
+          - img [ref=e51]
+          - generic [ref=e54]: 1. Persönliche Daten eingeben
+        - listitem [ref=e55]:
+          - img [ref=e56]
+          - generic [ref=e59]: 2. Verband und Liga auswählen
+        - listitem [ref=e60]:
+          - img [ref=e61]
+          - generic [ref=e64]: 3. Verein und Teams festlegen
+        - listitem [ref=e65]:
+          - img [ref=e66]
+          - generic [ref=e69]: 4. Liga-Daten synchronisieren
+      - paragraph [ref=e70]: "⏱️ Geschätzte Dauer: 5-10 Minuten"
+    - generic [ref=e71]:
+      - button "Los geht's →" [ref=e72] [cursor=pointer]
+      - paragraph [ref=e73]: Alle Daten werden lokal auf Ihrem Gerät gespeichert
+```

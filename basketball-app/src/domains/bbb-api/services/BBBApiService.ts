@@ -10,6 +10,7 @@ import type {
   DBBTableResponse,
   DBBTabellenEintrag,
   DBBSpielplanResponse,
+  DBBSpielplanEintrag,  // ← Missing import!
   DBBMatchInfoResponse,
   DBBPlayerDetailsResponse
 } from '../../../shared/types';
@@ -81,36 +82,11 @@ export class BBBApiService {
 
   /**
    * Fetch mit CORS-Proxy Fallback
-   * Fix: Verwende rest parameters statt arguments (TypeScript strict mode)
+   * WICHTIG: Direkter Fetch zu basketball-bund.net funktioniert NICHT (CORS blocked)
+   * → Wir nutzen IMMER CORS-Proxies für externe APIs
    */
   private async fetchWithFallback(url: string, options?: RequestInit): Promise<Response> {
-    // Skip CORS proxies if URL is localhost (for testing)
-    if (url.includes('localhost') || url.includes('127.0.0.1')) {
-      const response = await fetch(url, options);
-      if (!response.ok) {
-        throw new Error(`Request failed: ${response.status}`);
-      }
-      return response;
-    }
-
-    // Development: Skip direkten Fetch, nutze sofort CORS-Proxy
-    if (import.meta.env.DEV) {
-      console.log('🔄 DEV: Using CORS proxy immediately');
-    } else {
-      // Production: Versuche direkt (mit kürzerem Timeout)
-      try {
-        const response = await fetch(url, { 
-          ...options, 
-          signal: AbortSignal.timeout(2000) 
-        });
-        if (response.ok) {
-          console.log('✅ Direct fetch success');
-          return response;
-        }
-      } catch (error) {
-        console.warn('Direct fetch failed, trying CORS proxies', error);
-      }
-    }
+    console.log('🔄 Using CORS proxy for:', url);
 
     // Versuche CORS-Proxies mit besserer Fehlerbehandlung
     const errors: Array<{proxy: string, error: any}> = [];
@@ -260,44 +236,100 @@ export class BBBApiService {
     );
     
     const apiResponse: any = await response.json();
+    console.log('🔍 RAW API Response (Tabelle) - First 1000 chars:', JSON.stringify(apiResponse).substring(0, 1000));
     
-    // Die API gibt ein Wrapper-Objekt zurück: { data: { teams: [...] } }
-    const tableData = apiResponse.data || apiResponse;
+    // Die API gibt verschiedene Strukturen zurück, je nach Version
+    // Neue API: { data: { ligaId, liganame, teams: [...] } }
+    // Alte API: { data: { tabelle: { entries: [...] } } }
+    const data = apiResponse.data || apiResponse;
     
-    // Mappe API-Format zu unserem internen Format
-    const mappedTeams: DBBTabellenEintrag[] = (tableData.teams || []).map((team: any) => ({
-      position: team.platzierung,
-      teamId: team.teamId,
-      teamName: team.teamname || '',
-      clubId: team.teamId, // API liefert keine clubId, nutze teamId als Fallback
-      clubName: (team.teamname || '').split(' ')[0] || team.teamname || 'Unknown', // Safe split
-      games: team.spiele,
-      wins: team.gewonnen,
-      losses: team.verloren,
-      points: team.punkte,
-      scoredPoints: team.korbpunkteGemacht,
-      concededPoints: team.korbpunkteGegen,
-      pointsDifference: team.differenz
-    }));
+    // Suche nach Teams in verschiedenen möglichen Pfaden
+    let teams = data.teams || data.tabelle?.entries || data.entries || [];
+    let ligaIdFromResponse = data.ligaId || data.ligaData?.ligaId || ligaId;
+    let liganameFromResponse = data.liganame || data.ligaData?.liganame || '';
     
-    // Validiere gemappte Daten
-    const validTeams = mappedTeams.filter((team: any) => {
-      const isValid = BBBApiService.validateTabellenEintrag(team);
-      if (!isValid) {
-        console.error('Invalid table entry after mapping:', team);
-      }
-      return isValid;
-    });
-    
-    if (validTeams.length !== mappedTeams.length) {
-      console.warn(`Filtered out ${mappedTeams.length - validTeams.length} invalid entries`);
+    // Wenn teams ein Array ist und deutsche Feldnamen hat (platzierung, gewonnen, verloren)
+    if (Array.isArray(teams) && teams.length > 0 && teams[0].platzierung !== undefined) {
+      console.log('🔍 Found teams with German field names, mapping...');
+      teams = teams.map((team: any) => ({
+        position: team.platzierung || 0,
+        teamId: team.teamId || 0,
+        teamName: team.teamname || '',
+        clubId: team.clubId || team.teamId || 0, // clubId often missing, use teamId as fallback
+        clubName: team.teamname?.split(' ')[0] || 'Unknown',
+        games: team.spiele || 0,
+        wins: team.gewonnen || 0,
+        losses: team.verloren || 0,
+        points: team.punkte || 0,
+        scoredPoints: team.korbpunkteGemacht || 0,
+        concededPoints: team.korbpunkteGegen || 0,
+        pointsDifference: team.differenz || 0
+      }));
+    }
+    // Wenn teams bereits englische Feldnamen hat (durch alte Mapping-Logik)
+    else if (Array.isArray(teams) && teams.length > 0 && teams[0].team) {
+      console.log('🔍 Found teams with nested structure, mapping...');
+      teams = teams
+        .filter((entry: any) => entry && entry.team)
+        .map((entry: any) => ({
+          position: entry.rang || 0,
+          teamId: entry.team?.seasonTeamId || 0,
+          teamName: entry.team?.teamname || '',
+          clubId: entry.team?.clubId || entry.team?.seasonTeamId || 0,
+          clubName: entry.team?.teamname?.split(' ')[0] || entry.team?.teamname || 'Unknown',
+          games: entry.anzspiele || 0,
+          wins: entry.s || 0,
+          losses: entry.n || 0,
+          points: entry.anzGewinnpunkte || 0,
+          scoredPoints: entry.koerbe || 0,
+          concededPoints: entry.gegenKoerbe || 0,
+          pointsDifference: entry.korbdiff || 0
+        }));
     }
     
-    return {
-      ligaId: tableData.ligaId || ligaId,
-      liganame: tableData.liganame || '',
+    console.log(`🔍 Mapped ${teams.length} teams`);
+    
+    // Validiere gemappte Daten - aber sei weniger strikt
+    const validTeams = teams.filter((team: any) => {
+      // Basis-Validierung: teamName muss vorhanden sein
+      if (!team.teamName || team.teamName.trim() === '') {
+        console.warn('Team without name:', team);
+        return false;
+      }
+      
+      // Akzeptiere Teams auch ohne clubId (wird oft nicht mitgeliefert)
+      if (!team.clubId) {
+        team.clubId = team.teamId || 0;
+      }
+      if (!team.clubName) {
+        team.clubName = team.teamName.split(' ')[0] || 'Unknown';
+      }
+      
+      return true;
+    });
+    
+    if (validTeams.length === 0) {
+      console.error('No valid teams found in response:', apiResponse);
+      throw new Error('No valid teams found in API response');
+    }
+    
+    if (validTeams.length !== teams.length) {
+      console.warn(`Filtered out ${teams.length - validTeams.length} invalid entries`);
+    }
+    
+    const result = {
+      ligaId: ligaIdFromResponse,
+      liganame: liganameFromResponse,
       teams: validTeams
     };
+    
+    console.log('✅ Returning DBBTableResponse:', { 
+      ligaId: result.ligaId, 
+      liganame: result.liganame, 
+      teamCount: result.teams.length 
+    });
+    
+    return result;
   }
 
   /**
@@ -314,36 +346,45 @@ export class BBBApiService {
     );
     
     const apiResponse: any = await response.json();
+    console.log('🔍 RAW API Response (Spielplan):', JSON.stringify(apiResponse).substring(0, 500));
     
-    // Die API gibt ein Wrapper-Objekt zurück: { data: { spielplan: [...] } }
+    // Die API gibt ein Wrapper-Objekt zurück: { data: { spielplan: [...] } } oder { data: { matches: [...] } }
     const spielplanData = apiResponse.data || apiResponse;
+    console.log('🔍 Spielplan Data:', spielplanData);
+    
+    // Versuche verschiedene Properties
+    const games = spielplanData.spielplan || spielplanData.matches || [];
+    console.log('🔍 Spielplan games:', games);
     
     // Mappe API-Format zu unserem internen Format
-    const mappedGames: DBBSpielplanEintrag[] = (spielplanData.spielplan || []).map((spiel: any) => ({
-      matchId: spiel.spielid,
-      gameNumber: spiel.nr,
-      gameDay: spiel.tag,
-      date: spiel.datum,
-      time: spiel.uhrzeit,
-      homeTeam: {
-        teamId: spiel.heimteamid,
-        teamName: spiel.heimteamname
-      },
-      awayTeam: {
-        teamId: spiel.gastteamid,
-        teamName: spiel.gastteamname
-      },
-      venue: spiel.halle ? {
-        name: spiel.halle
-      } : undefined,
-      status: spiel.heimTore !== null ? 'finished' : 'scheduled',
-      homeScore: spiel.heimTore,
-      awayScore: spiel.gastTore
-    }));
+    // Filter ungültige Spiele (ohne Teams) + defensive null-checks
+    const mappedGames: DBBSpielplanEintrag[] = games
+      .filter((match: any) => match && match.homeTeam && match.guestTeam) // Filter invalid entries
+      .map((match: any) => ({
+        matchId: match.matchId || 0,
+        gameNumber: match.matchNo || 0,
+        gameDay: match.matchDay || 0,
+        date: match.kickoffDate || '',
+        time: match.kickoffTime || '',
+        homeTeam: {
+          teamId: match.homeTeam?.seasonTeamId || 0,
+          teamName: match.homeTeam?.teamname || 'Unknown'
+        },
+        awayTeam: {
+          teamId: match.guestTeam?.seasonTeamId || 0,
+          teamName: match.guestTeam?.teamname || 'Unknown'
+        },
+        venue: match.venue ? {
+          name: match.venue
+        } : undefined,
+        status: match.result ? 'finished' : 'scheduled',
+        homeScore: match.result ? parseInt(match.result.split(':')[0]) : undefined,
+        awayScore: match.result ? parseInt(match.result.split(':')[1]) : undefined
+      }));
     
     return {
-      ligaId: spielplanData.ligaId || ligaId,
-      liganame: spielplanData.liganame || '',
+      ligaId: spielplanData.ligaData?.ligaId || spielplanData.ligaId || ligaId,
+      liganame: spielplanData.ligaData?.liganame || spielplanData.liganame || '',
       games: mappedGames
     };
   }

@@ -146,7 +146,7 @@ class ClubDataLoader {
     const searchTerm = trimmedQuery.toLowerCase();
     return allClubs.filter(({ verein }) =>
       verein.name.toLowerCase().includes(searchTerm) ||
-      verein.kurzname.toLowerCase().includes(searchTerm)
+      verein.kurzname?.toLowerCase().includes(searchTerm)
     );
   }
 
@@ -161,7 +161,7 @@ class ClubDataLoader {
     }
 
     return allClubs.filter(({ verein }) =>
-      verein.verband_ids.includes(verbandId)
+      verein.verband_ids?.includes(verbandId)
     );
   }
 
@@ -176,7 +176,7 @@ class ClubDataLoader {
     // Verband-Filter
     if (verbandId !== null) {
       filtered = filtered.filter(({ verein }) =>
-        verein.verband_ids.includes(verbandId)
+        verein.verband_ids?.includes(verbandId)
       );
     }
 
@@ -186,7 +186,7 @@ class ClubDataLoader {
       const searchTerm = trimmedQuery.toLowerCase();
       filtered = filtered.filter(({ verein }) =>
         verein.name.toLowerCase().includes(searchTerm) ||
-        verein.kurzname.toLowerCase().includes(searchTerm)
+        verein.kurzname?.toLowerCase().includes(searchTerm)
       );
     }
 

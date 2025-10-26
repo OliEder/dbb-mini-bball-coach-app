@@ -1,0 +1,42 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - generic [ref=e3]:
+    - generic [ref=e6]:
+      - heading "Basketball Team Manager - Einrichtung" [level=1] [ref=e7]
+      - generic [ref=e8]: Schritt 2 von 10
+    - generic [ref=e12]:
+      - generic [ref=e13]:
+        - img [ref=e15]
+        - heading "Ihre persönlichen Daten" [level=2] [ref=e18]
+        - paragraph [ref=e19]: Bitte geben Sie Ihren Namen ein
+      - generic [ref=e20]:
+        - generic [ref=e21]:
+          - generic [ref=e22]:
+            - generic [ref=e23]: Vorname *
+            - textbox "Vorname *" [active] [ref=e24]:
+              - /placeholder: Max
+          - generic [ref=e25]:
+            - generic [ref=e26]: Nachname *
+            - textbox "Nachname *" [ref=e27]:
+              - /placeholder: Mustermann
+        - generic [ref=e28]:
+          - button "← Zurück" [ref=e29] [cursor=pointer]
+          - button "Weiter →" [ref=e30] [cursor=pointer]
+      - paragraph [ref=e32]: Diese Daten werden nur lokal auf Ihrem Gerät gespeichert
+  - generic [ref=e35]:
+    - generic [ref=e36]: "[plugin:vite:import-analysis] Failed to resolve import \"../onboarding-v2.store\" from \"src/domains/onboarding/components/v2/CompletionStep.tsx\". Does the file exist?"
+    - generic [ref=e37]: /Users/oliver-marcuseder/Documents/00-Privat/Basketball-Apps/basketball-app/src/domains/onboarding/components/v2/CompletionStep.tsx:10:37
+    - generic [ref=e38]: "8 | import { useNavigate } from 'react-router-dom'; 9 | import { Check } from 'lucide-react'; 10 | import { useOnboardingV2Store } from '../onboarding-v2.store'; | ^ 11 | import { useAppStore } from '@/stores/appStore'; 12 | export const CompletionStep = ()=>{"
+    - generic [ref=e39]: at TransformPluginContext._formatLog (file:///Users/oliver-marcuseder/Documents/00-Privat/Basketball-Apps/basketball-app/node_modules/vite/dist/node/chunks/config.js:31120:43) at TransformPluginContext.error (file:///Users/oliver-marcuseder/Documents/00-Privat/Basketball-Apps/basketball-app/node_modules/vite/dist/node/chunks/config.js:31117:14) at normalizeUrl (file:///Users/oliver-marcuseder/Documents/00-Privat/Basketball-Apps/basketball-app/node_modules/vite/dist/node/chunks/config.js:29604:18) at async file:///Users/oliver-marcuseder/Documents/00-Privat/Basketball-Apps/basketball-app/node_modules/vite/dist/node/chunks/config.js:29662:32 at async Promise.all (index 4) at async TransformPluginContext.transform (file:///Users/oliver-marcuseder/Documents/00-Privat/Basketball-Apps/basketball-app/node_modules/vite/dist/node/chunks/config.js:29630:4) at async EnvironmentPluginContainer.transform (file:///Users/oliver-marcuseder/Documents/00-Privat/Basketball-Apps/basketball-app/node_modules/vite/dist/node/chunks/config.js:30919:14) at async loadAndTransform (file:///Users/oliver-marcuseder/Documents/00-Privat/Basketball-Apps/basketball-app/node_modules/vite/dist/node/chunks/config.js:26057:26)
+    - generic [ref=e40]:
+      - text: Click outside, press Esc key, or fix the code to dismiss.
+      - text: You can also disable this overlay by setting
+      - code [ref=e41]: server.hmr.overlay
+      - text: to
+      - code [ref=e42]: "false"
+      - text: in
+      - code [ref=e43]: vite.config.js
+      - text: .
+```

@@ -77,7 +77,7 @@ export const SimplifiedVereinStep: React.FC<SimplifiedVereinStepProps> = ({
     // Verband-Filter
     if (verbandFilter !== null) {
       filtered = filtered.filter(({ verein }) => 
-        verein.verband_ids.includes(verbandFilter)
+        verein.verband_ids?.includes(verbandFilter)
       );
     }
     
@@ -86,7 +86,7 @@ export const SimplifiedVereinStep: React.FC<SimplifiedVereinStepProps> = ({
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(({ verein }) =>
         verein.name.toLowerCase().includes(query) ||
-        verein.kurzname.toLowerCase().includes(query)
+        verein.kurzname?.toLowerCase().includes(query)
       );
     }
     

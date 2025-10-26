@@ -63,20 +63,33 @@ export class BBBSyncService {
    */
   async syncTabelleAndTeams(ligaId: number): Promise<void> {
     const tableResponse = await this.apiService.getTabelle(ligaId);
+    console.log('📊 Tabelle Response:', tableResponse);
+    
+    // Validiere Response
+    if (!tableResponse || !tableResponse.teams) {
+      console.error('Invalid table response - no teams found:', tableResponse);
+      throw new Error(`No teams found in table response for Liga ${ligaId}`);
+    }
+    
+    console.log('📊 Teams count:', tableResponse.teams.length);
 
     // 1. Liga erstellen/updaten
     const liga = await this.createOrUpdateLiga({
       ligaId: ligaId, // Use passed ligaId, not from response
-      liganame: tableResponse.liganame,
+      liganame: tableResponse.liganame || `Liga ${ligaId}`,
     });
+    console.log('✅ Liga created/updated:', liga.liga_id);
 
     // 2. Für jedes Team in der Tabelle
     for (const eintrag of tableResponse.teams) {
+      console.log('🔄 Processing team:', eintrag.teamName, eintrag.teamId);
+      
       // 2.1 Verein erstellen/finden
       const verein = await this.createOrFindVerein({
         clubId: eintrag.clubId,
         clubName: eintrag.clubName,
       });
+      console.log('✅ Verein:', verein.name);
 
       // 2.2 Team erstellen/finden
       const team = await this.createOrFindTeam({
@@ -85,10 +98,14 @@ export class BBBSyncService {
         vereinId: verein.verein_id,
         ligaId: liga.liga_id,
       });
+      console.log('✅ Team:', team.name);
 
       // 2.3 Tabellen-Eintrag speichern
       await this.saveTabellenEintrag(liga.liga_id, eintrag);
+      console.log('✅ Tabellen-Eintrag gespeichert');
     }
+    
+    console.log('✅ syncTabelleAndTeams completed');
   }
 
   /**
@@ -225,23 +242,42 @@ export class BBBSyncService {
    */
   async syncSpielplan(ligaId: number): Promise<void> {
     const spielplanResponse = await this.apiService.getSpielplan(ligaId);
+    console.log('📈 Spielplan Response games count:', spielplanResponse.games?.length || 0);
+
+    // Finde Liga in DB für interne liga_id (UUID)
+    const liga = await db.ligen
+      .where('bbb_liga_id')
+      .equals(ligaId.toString())
+      .first();
+    
+    if (!liga) {
+      console.error('❌ Liga not found in DB:', ligaId);
+      throw new Error(`Liga ${ligaId} not found in DB`);
+    }
+    
+    console.log('✅ Liga gefunden, UUID:', liga.liga_id);
 
     // Für jedes Spiel
     for (const spielEintrag of spielplanResponse.games) {
+      console.log('🔄 Processing Spiel:', spielEintrag.matchId, spielEintrag.homeTeam.teamName, 'vs', spielEintrag.awayTeam.teamName);
+      
       // 1. Heim- und Gast-Team finden
       const heimTeam = await this.findTeamByExternId(spielEintrag.homeTeam.teamId);
       const gastTeam = await this.findTeamByExternId(spielEintrag.awayTeam.teamId);
 
       if (!heimTeam || !gastTeam) {
-        console.warn(`⚠️ Team not found for Spiel ${spielEintrag.matchId}`);
+        console.warn(`⚠️ Team not found for Spiel ${spielEintrag.matchId} - Heim: ${heimTeam?.name || 'NOT FOUND'}, Gast: ${gastTeam?.name || 'NOT FOUND'}`);
         continue;
       }
+      
+      console.log('✅ Teams found - Heim:', heimTeam.name, 'Gast:', gastTeam.name);
 
       // 2. Halle erstellen/finden (falls venue vorhanden)
       let halleId: string | undefined;
       if (spielEintrag.venue) {
         const halle = await this.createOrFindHalle(spielEintrag.venue);
         halleId = halle.halle_id;
+        console.log('✅ Halle:', halle.name);
       }
 
       // 3. Spiel erstellen/updaten
@@ -253,12 +289,16 @@ export class BBBSyncService {
         time: spielEintrag.time,
         heimTeamId: heimTeam.team_id,
         gastTeamId: gastTeam.team_id,
+        ligaId: liga.liga_id,  // ⭐ WICHTIG: Liga-UUID übergeben!
         halleId: halleId,
         status: spielEintrag.status,
         homeScore: spielEintrag.homeScore,
         awayScore: spielEintrag.awayScore,
       });
+      console.log('✅ Spiel created/updated');
     }
+    
+    console.log('✅ syncSpielplan completed');
   }
 
   /**
@@ -453,6 +493,7 @@ export class BBBSyncService {
       verein_id: crypto.randomUUID(),
       extern_verein_id: data.clubId.toString(),
       name: data.clubName,
+      ort: '', // Unknown for API-synced clubs
       ist_eigener_verein: false, // Default: Gegner-Verein
       created_at: new Date(),
     };
@@ -577,6 +618,7 @@ export class BBBSyncService {
     time: string;
     heimTeamId: string;
     gastTeamId: string;
+    ligaId: string;
     halleId?: string;
     status: string;
     homeScore?: number;
@@ -598,6 +640,42 @@ export class BBBSyncService {
     const heimTeam = await db.teams.get(data.heimTeamId);
     const gastTeam = await db.teams.get(data.gastTeamId);
 
+    // 🔧 FIX: Finde das eigene Team und setze team_id nur wenn es beteiligt ist
+    const eigenesTeam = await db.teams
+      .where('team_typ')
+      .equals('eigen')  // ✅ FIX: 'eigen' nicht 'eigenes'!
+      .first();
+    
+    let teamId = '';
+    let istHeim = false;
+    
+    if (eigenesTeam) {
+      // Prüfe ob eigenes Team beteiligt ist
+      if (heimTeam?.team_id === eigenesTeam.team_id) {
+        teamId = eigenesTeam.team_id;
+        istHeim = true;
+      } else if (gastTeam?.team_id === eigenesTeam.team_id) {
+        teamId = eigenesTeam.team_id;
+        istHeim = false;
+      }
+      // Fallback: Check via extern_team_id
+      else if (heimTeam?.extern_team_id === eigenesTeam.extern_team_id) {
+        teamId = eigenesTeam.team_id;
+        istHeim = true;
+      } else if (gastTeam?.extern_team_id === eigenesTeam.extern_team_id) {
+        teamId = eigenesTeam.team_id;
+        istHeim = false;
+      }
+      // Zweiter Fallback: Check via Name
+      else if (heimTeam?.name === eigenesTeam.name) {
+        teamId = eigenesTeam.team_id;
+        istHeim = true;
+      } else if (gastTeam?.name === eigenesTeam.name) {
+        teamId = eigenesTeam.team_id;
+        istHeim = false;
+      }
+    }
+
     const spielData = {
       extern_spiel_id: data.matchId.toString(),
       spielnr: data.gameNumber,
@@ -606,27 +684,31 @@ export class BBBSyncService {
       uhrzeit: data.time,
       heim_team_id: data.heimTeamId,
       gast_team_id: data.gastTeamId,
+      liga_id: data.ligaId,
       heim: heimTeam?.name || '',
       gast: gastTeam?.name || '',
       halle_id: data.halleId,
-      ist_heimspiel: false, // Wird später gesetzt
+      ist_heimspiel: istHeim, // 🔧 FIX: Jetzt korrekt gesetzt
       status: statusMap[data.status] || 'geplant',
       ergebnis_heim: data.homeScore,
       ergebnis_gast: data.awayScore,
-      altersklasse: 'U10' as Altersklasse, // TODO: Aus Liga
+      altersklasse: 'U10' as Altersklasse,
       updated_at: new Date(),
     };
 
     if (existingSpiel) {
-      // Update
-      await db.spiele.update(existingSpiel.spiel_id, spielData);
-      return { ...existingSpiel, ...spielData };
+      // Update mit korrekter team_id
+      await db.spiele.update(existingSpiel.spiel_id, {
+        ...spielData,
+        team_id: teamId || existingSpiel.team_id, // Behalte alte team_id wenn keine neue
+      });
+      return { ...existingSpiel, ...spielData, team_id: teamId || existingSpiel.team_id };
     }
 
     // Create new
     const spiel: Spiel = {
       spiel_id: crypto.randomUUID(),
-      team_id: data.heimTeamId, // Hauptteam setzen
+      team_id: teamId, // 🔧 FIX: Nur gesetzt wenn eigenes Team beteiligt
       ...spielData,
       altersklasse: spielData.altersklasse as Altersklasse,
       created_at: new Date(),

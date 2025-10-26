@@ -281,11 +281,49 @@ export function Dashboard() {
         )}
 
         {currentView === 'tabelle' && (
-          <TabellenAnsicht 
-            eintraege={tabelle}
-            eigenerVerein={team.name}
-            title={`Tabelle - ${team.altersklasse} ${team.saison}`}
-          />
+          <div className="space-y-4">
+            {/* Status-Banner wenn keine Daten */}
+            {tabelle.length === 0 && team.liga_id && (
+              <div className="alert-warning">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="font-semibold mb-1">
+                      📦 Keine Tabellendaten verfügbar
+                    </h3>
+                    <p className="text-sm">
+                      Synchronisiere die Liga-Daten, um die aktuelle Tabelle zu laden.
+                    </p>
+                  </div>
+                  <button
+                    onClick={handleSync}
+                    disabled={isSyncing}
+                    className="btn-primary"
+                  >
+                    <RefreshCw className={`w-4 h-4 ${isSyncing ? 'animate-spin' : ''}`} />
+                    {isSyncing ? 'Lädt...' : 'Jetzt synchronisieren'}
+                  </button>
+                </div>
+              </div>
+            )}
+            
+            {/* Info wenn keine Liga-ID */}
+            {!team.liga_id && (
+              <div className="alert-info">
+                <h3 className="font-semibold mb-1">
+                  ℹ️ Keine Liga zugeordnet
+                </h3>
+                <p className="text-sm">
+                  Diesem Team ist keine Liga zugeordnet. Tabellendaten können nicht geladen werden.
+                </p>
+              </div>
+            )}
+            
+            <TabellenAnsicht 
+              eintraege={tabelle}
+              eigenerVerein={team.name}
+              title={`Tabelle - ${team.altersklasse} ${team.saison}`}
+            />
+          </div>
         )}
 
         {currentView === 'statistik' && (
