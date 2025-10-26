@@ -1,0 +1,103 @@
+name: Club Data Crawler
+
+on:
+  schedule:
+    # Läuft jeden Sonntag um 2 Uhr nachts (UTC)
+    - cron: '0 2 * * 0'
+    
+  workflow_dispatch:
+    inputs:
+      verbandIds:
+        description: 'Comma-separated Verband IDs (leer = alle)'
+        required: false
+        default: ''
+      
+jobs:
+  crawl:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Run Crawler
+        run: |
+          if [ -z "${{ github.event.inputs.verbandIds }}" ]; then
+            echo "📊 Crawling all Verbände..."
+            npm run crawl:clubs:all
+          else
+            echo "📊 Crawling specific Verbände: ${{ github.event.inputs.verbandIds }}"
+            npm run crawl:clubs -- --verbandIds=${{ github.event.inputs.verbandIds }}
+          fi
+        continue-on-error: true
+        
+      - name: Process Data
+        run: |
+          echo "✂️ Splitting club data by Verband..."
+          npm run split:clubs
+          
+      - name: Generate Summary
+        run: |
+          echo "📈 Generating crawler summary..."
+          node -e "
+          const fs = require('fs');
+          const path = require('path');
+          
+          // Count clubs per Verband
+          const dataDir = './src/shared/data/clubs';
+          const files = fs.readdirSync(dataDir);
+          const stats = {};
+          let total = 0;
+          
+          files.forEach(file => {
+            if (file.endsWith('.json')) {
+              const data = JSON.parse(fs.readFileSync(path.join(dataDir, file), 'utf8'));
+              stats[file] = data.length;
+              total += data.length;
+            }
+          });
+          
+          console.log('=== Crawler Results ===');
+          console.log('Total Clubs:', total);
+          console.log('By Verband:');
+          Object.entries(stats).forEach(([file, count]) => {
+            console.log('  -', file + ':', count, 'clubs');
+          });
+          
+          // Write to summary file
+          const summary = {
+            timestamp: new Date().toISOString(),
+            total,
+            byVerband: stats
+          };
+          fs.writeFileSync('./crawler-summary.json', JSON.stringify(summary, null, 2));
+          "
+          
+      - name: Commit changes
+        run: |
+          git config --local user.email "crawler@github-actions.com"
+          git config --local user.name "Club Crawler Bot"
+          
+          git add -A
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "chore: update club data [skip ci]
+            
+            $(cat crawler-summary.json)"
+          fi
+          
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}

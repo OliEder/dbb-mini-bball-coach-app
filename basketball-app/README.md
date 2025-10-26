@@ -1,88 +1,83 @@
-# 🏀 Basketball Team Manager
+# Basketball Team Manager PWA
 
-**Version:** 2.0.0  
-**Status:** 🚧 In Entwicklung
+[![Deploy to GitHub Pages](https://github.com/USERNAME/basketball-app/actions/workflows/deploy.yml/badge.svg)](https://github.com/USERNAME/basketball-app/actions/workflows/deploy.yml)
+[![Club Crawler](https://github.com/USERNAME/basketball-app/actions/workflows/crawler.yml/badge.svg)](https://github.com/USERNAME/basketball-app/actions/workflows/crawler.yml)
 
-Progressive Web App für Basketball-Trainer zur Verwaltung von Teams, Scouting-Daten und Spielberichtsbögen.
+## 🏀 Basketball Team Manager für Jugendtrainer
 
----
+Progressive Web App für Jugend-Basketball-Trainer (U8/U10/U12) im deutschen Basketball-System.
 
-## 📚 Dokumentation (Single Source of Truth)
+### ✨ Features
 
-**➡️ Alle Dokumentation in [`docs/`](./docs/) Ordner!**
+- 📱 **PWA** - Installierbar auf allen Geräten
+- 🔄 **Offline-First** - Funktioniert ohne Internet
+- 👥 **Spieler-Management** mit Skill-Assessment
+- 📋 **Lineup-Planung** nach DBB Minibasketball-Regeln
+- 🎮 **Live Game Management** mit Substitution-Tracking
+- 🏆 **BBB Integration** - Automatischer Import von Liga-Daten
+- 📊 **Vereinsdaten** - Über 5000 deutsche Basketball-Vereine
 
-### Für neue Chat-Sessions
-👉 **[docs/development/QUICKSTART.md](./docs/development/QUICKSTART.md)** - Template für Chat-Wechsel
+## 🚀 Live Demo
 
-### Vollständige Projekt-Doku
-👉 **[docs/development/PROJECT-STATUS.md](./docs/development/PROJECT-STATUS.md)** - Architektur, Stand, Next Steps
+👉 **[App starten](https://USERNAME.github.io/basketball-app/)**
 
-### Technische Entscheidungen
-👉 **[docs/development/TECHNICAL-DECISIONS.md](./docs/development/TECHNICAL-DECISIONS.md)** - Alle TDRs
+## 📱 Installation
 
-### Test-Dokumentation
-👉 **[tests/README.md](./tests/README.md)** - Test-Strategie & Coverage
+### iPhone/iPad
+1. Link in **Safari** öffnen
+2. **Teilen** → **Zum Home-Bildschirm**
 
----
+### Android
+1. Link in **Chrome** öffnen
+2. **⋮** → **App installieren**
 
-## 🚀 Quick Start
+### Desktop
+1. Link in **Chrome/Edge** öffnen
+2. **Installieren** in der Adressleiste
+
+## 🛠️ Entwicklung
 
 ```bash
-npm install                # Dependencies installieren
-npm run dev                # Dev Server starten
-npm run test:ui            # Tests im UI Mode
+# Installation
+npm install
+
+# Entwicklung
+npm run dev
+
+# Build
+npm run build
+
+# Tests
+npm test
 ```
 
-**Mehr Details:** [docs/development/QUICKSTART.md](./docs/development/QUICKSTART.md)
+## 📊 Datenquellen
+
+- **Vereinsdaten:** Automatisch aktualisiert via GitHub Actions
+- **Liga-Daten:** basketball-bund.net REST API
+- **Offline-Storage:** IndexedDB mit Dexie.js
+
+## 🔒 Datenschutz
+
+- **GDPR/DSGVO konform**
+- Keine Nutzer-Accounts
+- Lokale Datenhaltung
+- Keine Tracking-Cookies
+
+## 🤝 Contributing
+
+Contributions sind willkommen! Siehe [CONTRIBUTING.md](docs/CONTRIBUTING.md).
+
+## 📄 Lizenz
+
+MIT License - siehe [LICENSE](LICENSE)
+
+## 🙏 Credits
+
+- Entwickelt für Basketball-Trainer in Deutschland
+- Daten von [basketball-bund.net](https://www.basketball-bund.net)
+- Icons von [Lucide](https://lucide.dev)
 
 ---
 
-## 📁 Ordnerstruktur
-
-```
-docs/
-├── development/           # Aktuelle Entwicklungs-Doku
-│   ├── PROJECT-STATUS.md      ⭐ Hauptdokumentation
-│   ├── QUICKSTART.md          🚀 Chat-Wechsel Template
-│   └── TECHNICAL-DECISIONS.md 🧠 Tech-Entscheidungen
-├── bugfixes/             # Bug-Fix Dokumentation
-└── archive/              # Alte/veraltete Dokumente
-
-src/
-├── domains/              # Domain-Driven Design
-└── shared/               # Shared Layer
-
-tests/
-├── unit/                 # Unit Tests
-├── integration/          # Integration Tests
-└── e2e/                  # End-to-End Tests
-```
-
----
-
-## 🎯 Aktueller Status
-
-- ✅ ClubDataLoader Service implementiert
-- ✅ Simplified Onboarding Flow implementiert  
-- ✅ 65+ Tests geschrieben
-- ⚠️ Tests laufen noch nicht alle grün (in Arbeit)
-
-**Nächste Schritte:** [docs/development/PROJECT-STATUS.md#nächste-schritte](./docs/development/PROJECT-STATUS.md#nächste-schritte)
-
----
-
-## 💡 Wichtig für Chat-Wechsel
-
-Bei neuem Chat einfach sagen:
-
-```
-Lies bitte für Kontext:
-- docs/development/QUICKSTART.md (Template + Links)
-- docs/development/PROJECT-STATUS.md (Vollständige Doku)
-
-Meine Aufgabe: [DEINE AUFGABE]
-```
-
----
-
-**Alle Details:** [docs/development/](./docs/development/)
+**[📱 App installieren](https://USERNAME.github.io/basketball-app/)** | **[📚 Dokumentation](docs/)** | **[🐛 Bug melden](../../issues)**

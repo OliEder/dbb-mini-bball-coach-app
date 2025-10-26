@@ -4,8 +4,12 @@ import { VitePWA } from 'vite-plugin-pwa';
 import path from 'path';
 
 // https://vitejs.dev/config/
-export default defineConfig({
-  plugins: [
+export default defineConfig(({ mode }) => {
+  const base = process.env.BASE_URL || '/';
+  
+  return {
+    base,  // GitHub Pages base path
+    plugins: [
     react(),
     VitePWA({
       registerType: 'autoUpdate',
@@ -95,5 +99,6 @@ export default defineConfig({
   },
   optimizeDeps: {
     exclude: ['lucide-react']
+  }
   }
 });
