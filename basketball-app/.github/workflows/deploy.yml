@@ -45,7 +45,7 @@ jobs:
         run: npm run build
         env:
           # Wichtig für GitHub Pages - setzt den korrekten base path
-          BASE_URL: /${{ github.event.repository.name }}/
+          BASE_URL: https://olieder.github.io/dbb-mini-bball-coach-app/
           
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
