@@ -1,0 +1,15 @@
+# Basketball Team Manager PWA
+# https://USERNAME.github.io/basketball-app/
+
+User-agent: *
+Allow: /
+
+# PWA Assets
+Allow: /assets/
+Allow: /manifest.json
+Allow: /sw.js
+
+# No need to crawl source maps
+Disallow: /*.map
+
+Sitemap: https://USERNAME.github.io/basketball-app/sitemap.xml
