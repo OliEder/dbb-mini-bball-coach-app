@@ -10,16 +10,24 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
-# Check if git is initialized
-if [ ! -d .git ]; then
-    echo -e "${RED}❌ Git ist nicht initialisiert!${NC}"
-    echo "Führe 'git init' aus und versuche es erneut."
+# Check if we're in a git repository
+if ! git rev-parse --git-dir > /dev/null 2>&1; then
+    echo -e "${RED}❌ Kein Git Repository gefunden!${NC}"
+    echo "Führe 'git init' aus oder wechsle ins richtige Verzeichnis."
     exit 1
 fi
 
-# Get repository name
-REPO_NAME=$(basename `git rev-parse --show-toplevel`)
-GITHUB_USER=$(git config user.name)
+# Get repository info
+REPO_URL=$(git config --get remote.origin.url 2>/dev/null)
+if [ -z "$REPO_URL" ]; then
+    REPO_NAME="basketball-app"
+    GITHUB_USER="DEIN-USERNAME"
+    echo -e "${YELLOW}⚠️  Kein Remote-Repository konfiguriert${NC}"
+else
+    # Extract from URL
+    REPO_NAME=$(basename -s .git "$REPO_URL")
+    GITHUB_USER=$(echo "$REPO_URL" | sed -e 's/.*github.com[:\/]\([^\/]*\).*/\1/')
+fi
 
 echo "Repository: $REPO_NAME"
 echo "GitHub User: $GITHUB_USER"
