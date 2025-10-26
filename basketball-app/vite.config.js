@@ -1,5 +1,5 @@
 import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react-swc';
+import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 import path from 'path';
 // https://vitejs.dev/config/
@@ -7,13 +7,8 @@ export default defineConfig({
     plugins: [
         react(),
         VitePWA({
-            // Service Worker nur in Production registrieren
             registerType: 'autoUpdate',
-            // WICHTIG: Deaktiviere Dev-Optionen
-            devOptions: {
-                enabled: false, // Service Worker im Dev-Mode deaktiviert
-            },
-            // Keine includeAssets - Icons fehlen aktuell
+            includeAssets: [], // Keine Assets zum Einschließen
             manifest: {
                 name: 'Basketball Team Manager',
                 short_name: 'BBall Manager',
@@ -21,27 +16,60 @@ export default defineConfig({
                 theme_color: '#1e3a8a',
                 background_color: '#ffffff',
                 display: 'standalone',
-                // Icons temporär entfernt - müssen noch erstellt werden
-                icons: []
+                start_url: '/',
+                icons: [] // Noch keine Icons
             },
             workbox: {
-                globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
+                // Explizit leeres Array, um den Glob-Fehler zu vermeiden
+                globPatterns: [],
+                // Navigation fallback
+                navigateFallback: 'index.html',
+                navigateFallbackDenylist: [/^\/api/],
+                // Cache-Strategien für Runtime
                 runtimeCaching: [
                     {
+                        // HTML-Seiten
+                        urlPattern: ({ request }) => request.mode === 'navigate',
+                        handler: 'NetworkFirst',
+                        options: {
+                            cacheName: 'pages-cache',
+                            networkTimeoutSeconds: 3
+                        }
+                    },
+                    {
+                        // JS und CSS
+                        urlPattern: /\.(js|css)$/,
+                        handler: 'StaleWhileRevalidate',
+                        options: {
+                            cacheName: 'assets-cache'
+                        }
+                    },
+                    {
+                        // BBB API
                         urlPattern: /^https:\/\/www\.basketball-bund\.net\/.*/i,
                         handler: 'NetworkFirst',
                         options: {
-                            cacheName: 'bbb-cache',
+                            cacheName: 'bbb-api-cache',
+                            networkTimeoutSeconds: 10,
                             expiration: {
                                 maxEntries: 50,
-                                maxAgeSeconds: 60 * 60 * 24 // 24 hours
+                                maxAgeSeconds: 60 * 60 * 24 // 24 Stunden
                             },
                             cacheableResponse: {
                                 statuses: [0, 200]
                             }
                         }
                     }
-                ]
+                ],
+                // Allgemeine Workbox-Optionen
+                cleanupOutdatedCaches: true,
+                clientsClaim: true,
+                skipWaiting: true
+            },
+            devOptions: {
+                enabled: false, // Service Worker in Development deaktiviert
+                navigateFallback: 'index.html',
+                suppressWarnings: true
             }
         })
     ],
@@ -52,12 +80,19 @@ export default defineConfig({
             '@shared': path.resolve(__dirname, './src/shared')
         }
     },
-    // Build-Optionen: Source-Maps nur in Development
     build: {
-        sourcemap: false, // Keine Source-Maps in Production (reduziert Bundle-Größe)
+        sourcemap: false, // Keine Source-Maps in Production
+        rollupOptions: {
+            output: {
+                manualChunks: {
+                    vendor: ['react', 'react-dom'],
+                    dexie: ['dexie'],
+                    ui: ['lucide-react']
+                }
+            }
+        }
     },
-    // Optimizations für Dependencies
     optimizeDeps: {
-        exclude: ['lucide-react'], // Kann Probleme mit Tree-Shaking haben
+        exclude: ['lucide-react']
     }
 });

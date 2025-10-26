@@ -676,9 +676,9 @@ export interface OnboardingState {
 // CreateVereinInput
 export interface CreateVereinInput {
   name: string;
-  kurzname?: string;
   ort: string;  // REQUIRED
-  ist_eigener_verein: boolean;
+  kurzname?: string;
+  ist_eigener_verein?: boolean;  // Default: true
   verband_id?: number;
   verband_ids?: number[];
   extern_verein_id?: string;

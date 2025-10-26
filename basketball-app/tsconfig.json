@@ -20,7 +20,7 @@
     "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true,
 
-    /* Paths - TypeScript 7.0 Migration (baseUrl removed) */
+    /* Paths - ohne baseUrl */
     "paths": {
       "@/*": ["./src/*"],
       "@domains/*": ["./src/domains/*"],

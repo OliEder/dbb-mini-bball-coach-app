@@ -11,10 +11,11 @@
 
 import React from 'react';
 import { useSimpleOnboardingStore } from '../onboarding-simple.store';
-import { WelcomeStep, UserStep } from './v2';
+import { WelcomeStep } from './WelcomeStep';
+import { UserStep } from './UserStep';
 import { SimplifiedVereinStep } from './SimplifiedVereinStep';
 import { SimplifiedTeamStep } from './SimplifiedTeamStep';
-import { CompletionStep } from './v2/CompletionStep';
+import { CompletionStep } from './CompletionStep';
 
 export const SimplifiedOnboardingContainer: React.FC = () => {
   const {

@@ -213,38 +213,54 @@ class TabellenService {
 
   /**
    * ⭐ NEW: Lädt Tabellen-Daten für das aktuelle Team
-   * Priorität: 1. Berechnung aus Spielen, 2. DB-Daten, 3. Mock-Daten
+   * Priorität: 1. Berechnung aus Spielen, 2. DB-Daten, 3. LEER (keine Mocks!)
    */
   async loadTabelleForTeam(teamId: string): Promise<TabellenEintrag[]> {
     console.log('🔍 TabellenService.loadTabelleForTeam() - Start für Team:', teamId);
     
     try {
-      // Finde Spielplan für Team
-      const spielplan = await db.spielplaene
-        .where({ team_id: teamId })
-        .first();
+      // Finde Team
+      const team = await db.teams.get(teamId);
       
-      console.log('📋 Spielplan gefunden:', spielplan ? 'JA' : 'NEIN', spielplan);
-      
-      if (!spielplan || !spielplan.liga_nr_offiziell) {
-        console.log('⚠️ Kein Spielplan gefunden - verwende Mock-Daten');
-        return this.getMockTabellenDaten();
+      if (!team) {
+        console.warn('⚠️ Kein Team gefunden:', teamId);
+        return [];
       }
       
-      // Finde Liga
-      const liga = await db.ligen
-        .where({ bbb_liga_id: spielplan.liga_nr_offiziell })
-        .first();
+      console.log('🏀 Team gefunden:', team.name);
       
-      console.log('🏀 Liga gefunden:', liga ? 'JA' : 'NEIN', liga);
+      // Finde Spiele des Teams (entweder als Heim- oder Gastteam)
+      const heimSpiele = await db.spiele
+        .where('heim_team_id')
+        .equals(teamId)
+        .toArray();
       
-      if (!liga) {
-        console.log('⚠️ Keine Liga gefunden - verwende Mock-Daten');
-        return this.getMockTabellenDaten();
+      const gastSpiele = await db.spiele
+        .where('gast_team_id')
+        .equals(teamId)
+        .toArray();
+      
+      const alleSpiele = [...heimSpiele, ...gastSpiele];
+      
+      console.log('🏀 Spiele gefunden:', alleSpiele.length);
+      
+      if (alleSpiele.length === 0) {
+        console.warn('⚠️ Keine Spiele gefunden für Team:', teamId);
+        return [];
       }
+      
+      // Extrahiere Liga-ID aus dem ersten Spiel
+      const ligaId = alleSpiele[0].liga_id;
+      
+      if (!ligaId) {
+        console.warn('⚠️ Keine Liga-ID in Spielen gefunden');
+        return [];
+      }
+      
+      console.log('🏀 Liga-ID:', ligaId);
       
       // ⭐ PRIORITY 1: Berechne Tabelle aus Spielergebnissen (PLAUSIBILITÄT!)
-      const berechnetTabelle = await this.berechneTabelleAusSpiele(liga.liga_id);
+      const berechnetTabelle = await this.berechneTabelleAusSpiele(ligaId);
       
       if (berechnetTabelle.length > 0) {
         console.log('✅ Tabelle aus Spielergebnissen berechnet:', berechnetTabelle.length, 'Teams');
@@ -252,19 +268,19 @@ class TabellenService {
       }
       
       // PRIORITY 2: Lade aus Datenbank (Fallback)
-      const dbTabelle = await this.loadTabelleFromDatabase(liga.liga_id);
+      const dbTabelle = await this.loadTabelleFromDatabase(ligaId);
       
       if (dbTabelle.length > 0) {
         console.log('ℹ️ Tabelle aus DB geladen (Fallback):', dbTabelle.length, 'Teams');
         return dbTabelle;
       }
       
-      // PRIORITY 3: Mock-Daten (Fallback)
-      console.log('⚠️ Keine Tabellendaten verfügbar - verwende Mock-Daten');
-      return this.getMockTabellenDaten();
+      // PRIORITY 3: Leer - UI soll Status anzeigen
+      console.warn('⚠️ Keine Tabellendaten verfügbar für Liga:', ligaId);
+      return [];
     } catch (error) {
       console.error('❌ Error loading tabelle for team:', error);
-      return this.getMockTabellenDaten();
+      return [];
     }
   }
   /**
@@ -345,7 +361,7 @@ class TabellenService {
       
       if (!shouldUseRealApi) {
         console.log('🎭 Dev Mode: Using Mock Data (Toggle in DevTools to use Real API)');
-        return this.getMockTabellenDaten();
+        return this.getMockTabellenDatenForTests();
       }
 
       console.log('⚡ Dev Mode: Using Real API');
@@ -367,9 +383,10 @@ class TabellenService {
   }
 
   /**
-   * Mock-Daten für Development
+   * Mock-Daten für Unit/Integration Tests
+   * ⚠️ NUR in Tests verwenden! Nicht in Production!
    */
-  private getMockTabellenDaten(): TabellenEintrag[] {
+  getMockTabellenDatenForTests(): TabellenEintrag[] {
     return [
       {
         rang: 1,

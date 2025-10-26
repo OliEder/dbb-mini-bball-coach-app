@@ -1,4 +1,4 @@
-@startuml
+@startuml Basketball-Manager PWA
 object "Spieler" as Spieler {
     - vorname: String
     - nachname: String

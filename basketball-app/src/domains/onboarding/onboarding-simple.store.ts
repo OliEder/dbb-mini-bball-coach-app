@@ -12,6 +12,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { Team, Verein } from '@shared/types';
+import { db } from '@shared/db/database';
 
 export type SimpleOnboardingStep = 
   | 'welcome'
@@ -150,6 +151,7 @@ export const useSimpleOnboardingStore = create<SimpleOnboardingState & SimpleOnb
             const createdVerein = await vereinService.createVerein({
               name: state.selectedVerein.name,
               kurzname: state.selectedVerein.kurzname,
+              ort: state.selectedVerein.ort || 'Unbekannt',  // REQUIRED field
               ist_eigener_verein: true
             });
             vereinId = createdVerein.verein_id;
@@ -159,12 +161,17 @@ export const useSimpleOnboardingStore = create<SimpleOnboardingState & SimpleOnb
           const createdTeamIds: string[] = [];
           
           for (const team of state.selectedTeams) {
+            // Map altersklasse_id to Altersklasse type
+            const altersklasse = team.altersklasse || 'U12';  // Use existing or default
+            
             const createdTeam = await teamService.createTeam({
               verein_id: vereinId,
               name: team.name,
-              altersklasse: team.altersklasse_id?.toString() || 'U12',
+              altersklasse: altersklasse,  // Type-safe Altersklasse
+              altersklasse_id: team.altersklasse_id,
               geschlecht: team.geschlecht || 'mixed',
               saison: team.saison,
+              trainer: state.user ? `${state.user.vorname} ${state.user.nachname}` : 'Unbekannt',  // REQUIRED
               liga_id: team.liga_id || undefined,
               liga_name: team.liga_name || undefined
             });
@@ -183,25 +190,85 @@ export const useSimpleOnboardingStore = create<SimpleOnboardingState & SimpleOnb
               try {
                 // Extrahiere Liga-ID aus liga_id String (kann Format "123" oder "liga-123" haben)
                 const ligaIdMatch = firstTeam.liga_id.match(/\d+/);
-                if (ligaIdMatch) {
-                  const ligaId = parseInt(ligaIdMatch[0], 10);
-                  
-                  // Sync im Hintergrund starten (nicht blockierend)
-                  bbbSyncService.syncLiga(ligaId, { skipMatchInfo: true })
-                    .then(() => {
-                      console.log('✅ Liga-Sync abgeschlossen');
-                    })
-                    .catch((error) => {
-                      console.warn('⚠️ Liga-Sync fehlgeschlagen:', error);
-                      // Nicht kritisch - Onboarding kann fortgesetzt werden
-                    });
+                if (!ligaIdMatch) {
+                  console.error('❌ Konnte Liga-ID nicht parsen:', firstTeam.liga_id);
                 } else {
-                  console.warn('⚠️ Konnte Liga-ID nicht parsen:', firstTeam.liga_id);
+                  const ligaId = parseInt(ligaIdMatch[0], 10);
+                  console.log('🎯 Extrahierte Liga-ID:', ligaId);
+                  
+                  // Sync starten (blockierend, damit wir Fehler sehen)
+                  try {
+                    await bbbSyncService.syncLiga(ligaId, { skipMatchInfo: true });
+                    console.log('✅ Liga-Sync erfolgreich abgeschlossen');
+                    
+                    // WICHTIG: User-Team mit Sync-Team mergen!
+                    // Das User-Team hat keine extern_team_id, aber das Sync-Team schon
+                    // Wir müssen die extern_team_id vom Sync-Team übernehmen
+                    const userTeam = await db.teams.get(firstTeamId);
+                    if (userTeam) {
+                      // Finde das passende Sync-Team anhand des Namens
+                      const syncTeam = await db.teams
+                        .where('name')
+                        .equals(userTeam.name)
+                        .and(team => team.extern_team_id !== undefined && team.team_id !== userTeam.team_id)
+                        .first();
+                      
+                      if (syncTeam && syncTeam.extern_team_id) {
+                        console.log('🔄 Merge User-Team mit Sync-Team:', syncTeam.name, syncTeam.extern_team_id);
+                        
+                        // Übernehme extern_team_id vom Sync-Team
+                        await db.teams.update(firstTeamId, {
+                          extern_team_id: syncTeam.extern_team_id
+                        });
+                        
+                        // WICHTIG: Update alle Spiele die das Sync-Team referenzieren!
+                        const spieleAsHeim = await db.spiele
+                          .where('heim_team_id')
+                          .equals(syncTeam.team_id)
+                          .toArray();
+                        
+                        const spieleAsGast = await db.spiele
+                          .where('gast_team_id')
+                          .equals(syncTeam.team_id)
+                          .toArray();
+                        
+                        console.log('🔄 Update', spieleAsHeim.length, 'Heimspiele und', spieleAsGast.length, 'Auswärtsspiele');
+                        
+                        for (const spiel of spieleAsHeim) {
+                          await db.spiele.update(spiel.spiel_id, {
+                            heim_team_id: firstTeamId
+                          });
+                        }
+                        
+                        for (const spiel of spieleAsGast) {
+                          await db.spiele.update(spiel.spiel_id, {
+                            gast_team_id: firstTeamId
+                          });
+                        }
+                        
+                        // Lösche das Sync-Team (Duplikat)
+                        await db.teams.delete(syncTeam.team_id);
+                        
+                        console.log('✅ Teams erfolgreich gemergt!');
+                      }
+                    }
+                    
+                    // Zeige Stats
+                    const spieleCount = await db.spiele.count();
+                    const tabelleCount = await db.liga_tabellen.count();
+                    const teamsCount = await db.teams.count();
+                    console.log('📈 Sync-Stats:', { spieleCount, tabelleCount, teamsCount });
+                  } catch (syncError) {
+                    console.error('❌ Liga-Sync fehlgeschlagen:', syncError);
+                    // Zeige User-Hinweis, aber blockiere Onboarding nicht
+                    console.warn('⚠️ Liga-Daten können später über Sync-Button nachgeladen werden');
+                  }
                 }
               } catch (error) {
-                console.warn('⚠️ Liga-Sync Fehler:', error);
-                // Nicht kritisch
+                console.error('❌ Liga-Sync Setup Fehler:', error);
               }
+            } else {
+              console.warn('⚠️ Kein liga_id vorhanden - überspringe Liga-Sync');
             }
           
           // Save to localStorage

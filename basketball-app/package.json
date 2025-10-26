@@ -11,7 +11,7 @@
     "test": "vitest",
     "test:json": "vitest --reporter=json --outputFile=test-results/vitest-results.json --run",
     "test:ui": "vitest --ui",
-    "test:ui:json": "vitest --ui --reporter=default --reporter=json --outputFile=test-results/vitest-results.json",
+    "test:ui:json": "vitest --run --reporter=default --reporter=json --outputFile=test-results/vitest-results.json",
     "test:coverage": "vitest --coverage",
     "test:watch": "vitest --reporter=default --reporter=json --outputFile=test-results/vitest-results.json",
     "test:e2e": "playwright test",
@@ -42,12 +42,17 @@
     "uuid": "^13.0.0",
     "zustand": "^5.0.8"
   },
+  "overrides": {
+    "glob": "^11.0.0",
+    "inflight": "npm:@tanem/inflight@^1.0.0",
+    "source-map": "^0.7.4"
+  },
   "devDependencies": {
     "@axe-core/playwright": "^4.11.0",
+    "source-map": "^0.7.4",
     "@eslint/js": "^9.38.0",
     "@pact-foundation/pact": "^16.0.2",
     "@playwright/test": "^1.56.1",
-    "@swc/core": "^1.13.21",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
@@ -58,7 +63,7 @@
     "@types/react-dom": "^19.2.2",
     "@typescript-eslint/eslint-plugin": "^8.46.2",
     "@typescript-eslint/parser": "^8.46.2",
-    "@vitejs/plugin-react-swc": "^4.1.0",
+    "@vitejs/plugin-react": "^5.1.0",
     "@vitest/ui": "^3.2.4",
     "autoprefixer": "^10.4.21",
     "axe-core": "^4.11.0",
@@ -77,5 +82,8 @@
     "vite": "^7.1.11",
     "vite-plugin-pwa": "^1.1.0",
     "vitest": "^3.2.4"
+  },
+  "optionalDependencies": {
+    "@swc/core-darwin-arm64": "^1.13.21"
   }
 }
