@@ -51,7 +51,7 @@ _DELETE_*
 node_modules.old/
 # Node.js (alle Subprojekte)
 **/node_modules/
-**/package-lock.json
+# package-lock.json MUSS committet werden für reproduzierbare Builds!
 **/_DELETE_*
 **/*.old
 **/*.broken
