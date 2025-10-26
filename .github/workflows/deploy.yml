@@ -44,7 +44,7 @@ jobs:
         working-directory: basketball-app
         run: npm run build
         env:
-          BASE_URL: /
+          BASE_URL: /dbb-mini-bball-coach-app/
           
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
