@@ -1,0 +1,109 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e3]:
+  - generic [ref=e6]:
+    - heading "Basketball Team Manager - Einrichtung" [level=1] [ref=e7]
+    - generic [ref=e8]: Schritt 4 von 10
+  - generic [ref=e12]:
+    - generic [ref=e13]:
+      - img [ref=e15]
+      - heading "Wählen Sie die Altersklassen" [level=2] [ref=e20]
+      - paragraph [ref=e21]: Für welche Altersklassen möchten Sie Teams verwalten?
+    - generic [ref=e22]:
+      - generic [ref=e24]:
+        - img [ref=e25]
+        - generic [ref=e27]:
+          - paragraph [ref=e28]: Minibasketball-Fokus
+          - paragraph [ref=e29]: Diese App ist speziell für Mini-Basketball (U8, U10, U12) optimiert mit DBB-Regel-Validierung für Einsatzzeiten.
+      - button "Alle auswählen" [ref=e31] [cursor=pointer]
+      - generic [ref=e32]:
+        - generic [ref=e33] [cursor=pointer]:
+          - checkbox "Senioren 89 Ligen verfügbar" [ref=e34]
+          - generic [ref=e35]:
+            - generic [ref=e36]: Senioren
+            - generic [ref=e37]: 89 Ligen verfügbar
+        - generic [ref=e38] [cursor=pointer]:
+          - checkbox "U10Minibasketball 46 Ligen verfügbar" [ref=e39]
+          - generic [ref=e40]:
+            - generic [ref=e41]: U10Minibasketball
+            - generic [ref=e42]: 46 Ligen verfügbar
+        - generic [ref=e43] [cursor=pointer]:
+          - checkbox "U11 1 Ligen verfügbar" [ref=e44]
+          - generic [ref=e45]:
+            - generic [ref=e46]: U11
+            - generic [ref=e47]: 1 Ligen verfügbar
+        - generic [ref=e48] [cursor=pointer]:
+          - checkbox "U12Minibasketball 61 Ligen verfügbar" [ref=e49]
+          - generic [ref=e50]:
+            - generic [ref=e51]: U12Minibasketball
+            - generic [ref=e52]: 61 Ligen verfügbar
+        - generic [ref=e53] [cursor=pointer]:
+          - checkbox "U14 60 Ligen verfügbar" [ref=e54]
+          - generic [ref=e55]:
+            - generic [ref=e56]: U14
+            - generic [ref=e57]: 60 Ligen verfügbar
+        - generic [ref=e58] [cursor=pointer]:
+          - checkbox "U15 1 Ligen verfügbar" [ref=e59]
+          - generic [ref=e60]:
+            - generic [ref=e61]: U15
+            - generic [ref=e62]: 1 Ligen verfügbar
+        - generic [ref=e63] [cursor=pointer]:
+          - checkbox "U16 48 Ligen verfügbar" [ref=e64]
+          - generic [ref=e65]:
+            - generic [ref=e66]: U16
+            - generic [ref=e67]: 48 Ligen verfügbar
+        - generic [ref=e68] [cursor=pointer]:
+          - checkbox "U18 36 Ligen verfügbar" [ref=e69]
+          - generic [ref=e70]:
+            - generic [ref=e71]: U18
+            - generic [ref=e72]: 36 Ligen verfügbar
+        - generic [ref=e73] [cursor=pointer]:
+          - checkbox "U20 12 Ligen verfügbar" [ref=e74]
+          - generic [ref=e75]:
+            - generic [ref=e76]: U20
+            - generic [ref=e77]: 12 Ligen verfügbar
+        - generic [ref=e78] [cursor=pointer]:
+          - checkbox "Ü30 2 Ligen verfügbar" [ref=e79]
+          - generic [ref=e80]:
+            - generic [ref=e81]: Ü30
+            - generic [ref=e82]: 2 Ligen verfügbar
+        - generic [ref=e83] [cursor=pointer]:
+          - checkbox "Ü35 2 Ligen verfügbar" [ref=e84]
+          - generic [ref=e85]:
+            - generic [ref=e86]: Ü35
+            - generic [ref=e87]: 2 Ligen verfügbar
+        - generic [ref=e88] [cursor=pointer]:
+          - checkbox "Ü40 3 Ligen verfügbar" [ref=e89]
+          - generic [ref=e90]:
+            - generic [ref=e91]: Ü40
+            - generic [ref=e92]: 3 Ligen verfügbar
+        - generic [ref=e93] [cursor=pointer]:
+          - checkbox "Ü45 1 Ligen verfügbar" [ref=e94]
+          - generic [ref=e95]:
+            - generic [ref=e96]: Ü45
+            - generic [ref=e97]: 1 Ligen verfügbar
+        - generic [ref=e98] [cursor=pointer]:
+          - checkbox "Ü50 1 Ligen verfügbar" [ref=e99]
+          - generic [ref=e100]:
+            - generic [ref=e101]: Ü50
+            - generic [ref=e102]: 1 Ligen verfügbar
+        - generic [ref=e103] [cursor=pointer]:
+          - checkbox "Ü55 1 Ligen verfügbar" [ref=e104]
+          - generic [ref=e105]:
+            - generic [ref=e106]: Ü55
+            - generic [ref=e107]: 1 Ligen verfügbar
+        - generic [ref=e108] [cursor=pointer]:
+          - checkbox "U8Minibasketball 6 Ligen verfügbar" [ref=e109]
+          - generic [ref=e110]:
+            - generic [ref=e111]: U8Minibasketball
+            - generic [ref=e112]: 6 Ligen verfügbar
+        - generic [ref=e113] [cursor=pointer]:
+          - checkbox "U9 3 Ligen verfügbar" [ref=e114]
+          - generic [ref=e115]:
+            - generic [ref=e116]: U9
+            - generic [ref=e117]: 3 Ligen verfügbar
+      - generic [ref=e118]:
+        - button "← Zurück" [ref=e119] [cursor=pointer]
+        - button "Weiter →" [disabled] [ref=e120]
+```

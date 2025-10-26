@@ -1,0 +1,110 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e3]:
+  - generic [ref=e6]:
+    - heading "Basketball Team Manager - Einrichtung" [level=1] [ref=e7]
+    - generic [ref=e8]: Schritt 3 von 10
+  - generic [ref=e12]:
+    - generic [ref=e13]:
+      - img [ref=e15]
+      - heading "Wählen Sie Ihren Verband" [level=2] [ref=e18]
+      - paragraph [ref=e19]: In welchem Basketball-Verband ist Ihr Verein organisiert?
+    - generic [ref=e20]:
+      - generic [ref=e21]:
+        - img [ref=e22]
+        - generic [ref=e24]:
+          - strong [ref=e25]: "Für Mini-Basketball:"
+          - text: Wählen Sie in der Regel Ihren
+          - strong [ref=e26]: Landesverband
+          - text: (Bundesland). Die anderen Kategorien sind für überregionale Wettbewerbe.
+      - generic [ref=e27]:
+        - heading "Landesverbände" [level=3] [ref=e28]: Landesverbände
+        - paragraph [ref=e30]: Ihr Bundesland - hier finden die meisten Mini-Basketball-Spiele statt
+        - generic [ref=e31]:
+          - generic [ref=e32] [cursor=pointer]:
+            - radio "Baden-Württemberg Basketball-Verband Baden-Württemberg" [ref=e33]
+            - generic [ref=e34]:
+              - generic [ref=e35]: Baden-Württemberg
+              - generic [ref=e36]: Basketball-Verband Baden-Württemberg
+          - generic [ref=e37] [cursor=pointer]:
+            - radio "Bayern Basketball-Verband Bayern" [ref=e38]
+            - generic [ref=e39]:
+              - generic [ref=e40]: Bayern
+              - generic [ref=e41]: Basketball-Verband Bayern
+          - generic [ref=e42] [cursor=pointer]:
+            - radio "Berlin Basketball-Verband Berlin" [ref=e43]
+            - generic [ref=e44]:
+              - generic [ref=e45]: Berlin
+              - generic [ref=e46]: Basketball-Verband Berlin
+          - generic [ref=e47] [cursor=pointer]:
+            - radio "Bremen Basketball-Verband Bremen" [ref=e48]
+            - generic [ref=e49]:
+              - generic [ref=e50]: Bremen
+              - generic [ref=e51]: Basketball-Verband Bremen
+          - generic [ref=e52] [cursor=pointer]:
+            - radio "Hamburg Basketball-Verband Hamburg" [ref=e53]
+            - generic [ref=e54]:
+              - generic [ref=e55]: Hamburg
+              - generic [ref=e56]: Basketball-Verband Hamburg
+          - generic [ref=e57] [cursor=pointer]:
+            - radio "Hessen Basketball-Verband Hessen" [ref=e58]
+            - generic [ref=e59]:
+              - generic [ref=e60]: Hessen
+              - generic [ref=e61]: Basketball-Verband Hessen
+          - generic [ref=e62] [cursor=pointer]:
+            - radio "Niedersachsen Basketball-Verband Niedersachsen" [ref=e63]
+            - generic [ref=e64]:
+              - generic [ref=e65]: Niedersachsen
+              - generic [ref=e66]: Basketball-Verband Niedersachsen
+          - generic [ref=e67] [cursor=pointer]:
+            - radio "Rheinland-Pfalz Basketball-Verband Rheinland-Pfalz" [ref=e68]
+            - generic [ref=e69]:
+              - generic [ref=e70]: Rheinland-Pfalz
+              - generic [ref=e71]: Basketball-Verband Rheinland-Pfalz
+          - generic [ref=e72] [cursor=pointer]:
+            - radio "Saarland Basketball-Verband Saarland" [ref=e73]
+            - generic [ref=e74]:
+              - generic [ref=e75]: Saarland
+              - generic [ref=e76]: Basketball-Verband Saarland
+          - generic [ref=e77] [cursor=pointer]:
+            - radio "Schleswig-Holstein Basketball-Verband Schleswig-Holstein" [ref=e78]
+            - generic [ref=e79]:
+              - generic [ref=e80]: Schleswig-Holstein
+              - generic [ref=e81]: Basketball-Verband Schleswig-Holstein
+          - generic [ref=e82] [cursor=pointer]:
+            - radio "Nordrhein-Westfalen Basketball-Verband Nordrhein-Westfalen" [ref=e83]
+            - generic [ref=e84]:
+              - generic [ref=e85]: Nordrhein-Westfalen
+              - generic [ref=e86]: Basketball-Verband Nordrhein-Westfalen
+          - generic [ref=e87] [cursor=pointer]:
+            - radio "Mecklenburg-Vorpommern Basketball-Verband Mecklenburg-Vorpommern" [ref=e88]
+            - generic [ref=e89]:
+              - generic [ref=e90]: Mecklenburg-Vorpommern
+              - generic [ref=e91]: Basketball-Verband Mecklenburg-Vorpommern
+          - generic [ref=e92] [cursor=pointer]:
+            - radio "Sachsen-Anhalt Basketball-Verband Sachsen-Anhalt" [ref=e93]
+            - generic [ref=e94]:
+              - generic [ref=e95]: Sachsen-Anhalt
+              - generic [ref=e96]: Basketball-Verband Sachsen-Anhalt
+          - generic [ref=e97] [cursor=pointer]:
+            - radio "Brandenburg Basketball-Verband Brandenburg" [ref=e98]
+            - generic [ref=e99]:
+              - generic [ref=e100]: Brandenburg
+              - generic [ref=e101]: Basketball-Verband Brandenburg
+          - generic [ref=e102] [cursor=pointer]:
+            - radio "Sachsen Basketball-Verband Sachsen" [ref=e103]
+            - generic [ref=e104]:
+              - generic [ref=e105]: Sachsen
+              - generic [ref=e106]: Basketball-Verband Sachsen
+          - generic [ref=e107] [cursor=pointer]:
+            - radio "Thüringen Basketball-Verband Thüringen" [ref=e108]
+            - generic [ref=e109]:
+              - generic [ref=e110]: Thüringen
+              - generic [ref=e111]: Basketball-Verband Thüringen
+      - group [ref=e112]:
+        - generic "Überregionale Verbände anzeigen" [active] [ref=e113] [cursor=pointer]
+      - generic [ref=e114]:
+        - button "← Zurück" [ref=e115] [cursor=pointer]
+        - button "Weiter →" [disabled] [ref=e116]
+```

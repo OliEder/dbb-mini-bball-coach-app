@@ -1,0 +1,20 @@
+meta {
+  name: competition-list
+  type: http
+  seq: 10
+}
+
+post {
+  url: {{baseURL}}/rest/competition/list
+  body: json
+  auth: none
+}
+
+body:json {
+  [{{ligaId}}]
+    
+}
+
+vars:pre-request {
+  ligaId: 51931
+}

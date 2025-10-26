@@ -1,0 +1,514 @@
+{
+  "club_id": 4468,
+  "club_name": "Fibalon Baskets Neumarkt",
+  "total_teams": 9,
+  "total_ligen": 9,
+  "team_variations": [
+    {
+      "teamname": "Fibalon Baskets Neumarkt",
+      "teamPermanentIds": [
+        167881,
+        167882,
+        167885,
+        167887,
+        167889,
+        311271,
+        320847
+      ],
+      "teamCompetitionIds": [
+        405995,
+        414665,
+        432418,
+        432437,
+        432452,
+        432547,
+        432555
+      ]
+    },
+    {
+      "teamname": "Fibalon Baskets Neumarkt 2",
+      "teamPermanentIds": [
+        167890,
+        321759
+      ],
+      "teamCompetitionIds": [
+        427916,
+        432896
+      ]
+    }
+  ],
+  "ligen_by_category": {
+    "Senioren männlich": [
+      {
+        "liga_id": 47653,
+        "liga_name": "Bayernliga Herren Mitte (ByLHM) 25/26",
+        "spielklasse": "Bayernliga",
+        "ebene": "Verband",
+        "verband": "Bayern",
+        "bezirk": null
+      },
+      {
+        "liga_id": 51347,
+        "liga_name": "Bezirksoberliga Herren 2025/26",
+        "spielklasse": "Bezirksoberliga",
+        "ebene": "Bezirk",
+        "verband": "Bayern",
+        "bezirk": "Oberpfalz"
+      }
+    ],
+    "U20 männlich": [
+      {
+        "liga_id": 49823,
+        "liga_name": "Landesliga U20 männlich Nord",
+        "spielklasse": "Landesliga",
+        "ebene": "Verband",
+        "verband": "Bayern",
+        "bezirk": null
+      }
+    ],
+    "U18 männlich": [
+      {
+        "liga_id": 51938,
+        "liga_name": "U18 männlich Bezirksoberliga",
+        "spielklasse": "Bezirksoberliga",
+        "ebene": "Bezirk",
+        "verband": "Bayern",
+        "bezirk": "Oberpfalz"
+      }
+    ],
+    "U16 männlich": [
+      {
+        "liga_id": 51935,
+        "liga_name": "U16 männlich Bezirksoberliga",
+        "spielklasse": "Bezirksoberliga",
+        "ebene": "Bezirk",
+        "verband": "Bayern",
+        "bezirk": "Oberpfalz"
+      },
+      {
+        "liga_id": 51936,
+        "liga_name": "U16 männlich Bezirksliga",
+        "spielklasse": "Bezirksliga",
+        "ebene": "Bezirk",
+        "verband": "Bayern",
+        "bezirk": "Oberpfalz"
+      }
+    ],
+    "U14 männlich": [
+      {
+        "liga_id": 51931,
+        "liga_name": "U14 männlich Bezirksoberliga",
+        "spielklasse": "Bezirksoberliga",
+        "ebene": "Bezirk",
+        "verband": "Bayern",
+        "bezirk": "Oberpfalz"
+      }
+    ],
+    "U12 mix": [
+      {
+        "liga_id": 51960,
+        "liga_name": "U12 mixed Bezirksliga",
+        "spielklasse": "Bezirksliga",
+        "ebene": "Bezirk",
+        "verband": "Bayern",
+        "bezirk": "Oberpfalz"
+      }
+    ],
+    "U10 mix": [
+      {
+        "liga_id": 51961,
+        "liga_name": "U10 mixed Bezirksliga",
+        "spielklasse": "Bezirksliga",
+        "ebene": "Bezirk",
+        "verband": "Bayern",
+        "bezirk": "Oberpfalz"
+      }
+    ]
+  },
+  "teams_detailed": [
+    {
+      "team_name": "Fibalon Baskets Neumarkt",
+      "team_name_small": "NM",
+      "team_permanent_id": 167889,
+      "season_team_id": 405995,
+      "liga_id": 47653,
+      "liga_name": "Bayernliga Herren Mitte (ByLHM) 25/26",
+      "tabelle": {
+        "rang": 4,
+        "total_teams": 12,
+        "position_text": "4/12"
+      },
+      "spiele": {
+        "gesamt": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "heim": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "auswaerts": {
+          "gespielt": 0,
+          "anstehend": 0
+        }
+      },
+      "naechste_spiele": [],
+      "statistik": {
+        "siege": 2,
+        "niederlagen": 1,
+        "punkte": 4,
+        "koerbe": 270,
+        "gegen_koerbe": 235,
+        "korbdifferenz": 35
+      }
+    },
+    {
+      "team_name": "Fibalon Baskets Neumarkt",
+      "team_name_small": null,
+      "team_permanent_id": 320847,
+      "season_team_id": 414665,
+      "liga_id": 49823,
+      "liga_name": "Landesliga U20 männlich Nord",
+      "tabelle": {
+        "rang": 2,
+        "total_teams": 7,
+        "position_text": "2/7"
+      },
+      "spiele": {
+        "gesamt": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "heim": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "auswaerts": {
+          "gespielt": 0,
+          "anstehend": 0
+        }
+      },
+      "naechste_spiele": [],
+      "statistik": {
+        "siege": 0,
+        "niederlagen": 0,
+        "punkte": 0,
+        "koerbe": 0,
+        "gegen_koerbe": 0,
+        "korbdifferenz": 0
+      }
+    },
+    {
+      "team_name": "Fibalon Baskets Neumarkt 2",
+      "team_name_small": "NM",
+      "team_permanent_id": 167890,
+      "season_team_id": 427916,
+      "liga_id": 51347,
+      "liga_name": "Bezirksoberliga Herren 2025/26",
+      "tabelle": {
+        "rang": 5,
+        "total_teams": 7,
+        "position_text": "5/7"
+      },
+      "spiele": {
+        "gesamt": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "heim": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "auswaerts": {
+          "gespielt": 0,
+          "anstehend": 0
+        }
+      },
+      "naechste_spiele": [],
+      "statistik": {
+        "siege": 0,
+        "niederlagen": 1,
+        "punkte": 0,
+        "koerbe": 59,
+        "gegen_koerbe": 77,
+        "korbdifferenz": -18
+      }
+    },
+    {
+      "team_name": "Fibalon Baskets Neumarkt",
+      "team_name_small": "NM",
+      "team_permanent_id": 167887,
+      "season_team_id": 432452,
+      "liga_id": 51938,
+      "liga_name": "U18 männlich Bezirksoberliga",
+      "tabelle": {
+        "rang": 3,
+        "total_teams": 5,
+        "position_text": "3/5"
+      },
+      "spiele": {
+        "gesamt": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "heim": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "auswaerts": {
+          "gespielt": 0,
+          "anstehend": 0
+        }
+      },
+      "naechste_spiele": [],
+      "statistik": {
+        "siege": 1,
+        "niederlagen": 1,
+        "punkte": 2,
+        "koerbe": 126,
+        "gegen_koerbe": 113,
+        "korbdifferenz": 13
+      }
+    },
+    {
+      "team_name": "Fibalon Baskets Neumarkt",
+      "team_name_small": "NM",
+      "team_permanent_id": 167885,
+      "season_team_id": 432437,
+      "liga_id": 51935,
+      "liga_name": "U16 männlich Bezirksoberliga",
+      "tabelle": {
+        "rang": 1,
+        "total_teams": 8,
+        "position_text": "1/8"
+      },
+      "spiele": {
+        "gesamt": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "heim": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "auswaerts": {
+          "gespielt": 0,
+          "anstehend": 0
+        }
+      },
+      "naechste_spiele": [],
+      "statistik": {
+        "siege": 2,
+        "niederlagen": 0,
+        "punkte": 4,
+        "koerbe": 146,
+        "gegen_koerbe": 134,
+        "korbdifferenz": 12
+      }
+    },
+    {
+      "team_name": "Fibalon Baskets Neumarkt",
+      "team_name_small": "FBN",
+      "team_permanent_id": 311271,
+      "season_team_id": 432418,
+      "liga_id": 51931,
+      "liga_name": "U14 männlich Bezirksoberliga",
+      "tabelle": {
+        "rang": 6,
+        "total_teams": 6,
+        "position_text": "6/6"
+      },
+      "spiele": {
+        "gesamt": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "heim": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "auswaerts": {
+          "gespielt": 0,
+          "anstehend": 0
+        }
+      },
+      "naechste_spiele": [],
+      "statistik": {
+        "siege": 0,
+        "niederlagen": 2,
+        "punkte": 0,
+        "koerbe": 96,
+        "gegen_koerbe": 188,
+        "korbdifferenz": -92
+      }
+    },
+    {
+      "team_name": "Fibalon Baskets Neumarkt 2",
+      "team_name_small": null,
+      "team_permanent_id": 321759,
+      "season_team_id": 432896,
+      "liga_id": 51936,
+      "liga_name": "U16 männlich Bezirksliga",
+      "tabelle": {
+        "rang": 2,
+        "total_teams": 4,
+        "position_text": "2/4"
+      },
+      "spiele": {
+        "gesamt": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "heim": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "auswaerts": {
+          "gespielt": 0,
+          "anstehend": 0
+        }
+      },
+      "naechste_spiele": [],
+      "statistik": {
+        "siege": 0,
+        "niederlagen": 0,
+        "punkte": 0,
+        "koerbe": 0,
+        "gegen_koerbe": 0,
+        "korbdifferenz": 0
+      }
+    },
+    {
+      "team_name": "Fibalon Baskets Neumarkt",
+      "team_name_small": "NM",
+      "team_permanent_id": 167882,
+      "season_team_id": 432547,
+      "liga_id": 51960,
+      "liga_name": "U12 mixed Bezirksliga",
+      "tabelle": {
+        "rang": 2,
+        "total_teams": 6,
+        "position_text": "2/6"
+      },
+      "spiele": {
+        "gesamt": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "heim": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "auswaerts": {
+          "gespielt": 0,
+          "anstehend": 0
+        }
+      },
+      "naechste_spiele": [],
+      "statistik": {
+        "siege": 1,
+        "niederlagen": 1,
+        "punkte": 2,
+        "koerbe": 128,
+        "gegen_koerbe": 66,
+        "korbdifferenz": 62
+      }
+    },
+    {
+      "team_name": "Fibalon Baskets Neumarkt",
+      "team_name_small": "NM",
+      "team_permanent_id": 167881,
+      "season_team_id": 432555,
+      "liga_id": 51961,
+      "liga_name": "U10 mixed Bezirksliga",
+      "tabelle": {
+        "rang": 6,
+        "total_teams": 7,
+        "position_text": "6/7"
+      },
+      "spiele": {
+        "gesamt": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "heim": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "auswaerts": {
+          "gespielt": 0,
+          "anstehend": 0
+        }
+      },
+      "naechste_spiele": [],
+      "statistik": {
+        "siege": 0,
+        "niederlagen": 1,
+        "punkte": 0,
+        "koerbe": 19,
+        "gegen_koerbe": 48,
+        "korbdifferenz": -29
+      }
+    }
+  ],
+  "geographic_distribution": {
+    "verbaende": {
+      "Bayern": 9
+    },
+    "bezirke": {
+      "Verbandsebene": 2,
+      "Oberpfalz": 7
+    },
+    "ebenen": {
+      "Verband": 2,
+      "Bezirk": 7
+    }
+  },
+  "best_teams": [
+    {
+      "team_name": "Fibalon Baskets Neumarkt",
+      "liga_name": "U16 männlich Bezirksoberliga",
+      "rang": 1,
+      "total_teams": 8,
+      "punkte": 4,
+      "bilanz": "2:0",
+      "korbdifferenz": 12
+    },
+    {
+      "team_name": "Fibalon Baskets Neumarkt",
+      "liga_name": "U12 mixed Bezirksliga",
+      "rang": 2,
+      "total_teams": 6,
+      "punkte": 2,
+      "bilanz": "1:1",
+      "korbdifferenz": 62
+    },
+    {
+      "team_name": "Fibalon Baskets Neumarkt",
+      "liga_name": "U18 männlich Bezirksoberliga",
+      "rang": 3,
+      "total_teams": 5,
+      "punkte": 2,
+      "bilanz": "1:1",
+      "korbdifferenz": 13
+    },
+    {
+      "team_name": "Fibalon Baskets Neumarkt",
+      "liga_name": "Bayernliga Herren Mitte (ByLHM) 25/26",
+      "rang": 4,
+      "total_teams": 12,
+      "punkte": 4,
+      "bilanz": "2:1",
+      "korbdifferenz": 35
+    },
+    {
+      "team_name": "Fibalon Baskets Neumarkt 2",
+      "liga_name": "Bezirksoberliga Herren 2025/26",
+      "rang": 5,
+      "total_teams": 7,
+      "punkte": 0,
+      "bilanz": "0:1",
+      "korbdifferenz": -18
+    }
+  ]
+}

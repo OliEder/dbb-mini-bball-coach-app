@@ -337,6 +337,7 @@ describe('VereinService', () => {
         altersklasse: 'U10',
         saison: '2025/2026',
         trainer: 'Test Trainer',
+        team_typ: 'eigen',
         created_at: new Date(),
       };
       await db.teams.add(team);
@@ -409,6 +410,7 @@ describe('VereinService', () => {
           altersklasse: 'U10',
           saison: '2025/2026',
           trainer: 'Test Trainer',
+          team_typ: 'eigen',
           created_at: new Date(),
         };
         await db.teams.add(team);
@@ -438,6 +440,7 @@ describe('VereinService', () => {
           altersklasse: 'U10',
           saison: '2025/2026',
           trainer: 'Trainer',
+          team_typ: 'eigen',
           created_at: new Date(),
         };
         await db.teams.add(team);
@@ -451,6 +454,7 @@ describe('VereinService', () => {
         altersklasse: 'U10',
         saison: '2025/2026',
         trainer: 'Trainer',
+        team_typ: 'eigen',
         created_at: new Date(),
       };
       await db.teams.add(team);

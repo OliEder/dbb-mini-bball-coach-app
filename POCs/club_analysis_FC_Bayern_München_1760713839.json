@@ -1,0 +1,835 @@
+{
+  "club_id": 619,
+  "club_name": "FC Bayern München",
+  "total_teams": 15,
+  "total_ligen": 15,
+  "team_variations": [
+    {
+      "teamname": "FC Bayern Basketball 2",
+      "teamPermanentIds": [
+        165709
+      ],
+      "teamCompetitionIds": [
+        414491
+      ]
+    },
+    {
+      "teamname": "FC Bayern München",
+      "teamPermanentIds": [
+        151042,
+        156623,
+        166178,
+        199567,
+        318558
+      ],
+      "teamCompetitionIds": [
+        400755,
+        414412,
+        414450,
+        426245,
+        426263
+      ]
+    },
+    {
+      "teamname": "FC Bayern München 1",
+      "teamPermanentIds": [
+        162749
+      ],
+      "teamCompetitionIds": [
+        426254
+      ]
+    },
+    {
+      "teamname": "FC Bayern München 2",
+      "teamPermanentIds": [
+        165333,
+        319916
+      ],
+      "teamCompetitionIds": [
+        426317,
+        433137
+      ]
+    },
+    {
+      "teamname": "FC Bayern München 3",
+      "teamPermanentIds": [
+        152031,
+        163016
+      ],
+      "teamCompetitionIds": [
+        401275,
+        426236
+      ]
+    },
+    {
+      "teamname": "FC Bayern München 4",
+      "teamPermanentIds": [
+        162381
+      ],
+      "teamCompetitionIds": [
+        414584
+      ]
+    },
+    {
+      "teamname": "FC Bayern München e.V.",
+      "teamPermanentIds": [
+        199597
+      ],
+      "teamCompetitionIds": [
+        426347
+      ]
+    },
+    {
+      "teamname": "FC Bayern München e.V. 2",
+      "teamPermanentIds": [
+        321333,
+        321340
+      ],
+      "teamCompetitionIds": [
+        426942,
+        427012
+      ]
+    }
+  ],
+  "ligen_by_category": {
+    "Senioren männlich": [
+      {
+        "liga_id": 47654,
+        "liga_name": "Bayernliga Herren Süd (ByLHS) 25/26",
+        "spielklasse": "Bayernliga",
+        "ebene": "Verband",
+        "verband": "Bayern",
+        "bezirk": null
+      },
+      {
+        "liga_id": 49812,
+        "liga_name": "Bezirksoberliga Herren (BOLH) - 2025/26",
+        "spielklasse": "Bezirksoberliga",
+        "ebene": "Bezirk",
+        "verband": "Bayern",
+        "bezirk": "Oberbayern"
+      }
+    ],
+    "Senioren weiblich": [
+      {
+        "liga_id": 47656,
+        "liga_name": "Bayernliga Süd Damen (ByLSD) 25/26",
+        "spielklasse": "Bayernliga",
+        "ebene": "Verband",
+        "verband": "Bayern",
+        "bezirk": null
+      }
+    ],
+    "U16 männlich": [
+      {
+        "liga_id": 49759,
+        "liga_name": "Bayernliga U16 männlich Süd",
+        "spielklasse": "Bayernliga",
+        "ebene": "Verband",
+        "verband": "Bayern",
+        "bezirk": null
+      }
+    ],
+    "U14 männlich": [
+      {
+        "liga_id": 49764,
+        "liga_name": "Bayernliga U14 männlich Einteilungsrunde Süd",
+        "spielklasse": "Bayernliga",
+        "ebene": "Verband",
+        "verband": "Bayern",
+        "bezirk": null
+      },
+      {
+        "liga_id": 49803,
+        "liga_name": "Landesliga U14 männlich Süd",
+        "spielklasse": "Landesliga",
+        "ebene": "Verband",
+        "verband": "Bayern",
+        "bezirk": null
+      },
+      {
+        "liga_id": 51190,
+        "liga_name": "Bezirksoberliga U14 ml (BOL14M) 2025/26",
+        "spielklasse": "Bezirksoberliga",
+        "ebene": "Bezirk",
+        "verband": "Bayern",
+        "bezirk": "Oberbayern"
+      }
+    ],
+    "U16 weiblich": [
+      {
+        "liga_id": 51189,
+        "liga_name": "Bezirksoberliga U16 wbl (bol16w) 2025/26",
+        "spielklasse": "Bezirksoberliga",
+        "ebene": "Bezirk",
+        "verband": "Bayern",
+        "bezirk": "Oberbayern"
+      },
+      {
+        "liga_id": 51245,
+        "liga_name": "West - Kreisliga u16w-A (we-kl16w-a) 2025/26 ",
+        "spielklasse": "Kreisliga",
+        "ebene": "Kreis",
+        "verband": "Bayern",
+        "bezirk": "Oberbayern"
+      }
+    ],
+    "U14 weiblich": [
+      {
+        "liga_id": 51191,
+        "liga_name": "Bezirksoberliga U14 wbl (bol14w)  2025/26",
+        "spielklasse": "Bezirksoberliga",
+        "ebene": "Bezirk",
+        "verband": "Bayern",
+        "bezirk": "Oberbayern"
+      },
+      {
+        "liga_id": 51249,
+        "liga_name": "West - Kreisliga u14w-A (we-kl14w-a) 2025/26",
+        "spielklasse": "Kreisliga",
+        "ebene": "Kreis",
+        "verband": "Bayern",
+        "bezirk": "Oberbayern"
+      }
+    ],
+    "U12 männlich": [
+      {
+        "liga_id": 51192,
+        "liga_name": "Bezirksoberliga U12 ml (BOL12M) 2025/26",
+        "spielklasse": "Bezirksoberliga",
+        "ebene": "Bezirk",
+        "verband": "Bayern",
+        "bezirk": "Oberbayern"
+      },
+      {
+        "liga_id": 51199,
+        "liga_name": "Bezirksliga U12 ml (BZL12M) 2025/26",
+        "spielklasse": "Bezirksliga",
+        "ebene": "Bezirk",
+        "verband": "Bayern",
+        "bezirk": "Oberbayern"
+      }
+    ],
+    "U12 weiblich": [
+      {
+        "liga_id": 51193,
+        "liga_name": "Bezirksoberliga U12 wbl (bol12w) 2025/26",
+        "spielklasse": "Bezirksoberliga",
+        "ebene": "Bezirk",
+        "verband": "Bayern",
+        "bezirk": "Oberbayern"
+      },
+      {
+        "liga_id": 52011,
+        "liga_name": "Kreisliga u12w Nordgruppe (kü-kl12w-n)",
+        "spielklasse": "Kreisliga",
+        "ebene": "Kreis",
+        "verband": "Bayern",
+        "bezirk": "Oberbayern"
+      }
+    ]
+  },
+  "teams_detailed": [
+    {
+      "team_name": "FC Bayern München 3",
+      "team_name_small": "FCBB3",
+      "team_permanent_id": 152031,
+      "season_team_id": 401275,
+      "liga_id": 47654,
+      "liga_name": "Bayernliga Herren Süd (ByLHS) 25/26",
+      "tabelle": {
+        "rang": 5,
+        "total_teams": 12,
+        "position_text": "5/12"
+      },
+      "spiele": {
+        "gesamt": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "heim": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "auswaerts": {
+          "gespielt": 0,
+          "anstehend": 0
+        }
+      },
+      "naechste_spiele": [],
+      "statistik": {
+        "siege": 1,
+        "niederlagen": 0,
+        "punkte": 2,
+        "koerbe": 61,
+        "gegen_koerbe": 60,
+        "korbdifferenz": 1
+      }
+    },
+    {
+      "team_name": "FC Bayern München",
+      "team_name_small": "FCB",
+      "team_permanent_id": 151042,
+      "season_team_id": 400755,
+      "liga_id": 47656,
+      "liga_name": "Bayernliga Süd Damen (ByLSD) 25/26",
+      "tabelle": {
+        "rang": 4,
+        "total_teams": 10,
+        "position_text": "4/10"
+      },
+      "spiele": {
+        "gesamt": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "heim": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "auswaerts": {
+          "gespielt": 0,
+          "anstehend": 0
+        }
+      },
+      "naechste_spiele": [],
+      "statistik": {
+        "siege": 1,
+        "niederlagen": 1,
+        "punkte": 2,
+        "koerbe": 106,
+        "gegen_koerbe": 91,
+        "korbdifferenz": 15
+      }
+    },
+    {
+      "team_name": "FC Bayern München",
+      "team_name_small": "FCBB",
+      "team_permanent_id": 166178,
+      "season_team_id": 414412,
+      "liga_id": 49759,
+      "liga_name": "Bayernliga U16 männlich Süd",
+      "tabelle": {
+        "rang": 2,
+        "total_teams": 8,
+        "position_text": "2/8"
+      },
+      "spiele": {
+        "gesamt": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "heim": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "auswaerts": {
+          "gespielt": 0,
+          "anstehend": 0
+        }
+      },
+      "naechste_spiele": [],
+      "statistik": {
+        "siege": 1,
+        "niederlagen": 0,
+        "punkte": 2,
+        "koerbe": 87,
+        "gegen_koerbe": 67,
+        "korbdifferenz": 20
+      }
+    },
+    {
+      "team_name": "FC Bayern München",
+      "team_name_small": "FCBB",
+      "team_permanent_id": 156623,
+      "season_team_id": 414450,
+      "liga_id": 49764,
+      "liga_name": "Bayernliga U14 männlich Einteilungsrunde Süd",
+      "tabelle": {
+        "rang": 1,
+        "total_teams": 7,
+        "position_text": "1/7"
+      },
+      "spiele": {
+        "gesamt": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "heim": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "auswaerts": {
+          "gespielt": 0,
+          "anstehend": 0
+        }
+      },
+      "naechste_spiele": [],
+      "statistik": {
+        "siege": 2,
+        "niederlagen": 0,
+        "punkte": 4,
+        "koerbe": 173,
+        "gegen_koerbe": 80,
+        "korbdifferenz": 93
+      }
+    },
+    {
+      "team_name": "FC Bayern Basketball 2",
+      "team_name_small": "FCBB",
+      "team_permanent_id": 165709,
+      "season_team_id": 414491,
+      "liga_id": 49803,
+      "liga_name": "Landesliga U14 männlich Süd",
+      "tabelle": {
+        "rang": 2,
+        "total_teams": 9,
+        "position_text": "2/9"
+      },
+      "spiele": {
+        "gesamt": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "heim": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "auswaerts": {
+          "gespielt": 0,
+          "anstehend": 0
+        }
+      },
+      "naechste_spiele": [],
+      "statistik": {
+        "siege": 2,
+        "niederlagen": 0,
+        "punkte": 4,
+        "koerbe": 113,
+        "gegen_koerbe": 106,
+        "korbdifferenz": 7
+      }
+    },
+    {
+      "team_name": "FC Bayern München 4",
+      "team_name_small": "FCB-4",
+      "team_permanent_id": 162381,
+      "season_team_id": 414584,
+      "liga_id": 49812,
+      "liga_name": "Bezirksoberliga Herren (BOLH) - 2025/26",
+      "tabelle": {
+        "rang": 12,
+        "total_teams": 12,
+        "position_text": "12/12"
+      },
+      "spiele": {
+        "gesamt": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "heim": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "auswaerts": {
+          "gespielt": 0,
+          "anstehend": 0
+        }
+      },
+      "naechste_spiele": [],
+      "statistik": {
+        "siege": 0,
+        "niederlagen": 0,
+        "punkte": 0,
+        "koerbe": 0,
+        "gegen_koerbe": 0,
+        "korbdifferenz": 0
+      }
+    },
+    {
+      "team_name": "FC Bayern München e.V.",
+      "team_name_small": "FC Ba",
+      "team_permanent_id": 199597,
+      "season_team_id": 426347,
+      "liga_id": 51189,
+      "liga_name": "Bezirksoberliga U16 wbl (bol16w) 2025/26",
+      "tabelle": {
+        "rang": 7,
+        "total_teams": 7,
+        "position_text": "7/7"
+      },
+      "spiele": {
+        "gesamt": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "heim": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "auswaerts": {
+          "gespielt": 0,
+          "anstehend": 0
+        }
+      },
+      "naechste_spiele": [],
+      "statistik": {
+        "siege": 0,
+        "niederlagen": 0,
+        "punkte": 0,
+        "koerbe": 0,
+        "gegen_koerbe": 0,
+        "korbdifferenz": 0
+      }
+    },
+    {
+      "team_name": "FC Bayern München 3",
+      "team_name_small": "FCBB",
+      "team_permanent_id": 163016,
+      "season_team_id": 426236,
+      "liga_id": 51190,
+      "liga_name": "Bezirksoberliga U14 ml (BOL14M) 2025/26",
+      "tabelle": {
+        "rang": 8,
+        "total_teams": 10,
+        "position_text": "8/10"
+      },
+      "spiele": {
+        "gesamt": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "heim": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "auswaerts": {
+          "gespielt": 0,
+          "anstehend": 0
+        }
+      },
+      "naechste_spiele": [],
+      "statistik": {
+        "siege": 0,
+        "niederlagen": 1,
+        "punkte": 0,
+        "koerbe": 59,
+        "gegen_koerbe": 80,
+        "korbdifferenz": -21
+      }
+    },
+    {
+      "team_name": "FC Bayern München",
+      "team_name_small": "FCB",
+      "team_permanent_id": 199567,
+      "season_team_id": 426245,
+      "liga_id": 51191,
+      "liga_name": "Bezirksoberliga U14 wbl (bol14w)  2025/26",
+      "tabelle": {
+        "rang": 1,
+        "total_teams": 10,
+        "position_text": "1/10"
+      },
+      "spiele": {
+        "gesamt": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "heim": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "auswaerts": {
+          "gespielt": 0,
+          "anstehend": 0
+        }
+      },
+      "naechste_spiele": [],
+      "statistik": {
+        "siege": 2,
+        "niederlagen": 0,
+        "punkte": 4,
+        "koerbe": 201,
+        "gegen_koerbe": 45,
+        "korbdifferenz": 156
+      }
+    },
+    {
+      "team_name": "FC Bayern München 1",
+      "team_name_small": "FCBB",
+      "team_permanent_id": 162749,
+      "season_team_id": 426254,
+      "liga_id": 51192,
+      "liga_name": "Bezirksoberliga U12 ml (BOL12M) 2025/26",
+      "tabelle": {
+        "rang": 1,
+        "total_teams": 10,
+        "position_text": "1/10"
+      },
+      "spiele": {
+        "gesamt": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "heim": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "auswaerts": {
+          "gespielt": 0,
+          "anstehend": 0
+        }
+      },
+      "naechste_spiele": [],
+      "statistik": {
+        "siege": 2,
+        "niederlagen": 0,
+        "punkte": 4,
+        "koerbe": 243,
+        "gegen_koerbe": 81,
+        "korbdifferenz": 162
+      }
+    },
+    {
+      "team_name": "FC Bayern München",
+      "team_name_small": null,
+      "team_permanent_id": 318558,
+      "season_team_id": 426263,
+      "liga_id": 51193,
+      "liga_name": "Bezirksoberliga U12 wbl (bol12w) 2025/26",
+      "tabelle": {
+        "rang": 4,
+        "total_teams": 10,
+        "position_text": "4/10"
+      },
+      "spiele": {
+        "gesamt": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "heim": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "auswaerts": {
+          "gespielt": 0,
+          "anstehend": 0
+        }
+      },
+      "naechste_spiele": [],
+      "statistik": {
+        "siege": 1,
+        "niederlagen": 0,
+        "punkte": 2,
+        "koerbe": 68,
+        "gegen_koerbe": 40,
+        "korbdifferenz": 28
+      }
+    },
+    {
+      "team_name": "FC Bayern München 2",
+      "team_name_small": "FCBB",
+      "team_permanent_id": 165333,
+      "season_team_id": 426317,
+      "liga_id": 51199,
+      "liga_name": "Bezirksliga U12 ml (BZL12M) 2025/26",
+      "tabelle": {
+        "rang": 3,
+        "total_teams": 10,
+        "position_text": "3/10"
+      },
+      "spiele": {
+        "gesamt": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "heim": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "auswaerts": {
+          "gespielt": 0,
+          "anstehend": 0
+        }
+      },
+      "naechste_spiele": [],
+      "statistik": {
+        "siege": 1,
+        "niederlagen": 1,
+        "punkte": 2,
+        "koerbe": 149,
+        "gegen_koerbe": 164,
+        "korbdifferenz": -15
+      }
+    },
+    {
+      "team_name": "FC Bayern München e.V. 2",
+      "team_name_small": null,
+      "team_permanent_id": 321340,
+      "season_team_id": 426942,
+      "liga_id": 51245,
+      "liga_name": "West - Kreisliga u16w-A (we-kl16w-a) 2025/26 ",
+      "tabelle": {
+        "rang": 4,
+        "total_teams": 7,
+        "position_text": "4/7"
+      },
+      "spiele": {
+        "gesamt": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "heim": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "auswaerts": {
+          "gespielt": 0,
+          "anstehend": 0
+        }
+      },
+      "naechste_spiele": [],
+      "statistik": {
+        "siege": 0,
+        "niederlagen": 0,
+        "punkte": 0,
+        "koerbe": 0,
+        "gegen_koerbe": 0,
+        "korbdifferenz": 0
+      }
+    },
+    {
+      "team_name": "FC Bayern München e.V. 2",
+      "team_name_small": null,
+      "team_permanent_id": 321333,
+      "season_team_id": 427012,
+      "liga_id": 51249,
+      "liga_name": "West - Kreisliga u14w-A (we-kl14w-a) 2025/26",
+      "tabelle": {
+        "rang": 5,
+        "total_teams": 7,
+        "position_text": "5/7"
+      },
+      "spiele": {
+        "gesamt": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "heim": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "auswaerts": {
+          "gespielt": 0,
+          "anstehend": 0
+        }
+      },
+      "naechste_spiele": [],
+      "statistik": {
+        "siege": 0,
+        "niederlagen": 1,
+        "punkte": 0,
+        "koerbe": 55,
+        "gegen_koerbe": 63,
+        "korbdifferenz": -8
+      }
+    },
+    {
+      "team_name": "FC Bayern München 2",
+      "team_name_small": null,
+      "team_permanent_id": 319916,
+      "season_team_id": 433137,
+      "liga_id": 52011,
+      "liga_name": "Kreisliga u12w Nordgruppe (kü-kl12w-n)",
+      "tabelle": {
+        "rang": 4,
+        "total_teams": 4,
+        "position_text": "4/4"
+      },
+      "spiele": {
+        "gesamt": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "heim": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "auswaerts": {
+          "gespielt": 0,
+          "anstehend": 0
+        }
+      },
+      "naechste_spiele": [],
+      "statistik": {
+        "siege": 0,
+        "niederlagen": 2,
+        "punkte": 0,
+        "koerbe": 30,
+        "gegen_koerbe": 80,
+        "korbdifferenz": -50
+      }
+    }
+  ],
+  "geographic_distribution": {
+    "verbaende": {
+      "Bayern": 15
+    },
+    "bezirke": {
+      "Verbandsebene": 5,
+      "Oberbayern": 10
+    },
+    "ebenen": {
+      "Verband": 5,
+      "Bezirk": 7,
+      "Kreis": 3
+    }
+  },
+  "best_teams": [
+    {
+      "team_name": "FC Bayern München",
+      "liga_name": "Bayernliga U14 männlich Einteilungsrunde Süd",
+      "rang": 1,
+      "total_teams": 7,
+      "punkte": 4,
+      "bilanz": "2:0",
+      "korbdifferenz": 93
+    },
+    {
+      "team_name": "FC Bayern München",
+      "liga_name": "Bezirksoberliga U14 wbl (bol14w)  2025/26",
+      "rang": 1,
+      "total_teams": 10,
+      "punkte": 4,
+      "bilanz": "2:0",
+      "korbdifferenz": 156
+    },
+    {
+      "team_name": "FC Bayern München 1",
+      "liga_name": "Bezirksoberliga U12 ml (BOL12M) 2025/26",
+      "rang": 1,
+      "total_teams": 10,
+      "punkte": 4,
+      "bilanz": "2:0",
+      "korbdifferenz": 162
+    },
+    {
+      "team_name": "FC Bayern Basketball 2",
+      "liga_name": "Landesliga U14 männlich Süd",
+      "rang": 2,
+      "total_teams": 9,
+      "punkte": 4,
+      "bilanz": "2:0",
+      "korbdifferenz": 7
+    },
+    {
+      "team_name": "FC Bayern München",
+      "liga_name": "Bayernliga U16 männlich Süd",
+      "rang": 2,
+      "total_teams": 8,
+      "punkte": 2,
+      "bilanz": "1:0",
+      "korbdifferenz": 20
+    }
+  ]
+}

@@ -14,14 +14,14 @@
 import React, { useEffect, useState } from 'react';
 import { useAppStore } from '@/stores/appStore';
 import { teamService } from '@/domains/team/services/TeamService';
+import { bbbSyncService } from '@/domains/bbb-api/services/BBBSyncService';
 import { db } from '@/shared/db/database';
-import { Home, Users, Calendar, ShirtIcon, BarChart3, Settings } from 'lucide-react';
+import { Home, Users, Calendar, ShirtIcon, BarChart3, Settings, RefreshCw } from 'lucide-react';
 import type { Team } from '@/shared/types';
 import { SpielerVerwaltung } from '@/domains/spieler/components/SpielerVerwaltung';
 import { SpielplanListe } from '@/domains/spielplan/components/SpielplanListe';
 import { TabellenAnsicht, type TabellenEintrag } from '@/domains/spielplan/components/TabellenAnsicht';
 import { tabellenService } from '@/domains/spielplan/services/TabellenService';
-import { DevTools } from '@/shared/components/DevTools';
 
 type View = 'overview' | 'spieler' | 'spielplan' | 'tabelle' | 'statistik' | 'einstellungen';
 
@@ -35,6 +35,7 @@ export function Dashboard() {
     spiele: 0,
   });
   const [tabelle, setTabelle] = useState<TabellenEintrag[]>([]);
+  const [isSyncing, setIsSyncing] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -64,6 +65,37 @@ export function Dashboard() {
       } catch (error) {
         console.error('Error loading tabelle:', error);
       }
+    }
+  };
+
+  const handleSync = async () => {
+    if (!team?.liga_id || isSyncing) return;
+    
+    setIsSyncing(true);
+    
+    try {
+      // Extrahiere Liga-ID
+      const ligaIdMatch = team.liga_id.match(/\d+/);
+      if (!ligaIdMatch) {
+        console.error('Keine gültige Liga-ID gefunden');
+        return;
+      }
+      
+      const ligaId = parseInt(ligaIdMatch[0], 10);
+      console.log('🔄 Starte manuellen Liga-Sync:', ligaId);
+      
+      await bbbSyncService.syncLiga(ligaId, { skipMatchInfo: true });
+      
+      console.log('✅ Liga-Sync erfolgreich');
+      
+      // Daten neu laden
+      await loadData();
+      
+    } catch (error) {
+      console.error('❌ Liga-Sync fehlgeschlagen:', error);
+      alert('Sync fehlgeschlagen: ' + (error as Error).message);
+    } finally {
+      setIsSyncing(false);
     }
   };
 
@@ -109,6 +141,19 @@ export function Dashboard() {
                 </p>
               </div>
             </div>
+            
+            {/* Sync Button */}
+            {team.liga_id && (
+              <button
+                onClick={handleSync}
+                disabled={isSyncing}
+                className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                title="Liga-Daten synchronisieren"
+              >
+                <RefreshCw className={`w-5 h-5 ${isSyncing ? 'animate-spin' : ''}`} />
+                {isSyncing ? 'Synchronisiere...' : 'Sync'}
+              </button>
+            )}
           </div>
         </div>
 
@@ -236,11 +281,49 @@ export function Dashboard() {
         )}
 
         {currentView === 'tabelle' && (
-          <TabellenAnsicht 
-            eintraege={tabelle}
-            eigenerVerein={team.name}
-            title={`Tabelle - ${team.altersklasse} ${team.saison}`}
-          />
+          <div className="space-y-4">
+            {/* Status-Banner wenn keine Daten */}
+            {tabelle.length === 0 && team.liga_id && (
+              <div className="alert-warning">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="font-semibold mb-1">
+                      📦 Keine Tabellendaten verfügbar
+                    </h3>
+                    <p className="text-sm">
+                      Synchronisiere die Liga-Daten, um die aktuelle Tabelle zu laden.
+                    </p>
+                  </div>
+                  <button
+                    onClick={handleSync}
+                    disabled={isSyncing}
+                    className="btn-primary"
+                  >
+                    <RefreshCw className={`w-4 h-4 ${isSyncing ? 'animate-spin' : ''}`} />
+                    {isSyncing ? 'Lädt...' : 'Jetzt synchronisieren'}
+                  </button>
+                </div>
+              </div>
+            )}
+            
+            {/* Info wenn keine Liga-ID */}
+            {!team.liga_id && (
+              <div className="alert-info">
+                <h3 className="font-semibold mb-1">
+                  ℹ️ Keine Liga zugeordnet
+                </h3>
+                <p className="text-sm">
+                  Diesem Team ist keine Liga zugeordnet. Tabellendaten können nicht geladen werden.
+                </p>
+              </div>
+            )}
+            
+            <TabellenAnsicht 
+              eintraege={tabelle}
+              eigenerVerein={team.name}
+              title={`Tabelle - ${team.altersklasse} ${team.saison}`}
+            />
+          </div>
         )}
 
         {currentView === 'statistik' && (
@@ -267,9 +350,6 @@ export function Dashboard() {
           </div>
         )}
       </main>
-
-      {/* Dev Tools - nur im Development Mode */}
-      <DevTools />
     </div>
   );
 }

@@ -6,16 +6,7 @@
 
 import { v4 as uuidv4 } from 'uuid';
 import { db } from '@/shared/db/database';
-import type { Verein, UUID } from '@/shared/types';
-
-export interface CreateVereinInput {
-  name: string;
-  ort: string;
-  kurzname?: string;
-  ist_eigener_verein?: boolean;
-  bbb_kontakt_id?: string;
-  verband_id?: number;
-}
+import type { Verein, UUID, CreateVereinInput } from '@/shared/types';
 
 export class VereinService {
   /**

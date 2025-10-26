@@ -46,3 +46,17 @@ basketball-app/test-data/real-data/
 basketball-app/test-data/**/*-real.*
 basketball-app/test-data/**/*-prod.*
 basketball-app/test-data/**/*-production.*
+node_modules/
+_DELETE_*
+node_modules.old/
+# Node.js (alle Subprojekte)
+**/node_modules/
+**/package-lock.json
+**/_DELETE_*
+**/*.old
+**/*.broken
+
+# Build outputs
+**/dist/
+**/build/
+**/.vite/

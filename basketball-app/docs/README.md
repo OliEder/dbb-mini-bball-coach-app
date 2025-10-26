@@ -1,119 +1,181 @@
-# 📚 Dokumentations-Index
+# 📚 Basketball Team Manager - Dokumentation
 
-Willkommen zur Dokumentation der Basketball Team Manager PWA!
-
-## 📋 Hauptdokumente
-
-| Dokument | Beschreibung |
-|----------|-------------|
-| [README.md](../README.md) | Hauptdokumentation mit Features, Setup und Tech Stack |
-| [CHANGELOG.md](../CHANGELOG.md) | Vollständige Versionshistorie mit allen Änderungen |
-| [SETUP.md](../SETUP.md) | Detaillierte Setup-Anleitung für Entwickler |
-| [STATUS.md](../STATUS.md) | Aktueller Projekt-Status und Roadmap |
-| [RELEASE-NOTES.md](../RELEASE-NOTES.md) | Release Notes für Endnutzer |
+**Single Source of Truth für alle Projekt-Dokumentation**
 
 ---
 
-## 🐛 Bugfix-Protokolle
+## 🎯 Wichtigste Dokumente
 
-Alle Bugfix-Dokumentationen findest du unter [bugfixes/](./bugfixes/):
+### ⚠️ Für neue Chat-Sessions - MUST READ!
+**[development/TYPESCRIPT-GUIDE.md](./development/TYPESCRIPT-GUIDE.md)** 🔴  
+**WICHTIG:** Vermeidet die häufigsten TypeScript-Fehler! (z.B. `team.id` → `team.team_id`)
 
-| Datum | Dokument | Beschreibung |
-|-------|----------|-------------|
-| 2025-10-13 | [BUGFIX-CORS-PROXY-UND-LIGA-ID.md](./bugfixes/BUGFIX-CORS-PROXY-UND-LIGA-ID.md) | CORS-Proxy Fallback und robuste Liga-ID Extraktion |
-| 2025-10-11 | [BUGFIX-HEADER-FILTERING.md](./bugfixes/BUGFIX-HEADER-FILTERING.md) | Robustere Filterung von Header-Zeilen |
-| 2025-10-11 | [BUGFIX-LIGA-NAME-AND-SCORES.md](./bugfixes/BUGFIX-LIGA-NAME-AND-SCORES.md) | Verbessertes Liga-Name und Scores Parsing |
-| 2025-10-11 | [BUGFIX-v1.2.1.md](./bugfixes/BUGFIX-v1.2.1.md) | Zusammenfassung aller v1.2.1 Bugfixes |
-| 2025-10-10 | [PWA-SERVICE-WORKER-FIX.md](./bugfixes/PWA-SERVICE-WORKER-FIX.md) | Service Worker Registrierung Fix |
-| 2025-10-10 | [KORREKTUR-BBB-Integration.md](./bugfixes/KORREKTUR-BBB-Integration.md) | BBB-Integration Korrekturen |
+### Vollständige Projekt-Doku
+**[development/PROJECT-STATUS.md](./development/PROJECT-STATUS.md)** ⭐  
+Architektur, implementierter Stand, bekannte Issues, nächste Schritte
 
----
+### Technische Entscheidungen
+**[development/TECHNICAL-DECISIONS.md](./development/TECHNICAL-DECISIONS.md)** 🧠  
+Alle Technical Decision Records (TDRs)
 
-## 🛠️ Development Guides
-
-Entwickler-Dokumentation findest du unter [development/](./development/):
-
-| Dokument | Beschreibung |
-|----------|-------------|
-| [DEV-TOOLS.md](./development/DEV-TOOLS.md) | Development Tools und Workflows |
+### Test-Status & Analyse
+**[development/TEST-STATUS.md](./development/TEST-STATUS.md)** 🧪  
+Test-Übersicht, Fehleranalyse, Lösungsansätze
 
 ---
 
-## 📦 Archiv
+## 📁 Ordnerstruktur
 
-Ältere Dokumente aus der Entwicklungsphase findest du unter [archive/](./archive/):
-
-- Feature-Implementierungen
-- Progress-Protokolle
-- Refactoring-Dokumentation
-- Update-Notizen
-
-Diese Dokumente sind für historische Zwecke archiviert.
-
----
-
-## 🔍 Schnellsuche
-
-### Nach Thema
-
-- **Setup & Installation**: [SETUP.md](../SETUP.md)
-- **Features & Funktionen**: [README.md](../README.md#-features)
-- **Versionshistorie**: [CHANGELOG.md](../CHANGELOG.md)
-- **Bekannte Probleme**: [STATUS.md](../STATUS.md#-bekannte-einschr%C3%A4nkungen)
-- **Roadmap**: [STATUS.md](../STATUS.md#-roadmap)
-- **Testing**: [README.md](../README.md#-testing)
-- **Accessibility**: [README.md](../README.md#-accessibility-wcag-20-aa)
-- **Datenschutz**: [README.md](../README.md#-datenschutz-dsgvo)
-
-### Nach Datum
-
-- **Neueste Änderungen**: [CHANGELOG.md](../CHANGELOG.md)
-- **Letzte Bugfixes**: [bugfixes/](./bugfixes/)
-- **Projekt-Status**: [STATUS.md](../STATUS.md)
+```
+docs/
+├── README.md                     ← Diese Datei (Übersicht)
+│
+├── development/                  ← Aktive Entwicklungs-Doku
+│   ├── TYPESCRIPT-GUIDE.md           🔴 TypeScript Best Practices (MUST READ!)
+│   ├── PROJECT-STATUS.md             ⭐ Hauptdokumentation
+│   ├── TECHNICAL-DECISIONS.md        🧠 TDRs
+│   ├── TEST-STATUS.md                🧪 Test-Analyse
+│   ├── DBB-API-EVALUATION.md         📡 API-Bewertung
+│   ├── DEV-TOOLS.md                  🛠️ Entwickler-Tools
+│   └── ONBOARDING-FLOW-V2.md         📋 Onboarding-Design
+│
+├── bugfixes/                     ← Bug-Fix Dokumentation
+│   ├── README.md                     📋 Übersicht & Template
+│   ├── 2025-10-23-BBB-SYNC-*.md      🐛 Bug-Fix Details
+│   └── 2025-10-26-BBB-SYNC-FIX.md    🔧 API Response Format Fix
+│
+└── archive/                      ← Alte/veraltete Dokumente
+    └── [Historische Dokumente]
+```
 
 ---
 
-## 📝 Dokumentations-Standards
+## 🚀 Quick Navigation
+
+### Ich möchte...
+
+#### ...in einem neuen Chat weitermachen
+→ [development/QUICKSTART.md](./development/QUICKSTART.md)
+
+#### ...verstehen wie die App aufgebaut ist
+→ [development/PROJECT-STATUS.md](./development/PROJECT-STATUS.md)
+
+#### ...wissen warum Tech-Entscheidung X getroffen wurde
+→ [development/TECHNICAL-DECISIONS.md](./development/TECHNICAL-DECISIONS.md)
+
+#### ...die DBB-API verstehen
+→ [development/DBB-API-EVALUATION.md](./development/DBB-API-EVALUATION.md)
+
+#### ...die Test-Strategie verstehen
+→ [../tests/README.md](../tests/README.md)
+
+#### ...den aktuellen Test-Status & Fehleranalyse sehen
+→ [development/TEST-STATUS.md](./development/TEST-STATUS.md)
+
+#### ...behobene Bugs & Lessons Learned sehen
+→ [bugfixes/](./bugfixes/) - Bug-Fix Dokumentation mit Prevention-Tipps
+
+#### ...ein neues Feature mit TDD entwickeln
+→ [development/QUICKSTART.md#tdd-workflow](./development/QUICKSTART.md#tdd-workflow)
+
+---
+
+## 📝 Dokumentations-Guidelines
+
+### Neue Dokumente erstellen
+
+1. **Entwicklungs-Doku** → `development/`
+2. **Bug-Dokumentation** → `bugfixes/`
+3. **Veraltete Doku** → `archive/`
+
+### Naming Convention
+
+```
+THEMA-BESCHREIBUNG.md
+
+Beispiele:
+✅ ONBOARDING-FLOW-V2.md
+✅ DBB-API-EVALUATION.md
+✅ TECHNICAL-DECISIONS.md
+
+❌ doc.md
+❌ notes.txt
+❌ temp-stuff.md
+```
 
 ### Markdown-Format
 
-Alle Dokumente folgen diesen Standards:
-- ✅ CommonMark Markdown
-- ✅ Überschriften mit Emojis für bessere Lesbarkeit
-- ✅ Code-Blöcke mit Syntax-Highlighting
-- ✅ Tabellen für strukturierte Daten
-- ✅ Relative Links zwischen Dokumenten
+```markdown
+# Titel
 
-### Dateinamen
+**Datum:** [Datum]  
+**Autor:** [Name/AI]  
+**Status:** [🚧 In Arbeit / ✅ Fertig / ⚠️ Veraltet]
 
+## Inhaltsverzeichnis
+...
+
+## Section
+...
 ```
-CATEGORY-beschreibung.md
+
+---
+
+## 🗂️ Archivierung
+
+Alte Dokumente werden nach `archive/` verschoben wenn:
+- Nicht mehr aktuell
+- Durch neue Version ersetzt
+- Historischer Wert (nicht löschen!)
+
+**Beispiel:**
+```bash
+mv docs/development/OLD-FEATURE.md docs/archive/2025-10-OLD-FEATURE.md
 ```
 
-**Kategorien:**
-- `BUGFIX-` - Bugfix-Dokumentation
-- `FEATURE-` - Feature-Dokumentation
-- `UPDATE-` - Update-Dokumentation
-- `SECURITY-` - Sicherheitsupdates
-- Keine Präfix - Hauptdokumente
+Präfix mit Datum: `YYYY-MM-FILENAME.md`
 
 ---
 
-## 🤝 Beitragen zur Dokumentation
+## 🔄 Updates
 
-Wenn du die Dokumentation verbessern möchtest:
+### Bei wichtigen Änderungen
 
-1. **Neue Dokumente**: Lege sie im passenden Unterordner ab
-2. **Updates**: Aktualisiere den CHANGELOG.md
-3. **Links**: Stelle sicher, dass alle internen Links funktionieren
-4. **Struktur**: Halte dich an die bestehende Struktur
+1. **Update development/PROJECT-STATUS.md**
+   - Implementierter Stand
+   - Bekannte Issues
+   - Nächste Schritte
+
+2. **Bei Tech-Entscheidungen: TDR schreiben**
+   - Template in TECHNICAL-DECISIONS.md
+   - Context → Optionen → Entscheidung → Begründung
+
+3. **README.md im Root aktualisieren**
+   - Nur Wegweiser, keine Details!
 
 ---
 
-## 📧 Kontakt
+## 🆘 Dokumentation nicht gefunden?
 
-Bei Fragen zur Dokumentation öffne ein Issue im Repository.
+1. Suche in `development/` (aktuell)
+2. Suche in `archive/` (historisch)
+3. Prüfe ob im Root-Ordner (sollte nicht sein!)
+4. Erstelle neue Doku in `development/`
 
 ---
 
-**Letzte Aktualisierung:** 13. Oktober 2025
+## 📞 Wichtige Links
+
+- [Projekt Root](../)
+- [Source Code](../src/)
+- [Tests](../tests/)
+- [Development Docs](./development/)
+
+---
+
+**Letzte Aktualisierung:** 23. Oktober 2025  
+**Maintainer:** AI-Assisted Development
+
+---
+
+💡 **Tipp:** Bookmark diese Datei für schnellen Zugriff auf alle Dokumentation!

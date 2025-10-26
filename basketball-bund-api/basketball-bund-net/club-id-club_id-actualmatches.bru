@@ -1,0 +1,20 @@
+meta {
+  name: club-id-club_id-actualmatches
+  type: http
+  seq: 13
+}
+
+get {
+  url: {{baseURL}}/rest/club/id/:clubId/actualmatches?justHome=true&rangeDays=20
+  body: none
+  auth: none
+}
+
+params:query {
+  justHome: true
+  rangeDays: 20
+}
+
+params:path {
+  clubId: 619
+}
