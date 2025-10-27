@@ -40,6 +40,13 @@ describe('BBBSyncService PACT Tests v16', () => {
     // Clear database
     await db.delete();
     await db.open();
+
+    // âœ… Initialize services with test mode to disable CORS fallback
+    apiService = new BBBApiService({
+      baseUrl: provider.url,
+      testMode: true  // Deaktiviert CORS-Fallback!
+    });
+    service = new BBBSyncService(apiService);
   });
 
   afterEach(async () => {
@@ -96,12 +103,14 @@ describe('BBBSyncService PACT Tests v16', () => {
           body: expectedResponse,
         })
         .executeTest(async (mockService) => {
-          // Configure API service to use mock URL
-          apiService = new BBBApiService();
-          (apiService as any).BASE_URL = mockService.url;
+          // ✅ Create API service with testMode enabled
+          const testApiService = new BBBApiService({
+            baseUrl: mockService.url,
+            testMode: true
+          });
 
           // Execute
-          const result = await apiService.getTabelle(ligaId);
+          const result = await testApiService.getTabelle(ligaId);
 
           // Verify
           expect(result.ligaId).toBe(ligaId);
@@ -119,18 +128,21 @@ describe('BBBSyncService PACT Tests v16', () => {
           ligaId: like(ligaId),
           liganame: like('U10 Bezirksliga Oberpfalz'),
           spielplan: eachLike({
-            spielid: like(99991),
-            nr: like(1),
-            tag: like(1),
-            datum: like('2025-11-01'),
-            uhrzeit: like('10:00'),
-            heimteamid: like(111),
-            heimteamname: like('SV Postbauer U10'),
-            gastteamid: like(222),
-            gastteamname: like('TSV Neumarkt U10'),
-            halle: like('Sporthalle Postbauer'),
-            heimTore: like(null),
-            gastTore: like(null),
+            matchId: like(99991),         // ✅ Englische Namen für einfacheres Mapping
+            matchNo: like(1),
+            matchDay: like(1),
+            kickoffDate: like('2025-11-01'),
+            kickoffTime: like('10:00'),
+            homeTeam: {
+              seasonTeamId: like(111),
+              teamname: like('SV Postbauer U10')
+            },
+            guestTeam: {
+              seasonTeamId: like(222),
+              teamname: like('TSV Neumarkt U10')
+            },
+            venue: like('Sporthalle Postbauer'),
+            result: like(null),
           }),
         },
       };
@@ -153,10 +165,13 @@ describe('BBBSyncService PACT Tests v16', () => {
           body: expectedResponse,
         })
         .executeTest(async (mockService) => {
-          apiService = new BBBApiService();
-          (apiService as any).BASE_URL = mockService.url;
+          // ✅ Create API service with testMode enabled
+          const testApiService = new BBBApiService({
+            baseUrl: mockService.url,
+            testMode: true
+          });
 
-          const result = await apiService.getSpielplan(ligaId);
+          const result = await testApiService.getSpielplan(ligaId);
 
           expect(result.ligaId).toBe(ligaId);
           expect(result.games).toHaveLength(1);
@@ -208,10 +223,13 @@ describe('BBBSyncService PACT Tests v16', () => {
           body: expectedResponse,
         })
         .executeTest(async (mockService) => {
-          apiService = new BBBApiService();
-          (apiService as any).BASE_URL = mockService.url;
+          // ✅ Create API service with testMode enabled
+          const testApiService = new BBBApiService({
+            baseUrl: mockService.url,
+            testMode: true
+          });
 
-          const result = await apiService.getMatchInfo(matchId);
+          const result = await testApiService.getMatchInfo(matchId);
 
           expect(result.matchId).toBe(matchId);
           expect(result.homeTeam.players).toHaveLength(1);
@@ -243,10 +261,13 @@ describe('BBBSyncService PACT Tests v16', () => {
           },
         })
         .executeTest(async (mockService) => {
-          apiService = new BBBApiService();
-          (apiService as any).BASE_URL = mockService.url;
+          // ✅ Create API service with testMode enabled
+          const testApiService = new BBBApiService({
+            baseUrl: mockService.url,
+            testMode: true
+          });
 
-          await expect(apiService.getTabelle(invalidLigaId)).rejects.toThrow();
+          await expect(testApiService.getTabelle(invalidLigaId)).rejects.toThrow();
         });
     });
 
@@ -272,10 +293,13 @@ describe('BBBSyncService PACT Tests v16', () => {
           },
         })
         .executeTest(async (mockService) => {
-          apiService = new BBBApiService();
-          (apiService as any).BASE_URL = mockService.url;
+          // ✅ Create API service with testMode enabled
+          const testApiService = new BBBApiService({
+            baseUrl: mockService.url,
+            testMode: true
+          });
 
-          await expect(apiService.getTabelle(ligaId)).rejects.toThrow();
+          await expect(testApiService.getTabelle(ligaId)).rejects.toThrow();
         });
     });
   });
@@ -347,10 +371,13 @@ describe('BBBSyncService PACT Tests v16', () => {
           body: expectedResponse,
         })
         .executeTest(async (mockService) => {
-          apiService = new BBBApiService();
-          (apiService as any).BASE_URL = mockService.url;
+          // ✅ Create API service with testMode enabled
+          const testApiService = new BBBApiService({
+            baseUrl: mockService.url,
+            testMode: true
+          });
 
-          const result = await apiService.filterLigen({
+          const result = await testApiService.filterLigen({
             verbandIds: [2],
             altersklasseIds: [10],
           });

@@ -345,11 +345,22 @@ describe('TeamService', () => {
         trainer: 'Max Mustermann',
       });
 
-      // Add 2 games
+      // Create gegner team
+      const gegnerTeam = await teamService.createTeam({
+        verein_id: testVerein.verein_id,
+        name: 'U10 Gegner',
+        altersklasse: 'U10' as const,
+        saison: '2025/2026',
+        trainer: 'Gegner Trainer',
+        team_typ: 'gegner',
+      });
+
+      // Add 2 games ✅ v6.0: mit heim_team_id und gast_team_id
       for (let i = 0; i < 2; i++) {
         await db.spiele.add({
           spiel_id: uuidv4(),
-          team_id: team.team_id,
+          heim_team_id: team.team_id,      // ✅ v6.0
+          gast_team_id: gegnerTeam.team_id, // ✅ v6.0
           datum: new Date(),
           heim: 'Team A',
           gast: 'Team B',

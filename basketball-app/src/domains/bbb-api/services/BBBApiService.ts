@@ -1,6 +1,8 @@
 /**
  * BBBApiService - Wrapper für DBB REST API
  * Basis-URL: https://www.basketball-bund.net
+ * 
+ * Test-Mode: Deaktiviert CORS-Fallback für PACT-Tests
  */
 
 import type {
@@ -10,13 +12,59 @@ import type {
   DBBTableResponse,
   DBBTabellenEintrag,
   DBBSpielplanResponse,
-  DBBSpielplanEintrag,  // ← Missing import!
+  DBBSpielplanEintrag,
   DBBMatchInfoResponse,
   DBBPlayerDetailsResponse
 } from '../../../shared/types';
 
+/**
+ * Konfiguration für BBBApiService
+ */
+export interface BBBApiConfig {
+  /**
+   * Base URL für API-Calls
+   * Default: https://www.basketball-bund.net
+   * Test-Mode: URL des PACT Mock-Servers
+   */
+  baseUrl?: string;
+
+  /**
+   * Test-Mode: Deaktiviert CORS-Fallback
+   * Nötig für PACT-Tests, da Mock-Server keine CORS-Proxies braucht
+   * Default: false
+   */
+  testMode?: boolean;
+}
+
 export class BBBApiService {
-  private readonly BASE_URL = 'https://www.basketball-bund.net';
+  private readonly BASE_URL: string;
+  private readonly testMode: boolean;
+
+  /**
+   * Constructor mit optionaler Konfiguration
+   * 
+   * @example Production
+   * ```typescript
+   * const api = new BBBApiService();
+   * ```
+   * 
+   * @example PACT Tests
+   * ```typescript
+   * const api = new BBBApiService({ 
+   *   baseUrl: mockProvider.url,
+   *   testMode: true 
+   * });
+   * ```
+   */
+  constructor(config?: BBBApiConfig) {
+    this.BASE_URL = config?.baseUrl || 'https://www.basketball-bund.net';
+    this.testMode = config?.testMode || false;
+    
+    if (this.testMode) {
+      console.log('🧪 BBBApiService in TEST MODE - CORS fallback disabled');
+      console.log('🧪 Base URL:', this.BASE_URL);
+    }
+  }
 
   /**
    * Extrahiert Liga-ID aus verschiedenen URL-Formaten
@@ -69,6 +117,7 @@ export class BBBApiService {
       return null;
     }
   }
+
   private readonly CORS_PROXIES = [
     'https://corsproxy.io/?',
     'https://proxy.cors.sh/',
@@ -82,10 +131,29 @@ export class BBBApiService {
 
   /**
    * Fetch mit CORS-Proxy Fallback
-   * WICHTIG: Direkter Fetch zu basketball-bund.net funktioniert NICHT (CORS blocked)
-   * → Wir nutzen IMMER CORS-Proxies für externe APIs
+   * 
+   * Production Mode:
+   * - Direkter Fetch zu basketball-bund.net funktioniert NICHT (CORS blocked)
+   * - Nutzt IMMER CORS-Proxies für externe APIs
+   * 
+   * Test Mode:
+   * - Direkter fetch ohne CORS-Proxies (für PACT Mock-Server)
+   * - Keine Fallback-Logik
    */
   private async fetchWithFallback(url: string, options?: RequestInit): Promise<Response> {
+    // 🧪 TEST MODE: Direkter fetch ohne CORS-Fallback
+    if (this.testMode) {
+      console.log('🧪 Test mode: Direct fetch to', url);
+      const response = await fetch(url, options);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      
+      return response;
+    }
+
+    // 🚀 PRODUCTION MODE: CORS-Fallback
     console.log('🔄 Using CORS proxy for:', url);
 
     // Versuche CORS-Proxies mit besserer Fehlerbehandlung
@@ -308,12 +376,12 @@ export class BBBApiService {
       return true;
     });
     
-    if (validTeams.length === 0) {
-      console.error('No valid teams found in response:', apiResponse);
-      throw new Error('No valid teams found in API response');
+    // Warnung bei leeren Teams (kann valide sein für neue Ligen)
+    if (validTeams.length === 0 && teams.length > 0) {
+      console.warn('No valid teams after filtering:', { ligaId, originalCount: teams.length });
     }
     
-    if (validTeams.length !== teams.length) {
+    if (validTeams.length !== teams.length && teams.length > 0) {
       console.warn(`Filtered out ${teams.length - validTeams.length} invalid entries`);
     }
     
@@ -516,4 +584,5 @@ export class BBBApiService {
   }
 }
 
+// Singleton-Instanz für Production
 export const bbbApiService = new BBBApiService();

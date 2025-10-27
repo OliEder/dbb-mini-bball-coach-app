@@ -55,6 +55,7 @@ docs/
 ### Ich möchte...
 
 #### ...in einem neuen Chat weitermachen
+→ [development/MULTI-TEAM-SUPPORT-PLAN.md](./development/MULTI-TEAM-SUPPORT-PLAN.md) **← AKTUELL**  
 → [development/QUICKSTART.md](./development/QUICKSTART.md)
 
 #### ...verstehen wie die App aufgebaut ist

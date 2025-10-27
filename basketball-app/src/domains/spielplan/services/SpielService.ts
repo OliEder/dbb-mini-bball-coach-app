@@ -53,6 +53,8 @@ class SpielService {
   /**
    * Gibt alle Spiele eines Teams zurück
    * 
+   * ✅ v6.0: Sucht nach heim_team_id UND gast_team_id (team_id entfernt!)
+   * 
    * @param teamId - Team-ID
    * @param filter - Optionale Filter (ist_heimspiel, status, spielplan_id)
    */
@@ -60,9 +62,18 @@ class SpielService {
     teamId: string,
     filter?: SpielFilter
   ): Promise<Spiel[]> {
-    let query = db.spiele.where({ team_id: teamId });
+    // ✅ v6.0: Suche nur nach heim_team_id und gast_team_id
+    const spieleByHeimId = await db.spiele.where('heim_team_id').equals(teamId).toArray();
+    const spieleByGastId = await db.spiele.where('gast_team_id').equals(teamId).toArray();
 
-    let spiele = await query.toArray();
+    // Merge & Deduplizieren (Spiel kann mehrfach gefunden werden)
+    const spieleMap = new Map<string, Spiel>();
+    
+    [...spieleByHeimId, ...spieleByGastId].forEach(spiel => {
+      spieleMap.set(spiel.spiel_id, spiel);
+    });
+    
+    let spiele = Array.from(spieleMap.values());
 
     // Apply filters
     if (filter?.ist_heimspiel !== undefined) {
@@ -152,14 +163,14 @@ class SpielService {
 
   /**
    * Zählt Spiele nach Status
+   * ✅ v6.0: Verwendet getSpieleByTeam() und filtert
    */
   async countSpieleByStatus(
     teamId: string,
     status: SpielStatus
   ): Promise<number> {
-    return db.spiele
-      .where({ team_id: teamId, status })
-      .count();
+    const spiele = await this.getSpieleByTeam(teamId, { status });
+    return spiele.length;
   }
 
   /**
@@ -208,13 +219,15 @@ class SpielService {
   /**
    * Validiert Spiel-Daten
    * 
+   * ✅ v6.0: team_id nicht mehr required, stattdessen heim_team_id/gast_team_id
+   * 
    * @throws Error bei Validierungsfehlern
    */
   private validateSpiel(
     data: Omit<Spiel, 'spiel_id' | 'created_at'>
   ): void {
-    if (!data.team_id) {
-      throw new Error('Team-ID ist erforderlich');
+    if (!data.heim_team_id && !data.gast_team_id) {
+      throw new Error('Mindestens heim_team_id oder gast_team_id ist erforderlich');
     }
 
     if (!data.datum) {

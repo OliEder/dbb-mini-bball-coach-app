@@ -182,90 +182,152 @@ export const useSimpleOnboardingStore = create<SimpleOnboardingState & SimpleOnb
           // 3. Erstes Team als aktives Team setzen
           const firstTeamId = createdTeamIds[0];
             
-            // 4. Liga-Daten synchronisieren (falls liga_id vorhanden)
-            const firstTeam = state.selectedTeams[0];
-            if (firstTeam.liga_id) {
-              console.log('🔄 Starte Liga-Sync für:', firstTeam.liga_id);
+            // 4. Liga-Daten synchronisieren für ALLE Teams
+            console.log('🔄 Starte Liga-Sync für alle Teams...');
+            
+            // Sammle alle eindeutigen Liga-IDs
+            const ligaIds = new Set<number>();
+            for (const team of state.selectedTeams) {
+              if (team.liga_id) {
+                const ligaIdMatch = team.liga_id.match(/\d+/);
+                if (ligaIdMatch) {
+                  ligaIds.add(parseInt(ligaIdMatch[0], 10));
+                }
+              }
+            }
+            
+            console.log('📊 Gefundene Ligen:', Array.from(ligaIds));
+            
+            if (ligaIds.size > 0) {
+              console.log('🔄 Starte Liga-Sync für', ligaIds.size, 'Ligen...');
               
               try {
-                // Extrahiere Liga-ID aus liga_id String (kann Format "123" oder "liga-123" haben)
-                const ligaIdMatch = firstTeam.liga_id.match(/\d+/);
-                if (!ligaIdMatch) {
-                  console.error('❌ Konnte Liga-ID nicht parsen:', firstTeam.liga_id);
-                } else {
-                  const ligaId = parseInt(ligaIdMatch[0], 10);
-                  console.log('🎯 Extrahierte Liga-ID:', ligaId);
+                // Synchronisiere alle Ligen nacheinander
+                for (const ligaId of Array.from(ligaIds)) {
+                  console.log('🎯 Synchronisiere Liga:', ligaId);
                   
-                  // Sync starten (blockierend, damit wir Fehler sehen)
                   try {
                     await bbbSyncService.syncLiga(ligaId, { skipMatchInfo: true });
-                    console.log('✅ Liga-Sync erfolgreich abgeschlossen');
+                    console.log('✅ Liga', ligaId, 'erfolgreich synchronisiert');
+                  } catch (syncError) {
+                    console.error('❌ Liga-Sync fehlgeschlagen für Liga', ligaId, ':', syncError);
+                    // Weiter mit nächster Liga
+                  }
+                  
+                  // Rate-Limiting zwischen Ligen
+                  if (Array.from(ligaIds).indexOf(ligaId) < ligaIds.size - 1) {
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                  }
+                }
+                
+                // ⭐ WICHTIG: Nach allen Liga-Syncs - Merge ALLE User-Teams mit Sync-Teams
+                console.log('🔄 Starte Team-Merge für alle User-Teams...');
+                
+                for (let i = 0; i < createdTeamIds.length; i++) {
+                  const userTeamId = createdTeamIds[i];
+                  const userTeam = await db.teams.get(userTeamId);
+                  if (!userTeam) {
+                    console.warn('⚠️ User-Team nicht gefunden:', userTeamId);
+                    continue;
+                  }
+                  
+                  console.log('🔍 Prüfe User-Team:', userTeam.name, '(Liga:', userTeam.liga_id, ')');
+                  
+                  // ⭐ WICHTIG: Finde Sync-Team anhand von NAME + LIGA!
+                  // Grund: Mehrere Teams können den gleichen Namen haben (z.B. "Regensburg Baskets 2")
+                  const syncTeam = await db.teams
+                    .where('name')
+                    .equals(userTeam.name)
+                    .and(team => 
+                      team.extern_team_id !== undefined && 
+                      team.team_id !== userTeam.team_id &&
+                      team.liga_id === userTeam.liga_id  // ✅ WICHTIG: Auch Liga muss matchen!
+                    )
+                    .first();
+                  
+                  if (syncTeam && syncTeam.extern_team_id) {
+                    console.log('🔄 Merge User-Team', userTeam.name, 'mit Sync-Team:', syncTeam.extern_team_id);
+                        
+                    // ✅ Übernehme extern_team_id, Altersklasse UND Saison vom Sync-Team
+                    await db.teams.update(userTeamId, {
+                      extern_team_id: syncTeam.extern_team_id,
+                      altersklasse: syncTeam.altersklasse,  // ✅ Übernehme aus Liga
+                      saison: syncTeam.saison,              // ✅ Übernehme aus Liga
+                      team_typ: 'eigen', // ✅ Markiere als eigenes Team!
+                    });
                     
-                    // WICHTIG: User-Team mit Sync-Team mergen!
-                    // Das User-Team hat keine extern_team_id, aber das Sync-Team schon
-                    // Wir müssen die extern_team_id vom Sync-Team übernehmen
-                    const userTeam = await db.teams.get(firstTeamId);
-                    if (userTeam) {
-                      // Finde das passende Sync-Team anhand des Namens
-                      const syncTeam = await db.teams
-                        .where('name')
-                        .equals(userTeam.name)
-                        .and(team => team.extern_team_id !== undefined && team.team_id !== userTeam.team_id)
-                        .first();
-                      
-                      if (syncTeam && syncTeam.extern_team_id) {
-                        console.log('🔄 Merge User-Team mit Sync-Team:', syncTeam.name, syncTeam.extern_team_id);
-                        
-                        // Übernehme extern_team_id vom Sync-Team
-                        await db.teams.update(firstTeamId, {
-                          extern_team_id: syncTeam.extern_team_id
-                        });
-                        
-                        // WICHTIG: Update alle Spiele die das Sync-Team referenzieren!
-                        const spieleAsHeim = await db.spiele
+                    // ⭐ WICHTIG: Update alle Spiele die das Sync-Team referenzieren!
+                    // 1. Spiele mit heim_team_id
+                    const spieleAsHeim = await db.spiele
                           .where('heim_team_id')
                           .equals(syncTeam.team_id)
                           .toArray();
-                        
-                        const spieleAsGast = await db.spiele
+                    
+                    // 2. Spiele mit gast_team_id
+                    const spieleAsGast = await db.spiele
                           .where('gast_team_id')
                           .equals(syncTeam.team_id)
                           .toArray();
-                        
-                        console.log('🔄 Update', spieleAsHeim.length, 'Heimspiele und', spieleAsGast.length, 'Auswärtsspiele');
-                        
-                        for (const spiel of spieleAsHeim) {
-                          await db.spiele.update(spiel.spiel_id, {
-                            heim_team_id: firstTeamId
-                          });
-                        }
-                        
-                        for (const spiel of spieleAsGast) {
-                          await db.spiele.update(spiel.spiel_id, {
-                            gast_team_id: firstTeamId
-                          });
-                        }
-                        
-                        // Lösche das Sync-Team (Duplikat)
-                        await db.teams.delete(syncTeam.team_id);
-                        
-                        console.log('✅ Teams erfolgreich gemergt!');
-                      }
+                    
+                    // 3. ✅ NEU: Spiele mit nur team_id (Legacy/U10-Fall)
+                    const spieleByTeamId = await db.spiele
+                          .where('team_id')
+                          .equals(syncTeam.team_id)
+                          .toArray();
+                    
+                    console.log('🔄 Update Spiele:', {
+                      heimspiele: spieleAsHeim.length,
+                      auswärtsspiele: spieleAsGast.length,
+                      teamIdSpiele: spieleByTeamId.length
+                    });
+                    
+                    // Update Heimspiele
+                    for (const spiel of spieleAsHeim) {
+                      await db.spiele.update(spiel.spiel_id, {
+                        heim_team_id: userTeamId,
+                        team_id: userTeamId // ✅ Auch team_id setzen!
+                      });
                     }
                     
-                    // Zeige Stats
-                    const spieleCount = await db.spiele.count();
-                    const tabelleCount = await db.liga_tabellen.count();
-                    const teamsCount = await db.teams.count();
-                    console.log('📈 Sync-Stats:', { spieleCount, tabelleCount, teamsCount });
-                  } catch (syncError) {
-                    console.error('❌ Liga-Sync fehlgeschlagen:', syncError);
-                    // Zeige User-Hinweis, aber blockiere Onboarding nicht
-                    console.warn('⚠️ Liga-Daten können später über Sync-Button nachgeladen werden');
+                    // Update Auswärtsspiele
+                    for (const spiel of spieleAsGast) {
+                      await db.spiele.update(spiel.spiel_id, {
+                        gast_team_id: userTeamId,
+                        team_id: userTeamId // ✅ Auch team_id setzen!
+                      });
+                    }
+                    
+                    // ⭐ Update team_id-only Spiele (U10-Fall)
+                    for (const spiel of spieleByTeamId) {
+                      // Bestimme ob Heim oder Auswärtsspiel
+                      const istHeim = spiel.ist_heimspiel ?? true; // Fallback: true
+                      
+                      await db.spiele.update(spiel.spiel_id, {
+                        team_id: userTeamId,
+                        heim_team_id: istHeim ? userTeamId : spiel.heim_team_id,
+                        gast_team_id: istHeim ? spiel.gast_team_id : userTeamId
+                      });
+                    }
+                    
+                    // Lösche das Sync-Team (Duplikat)
+                    await db.teams.delete(syncTeam.team_id);
+                    
+                    console.log('✅ Team', userTeam.name, 'erfolgreich gemergt!');
+                  } else {
+                    console.log('ℹ️ Kein Sync-Team gefunden für:', userTeam.name);
                   }
                 }
+                
+                // Zeige Stats nach allen Syncs
+                const spieleCount = await db.spiele.count();
+                const tabelleCount = await db.liga_tabellen.count();
+                const teamsCount = await db.teams.count();
+                console.log('📈 Gesamt-Sync-Stats:', { spieleCount, tabelleCount, teamsCount });
+                
               } catch (error) {
                 console.error('❌ Liga-Sync Setup Fehler:', error);
+                // Zeige User-Hinweis, aber blockiere Onboarding nicht
+                console.warn('⚠️ Liga-Daten können später über Sync-Button nachgeladen werden');
               }
             } else {
               console.warn('⚠️ Kein liga_id vorhanden - überspringe Liga-Sync');
@@ -275,11 +337,12 @@ export const useSimpleOnboardingStore = create<SimpleOnboardingState & SimpleOnb
           localStorage.setItem('onboarding-complete', 'true');
           localStorage.setItem('active-team-id', firstTeamId);
           
-          // Update app store
+          // ✅ Update app store with ALL teams
           const { useAppStore } = await import('@/stores/appStore');
           const appStore = useAppStore.getState();
+          appStore.setMyTeams(createdTeamIds);  // ✅ Alle Teams setzen
+          appStore.setCurrentTeam(firstTeamId);  // ✅ Erstes Team aktiv
           appStore.completeOnboarding();
-          appStore.setCurrentTeam(firstTeamId);
           
           console.log('✅ Onboarding completed successfully');
           console.log('Created Teams:', createdTeamIds);

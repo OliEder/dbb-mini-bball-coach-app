@@ -13,7 +13,9 @@ import type { Spiel, Team, Verein, Spielplan, Halle } from '@/shared/types';
 
 describe('SpielService Integration Tests', () => {
   let testTeam: Team;
+  let gegnerTeam: Team;
   let testVerein: Verein;
+  let gegnerVerein: Verein;
   let testSpielplan: Spielplan;
   let testHalle: Halle;
 
@@ -30,6 +32,14 @@ describe('SpielService Integration Tests', () => {
     };
     await db.vereine.add(testVerein);
 
+    gegnerVerein = {
+      verein_id: crypto.randomUUID(),
+      name: 'Gegner Verein',
+      ist_eigener_verein: false,
+      created_at: new Date(),
+    };
+    await db.vereine.add(gegnerVerein);
+
     testTeam = {
       team_id: crypto.randomUUID(),
       verein_id: testVerein.verein_id,
@@ -41,6 +51,18 @@ describe('SpielService Integration Tests', () => {
       created_at: new Date(),
     };
     await db.teams.add(testTeam);
+
+    gegnerTeam = {
+      team_id: crypto.randomUUID(),
+      verein_id: gegnerVerein.verein_id,
+      name: 'Gegner Team',
+      altersklasse: 'U10',
+      saison: '2025/2026',
+      trainer: 'Gegner Trainer',
+      team_typ: 'gegner',
+      created_at: new Date(),
+    };
+    await db.teams.add(gegnerTeam);
 
     testSpielplan = {
       spielplan_id: crypto.randomUUID(),
@@ -71,7 +93,8 @@ describe('SpielService Integration Tests', () => {
       // Given: Vollständiges Spiel mit allen Feldern
       const spielData = {
         spielplan_id: testSpielplan.spielplan_id,
-        team_id: testTeam.team_id,
+        heim_team_id: testTeam.team_id,    // ✅ v6.0
+        gast_team_id: gegnerTeam.team_id,  // ✅ v6.0
         spielnr: 5,
         spieltag: 3,
         datum: new Date('2025-11-15'),
@@ -102,7 +125,8 @@ describe('SpielService Integration Tests', () => {
     it('sollte Contract für minimales Spiel erfüllen', async () => {
       // Given: Minimales Spiel nur mit Pflichtfeldern
       const minimalData = {
-        team_id: testTeam.team_id,
+        heim_team_id: testTeam.team_id,    // ✅ v6.0: Mindestens eine Team-ID!
+        gast_team_id: gegnerTeam.team_id,  // ✅ v6.0
         datum: new Date('2025-11-15'),
         heim: testTeam.name,
         gast: 'Gegner',
@@ -128,7 +152,8 @@ describe('SpielService Integration Tests', () => {
     it('sollte alle Spiele eines Teams chronologisch sortiert zurückgeben', async () => {
       // Given: Spiele in verschiedenen Daten
       const spiel1 = await spielService.createSpiel({
-        team_id: testTeam.team_id,
+        heim_team_id: testTeam.team_id,
+        gast_team_id: gegnerTeam.team_id,
         datum: new Date('2025-11-22'),
         heim: testTeam.name,
         gast: 'Gegner 2',
@@ -138,7 +163,8 @@ describe('SpielService Integration Tests', () => {
       });
 
       const spiel2 = await spielService.createSpiel({
-        team_id: testTeam.team_id,
+        heim_team_id: gegnerTeam.team_id,
+        gast_team_id: testTeam.team_id,
         datum: new Date('2025-11-15'),
         heim: 'Gegner 1',
         gast: testTeam.name,
@@ -159,7 +185,8 @@ describe('SpielService Integration Tests', () => {
     it('sollte Filter korrekt an Database weitergeben', async () => {
       // Given: Heim- und Auswärtsspiele
       await spielService.createSpiel({
-        team_id: testTeam.team_id,
+        heim_team_id: testTeam.team_id,
+        gast_team_id: gegnerTeam.team_id,
         datum: new Date('2025-11-15'),
         heim: testTeam.name,
         gast: 'Gegner 1',
@@ -169,7 +196,8 @@ describe('SpielService Integration Tests', () => {
       });
 
       await spielService.createSpiel({
-        team_id: testTeam.team_id,
+        heim_team_id: gegnerTeam.team_id,
+        gast_team_id: testTeam.team_id,
         datum: new Date('2025-11-22'),
         heim: 'Gegner 2',
         gast: testTeam.name,
@@ -198,7 +226,8 @@ describe('SpielService Integration Tests', () => {
       const future2 = new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000);
 
       await spielService.createSpiel({
-        team_id: testTeam.team_id,
+        heim_team_id: testTeam.team_id,
+        gast_team_id: gegnerTeam.team_id,
         datum: past,
         heim: testTeam.name,
         gast: 'Past Game',
@@ -208,7 +237,8 @@ describe('SpielService Integration Tests', () => {
       });
 
       await spielService.createSpiel({
-        team_id: testTeam.team_id,
+        heim_team_id: testTeam.team_id,
+        gast_team_id: gegnerTeam.team_id,
         datum: future2,
         heim: testTeam.name,
         gast: 'Future 2',
@@ -218,7 +248,8 @@ describe('SpielService Integration Tests', () => {
       });
 
       const nextSpiel = await spielService.createSpiel({
-        team_id: testTeam.team_id,
+        heim_team_id: testTeam.team_id,
+        gast_team_id: gegnerTeam.team_id,
         datum: future1,
         heim: testTeam.name,
         gast: 'Future 1',
@@ -241,7 +272,8 @@ describe('SpielService Integration Tests', () => {
       // Given: Spiele mit BBB-Spielnummern
       await spielService.createSpiel({
         spielplan_id: testSpielplan.spielplan_id,
-        team_id: testTeam.team_id,
+        heim_team_id: testTeam.team_id,
+        gast_team_id: gegnerTeam.team_id,
         spielnr: 42,
         datum: new Date('2025-11-15'),
         heim: testTeam.name,
@@ -267,7 +299,8 @@ describe('SpielService Integration Tests', () => {
     it('sollte Statistiken korrekt berechnen', async () => {
       // Given: Verschiedene Spiele
       await spielService.createSpiel({
-        team_id: testTeam.team_id,
+        heim_team_id: testTeam.team_id,
+        gast_team_id: gegnerTeam.team_id,
         datum: new Date('2025-11-15'),
         heim: testTeam.name,
         gast: 'Gegner 1',
@@ -279,7 +312,8 @@ describe('SpielService Integration Tests', () => {
       });
 
       await spielService.createSpiel({
-        team_id: testTeam.team_id,
+        heim_team_id: gegnerTeam.team_id,
+        gast_team_id: testTeam.team_id,
         datum: new Date('2025-11-22'),
         heim: 'Gegner 2',
         gast: testTeam.name,
@@ -291,7 +325,8 @@ describe('SpielService Integration Tests', () => {
       });
 
       await spielService.createSpiel({
-        team_id: testTeam.team_id,
+        heim_team_id: testTeam.team_id,
+        gast_team_id: gegnerTeam.team_id,
         datum: new Date('2025-11-29'),
         heim: testTeam.name,
         gast: 'Gegner 3',
@@ -319,7 +354,8 @@ describe('SpielService Integration Tests', () => {
       // Given: Mehrere gleichzeitige Create-Operationen
       const promises = Array.from({ length: 10 }, (_, i) =>
         spielService.createSpiel({
-          team_id: testTeam.team_id,
+          heim_team_id: testTeam.team_id,
+          gast_team_id: gegnerTeam.team_id,
           datum: new Date(`2025-11-${15 + i}`),
           heim: testTeam.name,
           gast: `Gegner ${i}`,
@@ -350,7 +386,8 @@ describe('SpielService Integration Tests', () => {
       
       // 1. Create
       const created = await spielService.createSpiel({
-        team_id: testTeam.team_id,
+        heim_team_id: testTeam.team_id,
+        gast_team_id: gegnerTeam.team_id,
         spielnr: 1,
         datum: new Date('2025-11-15'),
         heim: testTeam.name,

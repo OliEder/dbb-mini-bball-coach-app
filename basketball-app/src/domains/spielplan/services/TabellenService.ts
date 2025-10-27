@@ -214,6 +214,9 @@ class TabellenService {
   /**
    * ⭐ NEW: Lädt Tabellen-Daten für das aktuelle Team
    * Priorität: 1. Berechnung aus Spielen, 2. DB-Daten, 3. LEER (keine Mocks!)
+   * 
+   * ✅ Sucht nach team_id, heim_team_id UND gast_team_id
+   * ✅ Converted BBB-Liga-ID zu interner UUID
    */
   async loadTabelleForTeam(teamId: string): Promise<TabellenEintrag[]> {
     console.log('🔍 TabellenService.loadTabelleForTeam() - Start für Team:', teamId);
@@ -228,8 +231,14 @@ class TabellenService {
       }
       
       console.log('🏀 Team gefunden:', team.name);
+      console.log('🏀 Team liga_id:', team.liga_id);
       
-      // Finde Spiele des Teams (entweder als Heim- oder Gastteam)
+      // ✅ Finde Spiele des Teams (team_id, heim_team_id ODER gast_team_id)
+      const spieleByTeamId = await db.spiele
+        .where('team_id')
+        .equals(teamId)
+        .toArray();
+      
       const heimSpiele = await db.spiele
         .where('heim_team_id')
         .equals(teamId)
@@ -240,27 +249,64 @@ class TabellenService {
         .equals(teamId)
         .toArray();
       
-      const alleSpiele = [...heimSpiele, ...gastSpiele];
+      // Merge & Deduplizieren
+      const spieleMap = new Map<string, Spiel>();
+      [...spieleByTeamId, ...heimSpiele, ...gastSpiele].forEach(spiel => {
+        spieleMap.set(spiel.spiel_id, spiel);
+      });
+      
+      const alleSpiele = Array.from(spieleMap.values());
       
       console.log('🏀 Spiele gefunden:', alleSpiele.length);
+      console.log('🏀 Spiele Details:', {
+        byTeamId: spieleByTeamId.length,
+        byHeimId: heimSpiele.length,
+        byGastId: gastSpiele.length
+      });
       
       if (alleSpiele.length === 0) {
         console.warn('⚠️ Keine Spiele gefunden für Team:', teamId);
         return [];
       }
       
-      // Extrahiere Liga-ID aus dem ersten Spiel
-      const ligaId = alleSpiele[0].liga_id;
+      // ✅ Liga-ID Resolution: BBB-Liga-ID → Interne UUID
+      let ligaIdForQuery: string | undefined;
       
-      if (!ligaId) {
-        console.warn('⚠️ Keine Liga-ID in Spielen gefunden');
+      if (team.liga_id) {
+        // Team hat liga_id - könnte BBB-ID oder UUID sein
+        console.log('🔍 Suche Liga mit BBB-ID oder UUID:', team.liga_id);
+        
+        // Versuche 1: Direkt als UUID (falls schon UUID)
+        let liga = await db.ligen.get(team.liga_id);
+        
+        // Versuche 2: Als BBB-Liga-ID
+        if (!liga) {
+          liga = await db.ligen.where('bbb_liga_id').equals(team.liga_id).first();
+        }
+        
+        if (liga) {
+          ligaIdForQuery = liga.liga_id; // Interne UUID verwenden!
+          console.log('✅ Liga gefunden:', liga.name, '→ UUID:', ligaIdForQuery);
+        } else {
+          console.warn('⚠️ Keine Liga gefunden für liga_id:', team.liga_id);
+        }
+      }
+      
+      // Fallback: Aus erstem Spiel
+      if (!ligaIdForQuery && alleSpiele[0].liga_id) {
+        ligaIdForQuery = alleSpiele[0].liga_id;
+        console.log('ℹ️ Liga-ID aus Spiel verwendet:', ligaIdForQuery);
+      }
+      
+      if (!ligaIdForQuery) {
+        console.warn('⚠️ Keine Liga-ID gefunden');
         return [];
       }
       
-      console.log('🏀 Liga-ID:', ligaId);
+      console.log('🏀 Liga-ID für Query:', ligaIdForQuery);
       
       // ⭐ PRIORITY 1: Berechne Tabelle aus Spielergebnissen (PLAUSIBILITÄT!)
-      const berechnetTabelle = await this.berechneTabelleAusSpiele(ligaId);
+      const berechnetTabelle = await this.berechneTabelleAusSpiele(ligaIdForQuery);
       
       if (berechnetTabelle.length > 0) {
         console.log('✅ Tabelle aus Spielergebnissen berechnet:', berechnetTabelle.length, 'Teams');
@@ -268,7 +314,7 @@ class TabellenService {
       }
       
       // PRIORITY 2: Lade aus Datenbank (Fallback)
-      const dbTabelle = await this.loadTabelleFromDatabase(ligaId);
+      const dbTabelle = await this.loadTabelleFromDatabase(ligaIdForQuery);
       
       if (dbTabelle.length > 0) {
         console.log('ℹ️ Tabelle aus DB geladen (Fallback):', dbTabelle.length, 'Teams');
@@ -276,7 +322,7 @@ class TabellenService {
       }
       
       // PRIORITY 3: Leer - UI soll Status anzeigen
-      console.warn('⚠️ Keine Tabellendaten verfügbar für Liga:', ligaId);
+      console.warn('⚠️ Keine Tabellendaten verfügbar für Liga:', ligaIdForQuery);
       return [];
     } catch (error) {
       console.error('❌ Error loading tabelle for team:', error);
