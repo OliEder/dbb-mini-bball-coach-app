@@ -31,11 +31,15 @@ export async function debugSpielplanIssue() {
     console.warn(`⚠️ ${duplicates.length} Duplikate gefunden:`, duplicates);
   }
   
-  // 3. Check Team-Zuordnung
+  // 3. ✅ v6.0: Check Team-Zuordnung via heim_team_id / gast_team_id
   if (teams.length > 0 && spiele.length > 0) {
     const teamId = teams[0].team_id;
-    const teamSpiele = spiele.filter(s => s.team_id === teamId);
+    const teamSpiele = spiele.filter(s => 
+      s.heim_team_id === teamId || s.gast_team_id === teamId
+    );
     console.log(`🎯 Spiele für Team ${teams[0].name}: ${teamSpiele.length}`);
+    console.log(`   - Heimspiele: ${spiele.filter(s => s.heim_team_id === teamId).length}`);
+    console.log(`   - Auswärtsspiele: ${spiele.filter(s => s.gast_team_id === teamId).length}`);
   }
   
   console.groupEnd();

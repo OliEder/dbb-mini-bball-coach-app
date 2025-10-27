@@ -26,14 +26,19 @@ export async function debugTeamData() {
     });
   });
   
-  // 2. Alle Spiele gruppiert nach team_id
+  // 2. ✅ v6.0: Alle Spiele gruppiert nach heim_team_id / gast_team_id
   const spiele = await db.spiele.toArray();
   console.log('\n⚽ SPIELE:', spiele.length);
   
   const spieleByTeam = new Map<string, number>();
   spiele.forEach(spiel => {
-    if (spiel.team_id) {
-      spieleByTeam.set(spiel.team_id, (spieleByTeam.get(spiel.team_id) || 0) + 1);
+    // Count Heimspiele
+    if (spiel.heim_team_id) {
+      spieleByTeam.set(spiel.heim_team_id, (spieleByTeam.get(spiel.heim_team_id) || 0) + 1);
+    }
+    // Count Auswärtsspiele
+    if (spiel.gast_team_id) {
+      spieleByTeam.set(spiel.gast_team_id, (spieleByTeam.get(spiel.gast_team_id) || 0) + 1);
     }
   });
   
@@ -106,7 +111,8 @@ export async function debugTeamData() {
   
   teams.forEach(team => {
     if (team.team_typ === 'eigen' && team.user_id) {
-      const teamSpiele = spiele.filter(s => s.team_id === team.team_id);
+      // ✅ v6.0: team_id removed from Spiel
+      const teamSpiele = spiele.filter(s => s.heim_team_id === team.team_id || s.gast_team_id === team.team_id);
       const heimSpiele = spiele.filter(s => s.heim_team_id === team.team_id);
       const gastSpiele = spiele.filter(s => s.gast_team_id === team.team_id);
       

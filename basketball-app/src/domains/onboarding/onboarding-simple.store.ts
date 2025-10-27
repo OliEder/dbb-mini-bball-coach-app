@@ -284,30 +284,18 @@ export const useSimpleOnboardingStore = create<SimpleOnboardingState & SimpleOnb
                     // Update Heimspiele
                     for (const spiel of spieleAsHeim) {
                       await db.spiele.update(spiel.spiel_id, {
-                        heim_team_id: userTeamId,
-                        team_id: userTeamId // ✅ Auch team_id setzen!
+                        heim_team_id: userTeamId
                       });
                     }
                     
                     // Update Auswärtsspiele
                     for (const spiel of spieleAsGast) {
                       await db.spiele.update(spiel.spiel_id, {
-                        gast_team_id: userTeamId,
-                        team_id: userTeamId // ✅ Auch team_id setzen!
+                        gast_team_id: userTeamId
                       });
                     }
                     
-                    // ⭐ Update team_id-only Spiele (U10-Fall)
-                    for (const spiel of spieleByTeamId) {
-                      // Bestimme ob Heim oder Auswärtsspiel
-                      const istHeim = spiel.ist_heimspiel ?? true; // Fallback: true
-                      
-                      await db.spiele.update(spiel.spiel_id, {
-                        team_id: userTeamId,
-                        heim_team_id: istHeim ? userTeamId : spiel.heim_team_id,
-                        gast_team_id: istHeim ? spiel.gast_team_id : userTeamId
-                      });
-                    }
+                    // ✅ v6.0: team_id-only updates removed (field no longer exists)
                     
                     // Lösche das Sync-Team (Duplikat)
                     await db.teams.delete(syncTeam.team_id);

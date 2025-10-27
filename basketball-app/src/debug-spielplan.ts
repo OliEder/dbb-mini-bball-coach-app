@@ -1,6 +1,7 @@
 import { db } from '@/shared/db/database';
 
 // Debug-Script für IndexedDB und Spielplan
+// ✅ v6.0: Updated for new schema (team_id removed from Spiel)
 async function debugSpielplan() {
   console.log('🔍 Debugging Spielplan & IndexedDB...\n');
   
@@ -13,7 +14,8 @@ async function debugSpielplan() {
       console.log('\n🎯 Erste 3 Spiele:');
       spiele.slice(0, 3).forEach((spiel, i) => {
         console.log(`  ${i+1}. ${spiel.heim} vs ${spiel.gast}`);
-        console.log(`     Team-ID: ${spiel.team_id}`);
+        console.log(`     Heim-Team-ID: ${spiel.heim_team_id || 'N/A'}`);
+        console.log(`     Gast-Team-ID: ${spiel.gast_team_id || 'N/A'}`);
         console.log(`     Datum: ${spiel.datum}`);
         console.log(`     Status: ${spiel.status}`);
       });

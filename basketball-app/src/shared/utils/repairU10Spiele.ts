@@ -1,26 +1,25 @@
 /**
- * DB Repair Script - Fix U10 Spiele
+ * DB Repair Script - Validate Spiele (v6.0)
  * 
- * Problem:
- * - U10-Spiele haben nur team_id, nicht heim_team_id/gast_team_id
- * - Dashboard/Spielplan findet sie nicht
+ * ✅ v6.0 Update: team_id wurde aus Spiel-Entity entfernt!
  * 
- * Lösung:
- * - Findet alle Spiele mit team_id aber ohne heim/gast IDs
- * - Setzt heim_team_id oder gast_team_id basierend auf ist_heimspiel
+ * Neuer Zweck:
+ * - Findet alle Spiele OHNE heim_team_id UND gast_team_id (Fehlerfall)
+ * - Solche Spiele sollten nicht existieren nach v6.0 Migration
+ * 
+ * @deprecated After v6.0 migration, all games should have team references
  */
 
 import { db } from '@/shared/db/database';
 
 export async function repairU10Spiele(): Promise<void> {
-  console.log('🔧 Starting DB Repair: U10 Spiele...');
+  console.log('🔧 Starting DB Validation: Spiele (v6.0)...');
   
   try {
-    // 1. Finde alle Spiele mit team_id aber ohne heim_team_id UND gast_team_id
+    // ✅ v6.0: Finde alle Spiele OHNE Team-Referenzen (Fehlerfall!)
     const alleSpiele = await db.spiele.toArray();
     
     const brokenSpiele = alleSpiele.filter(spiel => 
-      spiel.team_id && 
       (!spiel.heim_team_id || spiel.heim_team_id === '') &&
       (!spiel.gast_team_id || spiel.gast_team_id === '')
     );
@@ -32,46 +31,18 @@ export async function repairU10Spiele(): Promise<void> {
       return;
     }
     
-    // 2. Repariere jedes Spiel
-    let repaired = 0;
+    // ⚠️ v6.0: Spiele OHNE Team-Referenzen sind ein Fehler!
+    console.error('❌ Gefundene Spiele ohne heim_team_id UND gast_team_id:');
+    brokenSpiele.forEach(spiel => {
+      console.error(`  - ${spiel.heim} vs ${spiel.gast} (${spiel.datum})`);
+      console.error(`    Spiel-ID: ${spiel.spiel_id}`);
+    });
     
-    for (const spiel of brokenSpiele) {
-      const istHeim = spiel.ist_heimspiel ?? true; // Fallback: Heimspiel
-      
-      const updates: Partial<typeof spiel> = {};
-      
-      if (istHeim) {
-        // Heimspiel → setze heim_team_id
-        updates.heim_team_id = spiel.team_id;
-        console.log(`  🏠 ${spiel.heim} vs ${spiel.gast} → heim_team_id gesetzt`);
-      } else {
-        // Auswärtsspiel → setze gast_team_id
-        updates.gast_team_id = spiel.team_id;
-        console.log(`  🚌 ${spiel.heim} vs ${spiel.gast} → gast_team_id gesetzt`);
-      }
-      
-      await db.spiele.update(spiel.spiel_id, updates);
-      repaired++;
-    }
-    
-    console.log(`✅ DB Repair abgeschlossen: ${repaired} Spiele repariert`);
-    
-    // 3. Validierung
-    const validation = await db.spiele.toArray();
-    const stillBroken = validation.filter(spiel => 
-      spiel.team_id && 
-      (!spiel.heim_team_id || spiel.heim_team_id === '') &&
-      (!spiel.gast_team_id || spiel.gast_team_id === '')
-    );
-    
-    if (stillBroken.length > 0) {
-      console.warn('⚠️ Noch', stillBroken.length, 'defekte Spiele vorhanden!');
-    } else {
-      console.log('✅ Alle Spiele erfolgreich repariert!');
-    }
+    console.warn('💡 Diese Spiele sollten manuell repariert oder gelöscht werden!');
+    console.warn('💡 Vermutlich fehlerhafte Daten aus altem Sync.');
     
   } catch (error) {
-    console.error('❌ DB Repair fehlgeschlagen:', error);
+    console.error('❌ DB Validation fehlgeschlagen:', error);
     throw error;
   }
 }
