@@ -43,6 +43,8 @@ workbox-*.js
 src/**/*.js
 src/**/*.jsx
 !src/**/*.config.js
+*.tsbuildinfo
+tsconfig.tsbuildinfo
 
 # Temporary files
 COMMIT-SUMMARY.md
