@@ -72,9 +72,8 @@ export function DevTools() {
     }
   };
   
-  // Immer anzeigen während wir debuggen
-  // TODO: Später wieder auf isDev-Check setzen
-  if (false) { // Temporär deaktiviert für Debugging
+  // Nur im Dev-Mode anzeigen
+  if (!isDev) {
     return null;
   }
 

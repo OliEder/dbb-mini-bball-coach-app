@@ -266,9 +266,12 @@ function App() {
   }
   
   // Main App mit Router
+  // basename für GitHub Pages Subpath Deployment
+  const basename = import.meta.env.BASE_URL || '/';
+  
   return (
     <>
-      <BrowserRouter>
+      <BrowserRouter basename={basename}>
         <AppRouter />
       </BrowserRouter>
       

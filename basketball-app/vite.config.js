@@ -15,6 +15,7 @@ export default defineConfig(() => {
             VitePWA({
                 registerType: 'autoUpdate',
                 includeAssets: [],
+                injectRegister: 'auto', // Automatische Registration ohne UI
                 manifest: {
                     name: 'Basketball Team Manager',
                     short_name: 'BBall Manager',
@@ -69,8 +70,7 @@ export default defineConfig(() => {
                     skipWaiting: true
                 },
                 devOptions: {
-                    enabled: false, // Service Worker in Development deaktiviert
-                    navigateFallback: 'index.html'
+                    enabled: false // PWA komplett in Development deaktiviert
                 }
             })
         ],
