@@ -72,7 +72,8 @@ export default defineConfig(() => {
         },
         devOptions: {
           enabled: false,  // Service Worker in Development deaktiviert
-          type: 'module'
+          type: 'module',
+          navigateFallback: 'index.html'
         }
       })
     ],
