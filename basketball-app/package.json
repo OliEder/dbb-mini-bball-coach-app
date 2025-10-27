@@ -49,7 +49,6 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.11.0",
-    "source-map": "^0.7.4",
     "@eslint/js": "^9.38.0",
     "@pact-foundation/pact": "^16.0.2",
     "@playwright/test": "^1.56.1",
@@ -64,6 +63,7 @@
     "@typescript-eslint/eslint-plugin": "^8.46.2",
     "@typescript-eslint/parser": "^8.46.2",
     "@vitejs/plugin-react": "^5.1.0",
+    "@vitest/coverage-v8": "^3.2.4",
     "@vitest/ui": "^3.2.4",
     "autoprefixer": "^10.4.21",
     "axe-core": "^4.11.0",
@@ -75,6 +75,7 @@
     "happy-dom": "^20.0.8",
     "jest-axe": "^10.0.0",
     "postcss": "^8.5.6",
+    "source-map": "^0.7.4",
     "tailwindcss": "^3.4.15",
     "tsx": "^4.20.6",
     "typescript": "^5.9.3",

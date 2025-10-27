@@ -24,18 +24,21 @@
             "liganame": "U10 Bezirksliga Oberpfalz",
             "spielplan": [
               {
-                "datum": "2025-11-01",
-                "gastTore": null,
-                "gastteamid": 222,
-                "gastteamname": "TSV Neumarkt U10",
-                "halle": "Sporthalle Postbauer",
-                "heimTore": null,
-                "heimteamid": 111,
-                "heimteamname": "SV Postbauer U10",
-                "nr": 1,
-                "spielid": 99991,
-                "tag": 1,
-                "uhrzeit": "10:00"
+                "guestTeam": {
+                  "seasonTeamId": 222,
+                  "teamname": "TSV Neumarkt U10"
+                },
+                "homeTeam": {
+                  "seasonTeamId": 111,
+                  "teamname": "SV Postbauer U10"
+                },
+                "kickoffDate": "2025-11-01",
+                "kickoffTime": "10:00",
+                "matchDay": 1,
+                "matchId": 99991,
+                "matchNo": 1,
+                "result": null,
+                "venue": "Sporthalle Postbauer"
               }
             ]
           }
@@ -70,7 +73,7 @@
                 }
               ]
             },
-            "$.data.spielplan[*].datum": {
+            "$.data.spielplan[*].guestTeam.seasonTeamId": {
               "combine": "AND",
               "matchers": [
                 {
@@ -78,7 +81,7 @@
                 }
               ]
             },
-            "$.data.spielplan[*].gastTore": {
+            "$.data.spielplan[*].guestTeam.teamname": {
               "combine": "AND",
               "matchers": [
                 {
@@ -86,7 +89,7 @@
                 }
               ]
             },
-            "$.data.spielplan[*].gastteamid": {
+            "$.data.spielplan[*].homeTeam.seasonTeamId": {
               "combine": "AND",
               "matchers": [
                 {
@@ -94,7 +97,7 @@
                 }
               ]
             },
-            "$.data.spielplan[*].gastteamname": {
+            "$.data.spielplan[*].homeTeam.teamname": {
               "combine": "AND",
               "matchers": [
                 {
@@ -102,7 +105,7 @@
                 }
               ]
             },
-            "$.data.spielplan[*].halle": {
+            "$.data.spielplan[*].kickoffDate": {
               "combine": "AND",
               "matchers": [
                 {
@@ -110,7 +113,7 @@
                 }
               ]
             },
-            "$.data.spielplan[*].heimTore": {
+            "$.data.spielplan[*].kickoffTime": {
               "combine": "AND",
               "matchers": [
                 {
@@ -118,7 +121,7 @@
                 }
               ]
             },
-            "$.data.spielplan[*].heimteamid": {
+            "$.data.spielplan[*].matchDay": {
               "combine": "AND",
               "matchers": [
                 {
@@ -126,7 +129,7 @@
                 }
               ]
             },
-            "$.data.spielplan[*].heimteamname": {
+            "$.data.spielplan[*].matchId": {
               "combine": "AND",
               "matchers": [
                 {
@@ -134,7 +137,7 @@
                 }
               ]
             },
-            "$.data.spielplan[*].nr": {
+            "$.data.spielplan[*].matchNo": {
               "combine": "AND",
               "matchers": [
                 {
@@ -142,7 +145,7 @@
                 }
               ]
             },
-            "$.data.spielplan[*].spielid": {
+            "$.data.spielplan[*].result": {
               "combine": "AND",
               "matchers": [
                 {
@@ -150,15 +153,7 @@
                 }
               ]
             },
-            "$.data.spielplan[*].tag": {
-              "combine": "AND",
-              "matchers": [
-                {
-                  "match": "type"
-                }
-              ]
-            },
-            "$.data.spielplan[*].uhrzeit": {
+            "$.data.spielplan[*].venue": {
               "combine": "AND",
               "matchers": [
                 {
