@@ -5,6 +5,11 @@
  * - Orchestriert verschiedene Domain-Komponenten
  * - Zentrale Navigation
  * 
+ * Phase 2: Multi-Team Support
+ * - TeamSwitcher im Header
+ * - TeamOverview View
+ * - Dynamischer Team-Wechsel
+ * 
  * WCAG 2.0 AA:
  * - Keyboard Navigation
  * - Screen Reader Support
@@ -16,17 +21,22 @@ import { useAppStore } from '@/stores/appStore';
 import { teamService } from '@/domains/team/services/TeamService';
 import { bbbSyncService } from '@/domains/bbb-api/services/BBBSyncService';
 import { db } from '@/shared/db/database';
-import { Home, Users, Calendar, ShirtIcon, BarChart3, Settings, RefreshCw } from 'lucide-react';
+import { Home, Users, Calendar, ShirtIcon, BarChart3, Settings, RefreshCw, Layers } from 'lucide-react';
 import type { Team } from '@/shared/types';
 import { SpielerVerwaltung } from '@/domains/spieler/components/SpielerVerwaltung';
 import { SpielplanListe } from '@/domains/spielplan/components/SpielplanListe';
 import { TabellenAnsicht, type TabellenEintrag } from '@/domains/spielplan/components/TabellenAnsicht';
 import { tabellenService } from '@/domains/spielplan/services/TabellenService';
+import { TeamSwitcher } from '@/shared/components/TeamSwitcher';
+import { TeamOverview } from './components/TeamOverview';
+import { debugTeamData } from '@/shared/utils/debugTeamData';
+import { repairU10Spiele } from '@/shared/utils/repairU10Spiele';
 
-type View = 'overview' | 'spieler' | 'spielplan' | 'tabelle' | 'statistik' | 'einstellungen';
+type View = 'overview' | 'teams' | 'spieler' | 'spielplan' | 'tabelle' | 'statistik' | 'einstellungen';
 
 export function Dashboard() {
   const currentTeamId = useAppStore(state => state.currentTeamId);
+  const myTeamIds = useAppStore(state => state.myTeamIds);
   const [team, setTeam] = useState<Team | null>(null);
   const [currentView, setCurrentView] = useState<View>('overview');
   const [stats, setStats] = useState({
@@ -36,10 +46,89 @@ export function Dashboard() {
   });
   const [tabelle, setTabelle] = useState<TabellenEintrag[]>([]);
   const [isSyncing, setIsSyncing] = useState(false);
+  const [isInitialSync, setIsInitialSync] = useState(false);
 
   useEffect(() => {
     loadData();
   }, [currentTeamId]);
+
+  // ⭐ Auto-Sync beim ersten Laden (wenn online)
+  useEffect(() => {
+    const performInitialSync = async () => {
+      // Nur beim ersten Laden UND wenn online
+      if (!navigator.onLine || isInitialSync) {
+        return;
+      }
+
+      try {
+        // Hole alle Teams des Users
+        const allTeams = await Promise.all(
+          myTeamIds.map(id => teamService.getTeamById(id))
+        );
+
+        // Sammle alle eindeutigen Liga-IDs
+        const ligaIds = new Set<number>();
+        for (const team of allTeams) {
+          if (team?.liga_id) {
+            const ligaIdMatch = team.liga_id.match(/\d+/);
+            if (ligaIdMatch) {
+              ligaIds.add(parseInt(ligaIdMatch[0], 10));
+            }
+          }
+        }
+
+        if (ligaIds.size === 0) {
+          console.log('⚠️ Keine Ligen zum Synchronisieren gefunden');
+          return;
+        }
+
+        // Prüfe ob Sync nötig ist (letzte Sync > 6 Stunden her)
+        const lastSyncKey = 'last-auto-sync';
+        const lastSync = localStorage.getItem(lastSyncKey);
+        const sixHoursAgo = Date.now() - 6 * 60 * 60 * 1000;
+
+        if (lastSync && parseInt(lastSync) > sixHoursAgo) {
+          console.log('✅ Sync nicht nötig - letzter Sync vor', Math.round((Date.now() - parseInt(lastSync)) / 1000 / 60), 'Minuten');
+          return;
+        }
+
+        console.log('🔄 Starte automatischen Liga-Sync für', ligaIds.size, 'Ligen...');
+        setIsInitialSync(true);
+
+        // Synchronisiere alle Ligen
+        for (const ligaId of Array.from(ligaIds)) {
+          try {
+            console.log('🎯 Auto-Sync Liga:', ligaId);
+            await bbbSyncService.syncLiga(ligaId, { skipMatchInfo: true });
+            console.log('✅ Liga', ligaId, 'synchronisiert');
+          } catch (error) {
+            console.error('❌ Auto-Sync fehlgeschlagen für Liga', ligaId, ':', error);
+            // Weiter mit nächster Liga
+          }
+
+          // Rate-Limiting
+          await new Promise(resolve => setTimeout(resolve, 500));
+        }
+
+        // Speichere Sync-Zeitpunkt
+        localStorage.setItem(lastSyncKey, Date.now().toString());
+
+        console.log('✅ Auto-Sync abgeschlossen');
+
+        // Daten neu laden
+        await loadData();
+
+      } catch (error) {
+        console.error('❌ Auto-Sync fehlgeschlagen:', error);
+      } finally {
+        setIsInitialSync(false);
+      }
+    };
+
+    // Starte nach 1 Sekunde (damit UI zuerst geladen wird)
+    const timer = setTimeout(performInitialSync, 1000);
+    return () => clearTimeout(timer);
+  }, [myTeamIds]); // Nur bei Änderung der Team-IDs
 
   const loadData = async () => {
     if (!currentTeamId) return;
@@ -99,6 +188,33 @@ export function Dashboard() {
     }
   };
 
+  const handleTeamSelected = () => {
+    // Nach Team-Wechsel zur Übersicht
+    setCurrentView('overview');
+  };
+
+  const handleDebug = async () => {
+    console.log('🔍 Starte Team-Daten Debug...');
+    await debugTeamData();
+    console.log('✅ Debug abgeschlossen - siehe Console-Ausgabe oben');
+  };
+
+  const handleRepair = async () => {
+    if (!confirm('🔧 Möchtest du die U10-Spiele reparieren? Dies setzt fehlende heim_team_id/gast_team_id Felder.')) {
+      return;
+    }
+    
+    console.log('🔧 Starte DB Repair...');
+    try {
+      await repairU10Spiele();
+      alert('✅ Repair erfolgreich! Lade Seite neu...');
+      await loadData(); // Daten neu laden
+    } catch (error) {
+      console.error('❌ Repair fehlgeschlagen:', error);
+      alert('❌ Repair fehlgeschlagen: ' + (error as Error).message);
+    }
+  };
+
   if (!team) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -115,8 +231,30 @@ export function Dashboard() {
     );
   }
 
+  // ⭐ Loading State während Auto-Sync
+  if (isInitialSync) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div 
+          className="text-center"
+          role="status"
+          aria-live="polite"
+        >
+          <RefreshCw className="w-12 h-12 text-blue-600 animate-spin mx-auto mb-4" />
+          <h2 className="text-xl font-semibold text-gray-900 mb-2">
+            Synchronisiere Liga-Daten...
+          </h2>
+          <p className="text-gray-600">
+            Dies kann einen Moment dauern.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   const navigationItems = [
     { id: 'overview' as View, label: 'Übersicht', icon: Home },
+    ...(myTeamIds.length > 1 ? [{ id: 'teams' as View, label: 'Meine Teams', icon: Layers }] : []),
     { id: 'spieler' as View, label: 'Spieler', icon: Users },
     { id: 'spielplan' as View, label: 'Spielplan', icon: Calendar },
     { id: 'tabelle' as View, label: 'Tabelle', icon: BarChart3 },
@@ -129,7 +267,7 @@ export function Dashboard() {
       {/* Header */}
       <header className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               <Home className="w-8 h-8 text-primary-600" aria-hidden="true" />
               <div>
@@ -142,18 +280,43 @@ export function Dashboard() {
               </div>
             </div>
             
-            {/* Sync Button */}
-            {team.liga_id && (
-              <button
-                onClick={handleSync}
-                disabled={isSyncing}
-                className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                title="Liga-Daten synchronisieren"
-              >
-                <RefreshCw className={`w-5 h-5 ${isSyncing ? 'animate-spin' : ''}`} />
-                {isSyncing ? 'Synchronisiere...' : 'Sync'}
-              </button>
-            )}
+            <div className="flex items-center gap-3">
+              {/* ✅ TeamSwitcher */}
+              <TeamSwitcher />
+              
+              {/* Debug & Repair Buttons (Development) */}
+              {process.env.NODE_ENV === 'development' && (
+                <div className="flex gap-2">
+                  <button
+                    onClick={handleDebug}
+                    className="flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors min-h-[44px]"
+                    title="Debug Team-Daten"
+                  >
+                    🔍 Debug
+                  </button>
+                  <button
+                    onClick={handleRepair}
+                    className="flex items-center gap-2 px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors min-h-[44px]"
+                    title="U10-Spiele reparieren"
+                  >
+                    🔧 Repair
+                  </button>
+                </div>
+              )}
+              
+              {/* Sync Button */}
+              {team.liga_id && (
+                <button
+                  onClick={handleSync}
+                  disabled={isSyncing}
+                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors min-h-[44px]"
+                  title="Liga-Daten synchronisieren"
+                >
+                  <RefreshCw className={`w-5 h-5 ${isSyncing ? 'animate-spin' : ''}`} />
+                  <span className="hidden sm:inline">{isSyncing ? 'Synchronisiere...' : 'Sync'}</span>
+                </button>
+              )}
+            </div>
           </div>
         </div>
 
@@ -173,7 +336,7 @@ export function Dashboard() {
                   onClick={() => setCurrentView(item.id)}
                   className={`
                     flex items-center gap-2 px-4 py-3 text-sm font-medium
-                    border-b-2 transition-colors whitespace-nowrap
+                    border-b-2 transition-colors whitespace-nowrap min-h-[44px]
                     ${isActive
                       ? 'border-primary-600 text-primary-600'
                       : 'border-transparent text-gray-600 hover:text-gray-900 hover:border-gray-300'
@@ -270,6 +433,11 @@ export function Dashboard() {
               </div>
             </div>
           </div>
+        )}
+
+        {/* ✅ Team Overview View */}
+        {currentView === 'teams' && (
+          <TeamOverview onTeamSelect={handleTeamSelected} />
         )}
 
         {currentView === 'spieler' && (

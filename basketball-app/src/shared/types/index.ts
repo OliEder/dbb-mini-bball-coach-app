@@ -11,7 +11,14 @@ export type UUID = string;
 
 // ==================== ENUMS ====================
 
-export type Altersklasse = 'U8' | 'U10' | 'U12' | 'U14' | 'U16' | 'U18';
+// ✅ Erweitert um alle möglichen Altersklassen inkl. Senioren
+// Deutsche Basketball-Altersklassen: U7 bis U23 + Senioren
+export type Altersklasse = 
+  | 'U7' | 'U8' | 'U9' 
+  | 'U10' | 'U11' | 'U12' | 'U13' 
+  | 'U14' | 'U15' | 'U16' | 'U17' 
+  | 'U18' | 'U19' | 'U20' | 'U21' | 'U23'
+  | 'Senioren';
 
 export type SpielerTyp = 'eigenes_team' | 'gegner' | 'scouting' | 'probetraining';
 
@@ -238,11 +245,19 @@ export interface Spielplan {
 
 // ==================== SPIEL ====================
 
+/**
+ * WICHTIG v6.0: Spiel gehört KEINEM Team!
+ * - Ein Spiel findet zwischen zwei Teams statt (heim_team_id, gast_team_id)
+ * - Filterung nach Team erfolgt über SpielService
+ * - Unterstützt Edge Case: Internes Spiel (beide Teams sind eigene Teams)
+ * 
+ * BREAKING CHANGE: team_id entfernt!
+ */
 export interface Spiel {
   spiel_id: UUID;
   extern_spiel_id?: string;  // matchId aus DBB API
   spielplan_id?: UUID;
-  team_id: UUID;
+  // team_id ENTFERNT in v6.0! Spiel gehört keinem Team.
   liga_id?: UUID;  // Zuordnung zur Liga
   
   // BBB-Integration v4.0

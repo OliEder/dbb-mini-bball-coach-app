@@ -29,6 +29,111 @@ export class BBBSyncService {
   constructor(apiService?: typeof bbbApiService) {
     this.apiService = apiService || bbbApiService;
   }
+
+  /**
+   * Extrahiert Altersklasse aus Liga-Namen
+   * Beispiele: "U14 männlich Bezirksoberliga" → U14
+   *            "U10 mixed Bezirksliga" → U10
+   *            "U21 Regionalliga" → U21
+   *            "U23 Oberliga" → U23
+   *            "Herren Bezirksliga" → Senioren
+   *            "Damen Regionalliga" → Senioren
+   */
+  private extractAltersklasseFromLiganame(liganame: string): Altersklasse {
+    // Prüfe auf UXX Pattern (U7 bis U23)
+    const match = liganame.match(/U(\d{1,2})/);
+    if (match) {
+      const altersklasse = `U${match[1]}` as Altersklasse;
+      // ✅ Erweiterte Validierung für alle möglichen Altersklassen
+      const validAltersklassen = [
+        'U7', 'U8', 'U9',
+        'U10', 'U11', 'U12', 'U13',
+        'U14', 'U15', 'U16', 'U17',
+        'U18', 'U19', 'U20', 'U21', 'U23'
+      ];
+      if (validAltersklassen.includes(altersklasse)) {
+        return altersklasse;
+      }
+    }
+    
+    // Prüfe auf Senioren-Ligen (Herren/Damen/Senioren)
+    const seniorenPattern = /(Herren|Damen|Senioren)/i;
+    if (seniorenPattern.test(liganame)) {
+      return 'Senioren';
+    }
+    
+    // Fallback für unbekannte Ligen
+    console.warn(`Could not extract Altersklasse from: ${liganame}, using Senioren as fallback`);
+    return 'Senioren';
+  }
+
+  /**
+   * Extrahiert Altersklasse aus Team-Namen
+   * Beispiele: "SV Postbauer U12" → U12
+   *            "TSV Neumarkt U14" → U14
+   *            "Fibalon Baskets U21" → U21
+   *            "TSV München Herren" → Senioren
+   *            "DJK Augsburg Damen" → Senioren
+   * 
+   * WICHTIG: Team-Altersklasse kann von Liga-Altersklasse abweichen!
+   * Ein U12-Team kann in einer U14-Liga spielen (hochspielen)
+   */
+  private extractAltersklasseFromTeamname(teamname: string): Altersklasse | null {
+    // Prüfe auf UXX Pattern (U7 bis U23)
+    const match = teamname.match(/U(\d{1,2})/);
+    if (match) {
+      const altersklasse = `U${match[1]}` as Altersklasse;
+      // ✅ Erweiterte Validierung für alle möglichen Altersklassen
+      const validAltersklassen = [
+        'U7', 'U8', 'U9',
+        'U10', 'U11', 'U12', 'U13',
+        'U14', 'U15', 'U16', 'U17',
+        'U18', 'U19', 'U20', 'U21', 'U23'
+      ];
+      if (validAltersklassen.includes(altersklasse)) {
+        return altersklasse;
+      }
+    }
+    
+    // Prüfe auf Senioren-Teams (Herren/Damen)
+    const seniorenPattern = /(Herren|Damen|Senioren)/i;
+    if (seniorenPattern.test(teamname)) {
+      return 'Senioren';
+    }
+    
+    // Kein Fallback - gebe null zurück wenn nicht gefunden
+    return null;
+  }
+
+  /**
+   * Extrahiert Saison aus Liga-Namen oder ermittelt aktuelle Saison
+   * Beispiele: "U14 männlich 2024/25" → "2024/25"
+   *            "U10 mixed Bezirksliga" → aktuelle Saison basierend auf Datum
+   * Basketball-Saison: August bis Juli
+   */
+  private extractSaisonFromLiganame(liganame: string): string {
+    // Versuche Saison aus Liga-Namen zu extrahieren
+    // Pattern: "YYYY/YY" oder "YYYY-YY"
+    const saisonMatch = liganame.match(/(\d{4})[\/\-](\d{2,4})/);
+    if (saisonMatch) {
+      const startYear = saisonMatch[1];
+      const endYear = saisonMatch[2];
+      // Normalisiere auf Format "YYYY/YY"
+      return `${startYear}/${endYear.length === 4 ? endYear.slice(-2) : endYear}`;
+    }
+    
+    // Fallback: Berechne aktuelle Saison basierend auf Datum
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth(); // 0-11
+    
+    // Wenn August-Dezember: Saison startet im aktuellen Jahr
+    // Wenn Januar-Juli: Saison startete im Vorjahr
+    const startYear = month >= 7 ? year : year - 1; // 7 = August
+    const endYear = startYear + 1;
+    
+    return `${startYear}/${endYear.toString().slice(-2)}`;
+  }
   
   /**
    * Synchronisiert eine komplette Liga (Tabelle + Spielplan)
@@ -65,10 +170,15 @@ export class BBBSyncService {
     const tableResponse = await this.apiService.getTabelle(ligaId);
     console.log('📊 Tabelle Response:', tableResponse);
     
-    // Validiere Response
-    if (!tableResponse || !tableResponse.teams) {
-      console.error('Invalid table response - no teams found:', tableResponse);
-      throw new Error(`No teams found in table response for Liga ${ligaId}`);
+    // Validiere Response - leere Arrays sind valide (neue Ligen)
+    if (!tableResponse) {
+      console.error('Invalid table response - no response:', tableResponse);
+      throw new Error(`No table response for Liga ${ligaId}`);
+    }
+    
+    if (!Array.isArray(tableResponse.teams)) {
+      console.error('Invalid table response - teams is not an array:', tableResponse);
+      throw new Error(`Invalid teams structure in table response for Liga ${ligaId}`);
     }
     
     console.log('📊 Teams count:', tableResponse.teams.length);
@@ -448,13 +558,16 @@ export class BBBSyncService {
       return { ...existingLiga, name: data.liganame };
     }
 
-    // Create new
+    // Create new - Extract Altersklasse and Saison from Liganame
+    const altersklasse = this.extractAltersklasseFromLiganame(data.liganame);
+    const saison = this.extractSaisonFromLiganame(data.liganame);
+    
     const liga: Liga = {
       liga_id: crypto.randomUUID(),
       bbb_liga_id: data.ligaId.toString(),
       name: data.liganame,
-      saison: '2025/26', // TODO: Aus API extrahieren
-      altersklasse: 'U10' as Altersklasse, // TODO: Aus API extrahieren
+      saison: saison,
+      altersklasse: altersklasse,
       sync_am: new Date(),
       created_at: new Date(),
     };
@@ -511,6 +624,21 @@ export class BBBSyncService {
     vereinId: string;
     ligaId: string;
   }): Promise<Team> {
+    // ✅ Hole Liga für Saison (und Fallback-Altersklasse)
+    const liga = await db.ligen.get(data.ligaId);
+    if (!liga) {
+      throw new Error(`Liga ${data.ligaId} not found when creating team`);
+    }
+
+    // ✅ WICHTIG: Extrahiere Altersklasse aus TEAM-Namen, nicht Liga-Namen!
+    // Ein U12-Team kann in einer U14-Liga spielen (hochspielen)
+    const teamAltersklasse = this.extractAltersklasseFromTeamname(data.teamName);
+    const altersklasse = teamAltersklasse || liga.altersklasse; // Fallback zur Liga-AK wenn nicht im Team-Namen
+    
+    if (teamAltersklasse !== liga.altersklasse) {
+      console.log(`⚠️ Team-AK (${teamAltersklasse || 'nicht gefunden'}) != Liga-AK (${liga.altersklasse}) für Team: ${data.teamName}`);
+    }
+
     // Suche nach extern_team_id
     let team = await db.teams
       .where('extern_team_id')
@@ -518,18 +646,28 @@ export class BBBSyncService {
       .first();
 
     if (team) {
-      return team;
+      // ✅ UPDATE: Aktualisiere auch bestehende Teams mit aktuellen Werten
+      await db.teams.update(team.team_id, {
+        name: data.teamName,
+        verein_id: data.vereinId,
+        altersklasse: altersklasse,  // ✅ Von Team-Namen extrahiert!
+        saison: liga.saison,         // ✅ Von Liga übernommen
+        liga_id: liga.bbb_liga_id,   // ⭐ WICHTIG: BBB-Liga-ID für Matching!
+        updated_at: new Date(),
+      });
+      return { ...team, name: data.teamName, verein_id: data.vereinId, altersklasse: altersklasse, saison: liga.saison, liga_id: liga.bbb_liga_id };
     }
 
-    // Erstelle neues Team
+    // Erstelle neues Team mit Werten aus Team-Namen und Liga
     team = {
       team_id: crypto.randomUUID(),
       extern_team_id: data.teamId.toString(),
       verein_id: data.vereinId,
       name: data.teamName,
       trainer: '', // Wird später gesetzt
-      altersklasse: 'U10' as Altersklasse, // TODO: Aus Liga extrahieren
-      saison: '2025/26', // TODO: Aus Liga extrahieren
+      altersklasse: altersklasse,  // ✅ Von Team-Namen extrahiert!
+      saison: liga.saison,         // ✅ Von Liga übernommen
+      liga_id: liga.bbb_liga_id,   // ⭐ WICHTIG: BBB-Liga-ID für Matching!
       team_typ: 'gegner', // Default: alle sind Gegner
       created_at: new Date(),
     };
@@ -637,43 +775,23 @@ export class BBBSyncService {
       'cancelled': 'abgesagt',
     };
 
+    // ✅ Hole Liga für Altersklasse
+    const liga = await db.ligen.get(data.ligaId);
+    if (!liga) {
+      throw new Error(`Liga ${data.ligaId} not found when creating spiel`);
+    }
+
     const heimTeam = await db.teams.get(data.heimTeamId);
     const gastTeam = await db.teams.get(data.gastTeamId);
 
-    // 🔧 FIX: Finde das eigene Team und setze team_id nur wenn es beteiligt ist
-    const eigenesTeam = await db.teams
-      .where('team_typ')
-      .equals('eigen')  // ✅ FIX: 'eigen' nicht 'eigenes'!
-      .first();
-    
-    let teamId = '';
+    // ✅ v6.0: Berechne ist_heimspiel basierend auf erstem eigenen Team
+    // Bei internem Spiel: ist_heimspiel = true (aus Heim-Perspektive)
     let istHeim = false;
     
-    if (eigenesTeam) {
-      // Prüfe ob eigenes Team beteiligt ist
-      if (heimTeam?.team_id === eigenesTeam.team_id) {
-        teamId = eigenesTeam.team_id;
-        istHeim = true;
-      } else if (gastTeam?.team_id === eigenesTeam.team_id) {
-        teamId = eigenesTeam.team_id;
-        istHeim = false;
-      }
-      // Fallback: Check via extern_team_id
-      else if (heimTeam?.extern_team_id === eigenesTeam.extern_team_id) {
-        teamId = eigenesTeam.team_id;
-        istHeim = true;
-      } else if (gastTeam?.extern_team_id === eigenesTeam.extern_team_id) {
-        teamId = eigenesTeam.team_id;
-        istHeim = false;
-      }
-      // Zweiter Fallback: Check via Name
-      else if (heimTeam?.name === eigenesTeam.name) {
-        teamId = eigenesTeam.team_id;
-        istHeim = true;
-      } else if (gastTeam?.name === eigenesTeam.name) {
-        teamId = eigenesTeam.team_id;
-        istHeim = false;
-      }
+    if (heimTeam?.team_typ === 'eigen') {
+      istHeim = true;
+    } else if (gastTeam?.team_typ === 'eigen') {
+      istHeim = false;
     }
 
     const spielData = {
@@ -692,23 +810,20 @@ export class BBBSyncService {
       status: statusMap[data.status] || 'geplant',
       ergebnis_heim: data.homeScore,
       ergebnis_gast: data.awayScore,
-      altersklasse: 'U10' as Altersklasse,
+      altersklasse: liga.altersklasse,  // ✅ Von Liga übernommen
       updated_at: new Date(),
     };
 
     if (existingSpiel) {
-      // Update mit korrekter team_id
-      await db.spiele.update(existingSpiel.spiel_id, {
-        ...spielData,
-        team_id: teamId || existingSpiel.team_id, // Behalte alte team_id wenn keine neue
-      });
-      return { ...existingSpiel, ...spielData, team_id: teamId || existingSpiel.team_id };
+      // Update existing Spiel
+      await db.spiele.update(existingSpiel.spiel_id, spielData);
+      return { ...existingSpiel, ...spielData };
     }
 
     // Create new
     const spiel: Spiel = {
       spiel_id: crypto.randomUUID(),
-      team_id: teamId, // 🔧 FIX: Nur gesetzt wenn eigenes Team beteiligt
+      // team_id ENTFERNT in v6.0! Spiel gehört keinem Team.
       ...spielData,
       altersklasse: spielData.altersklasse as Altersklasse,
       created_at: new Date(),

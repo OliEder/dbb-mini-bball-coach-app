@@ -5,7 +5,7 @@
  * Kein Fetch nötig - direkte ES Module Imports
  */
 
-import type { Verein, Team } from '@shared/types';
+import type { Verein, Team, Altersklasse } from '@shared/types';
 
 // Import metadata
 import metadata from '@shared/data/clubs-chunks/clubs-metadata.json';
@@ -52,6 +52,40 @@ export interface ClubEntry {
 }
 
 class ClubDataLoader {
+  /**
+   * Extrahiert Altersklasse aus teamAkj String
+   * Beispiele: "U10", "U12", "U21", "U23", "Herren", "Damen"
+   * Fallback: "U12" für ungültige Werte
+   */
+  private extractAltersklasse(teamAkj: string | undefined): Altersklasse {
+    if (!teamAkj) return 'U12';
+
+    // Prüfe auf UXX Pattern (U7 bis U23)
+    const match = teamAkj.match(/U(\d{1,2})/);
+    if (match) {
+      const altersklasse = `U${match[1]}`;
+      const validAltersklassen = [
+        'U7', 'U8', 'U9',
+        'U10', 'U11', 'U12', 'U13',
+        'U14', 'U15', 'U16', 'U17',
+        'U18', 'U19', 'U20', 'U21', 'U23'
+      ];
+      if (validAltersklassen.includes(altersklasse)) {
+        return altersklasse as any;
+      }
+    }
+
+    // Prüfe auf Senioren (Herren/Damen/Senioren)
+    const seniorenPattern = /(Herren|Damen|Senioren)/i;
+    if (seniorenPattern.test(teamAkj)) {
+      return 'Senioren';
+    }
+
+    // Fallback
+    console.warn(`Could not extract Altersklasse from teamAkj: "${teamAkj}", using U12 as fallback`);
+    return 'U12';
+  }
+
   private chunksCache: Map<number, any[]> = new Map();
   private allClubs: ClubEntry[] | null = null;
 
@@ -205,18 +239,26 @@ class ClubDataLoader {
       const clubData = chunkData.find(club => club.clubId === clubId);
       
       if (clubData && clubData.teams) {
-        const teams: Team[] = clubData.teams.map((teamData: any) => ({
-          team_id: teamData.teamPermanentId || `team_${Math.random()}`,
-          verein_id: clubData.clubId,
-          name: teamData.teamname || 'Unbekanntes Team',
-          liga_id: teamData.seasons?.[0]?.ligen?.[0]?.ligaId || '',
-          liga_name: teamData.seasons?.[0]?.ligen?.[0]?.liganame || '',
-          altersklasse_id: teamData.teamAkjId || 0,
-          geschlecht: teamData.teamGenderId === 1 ? 'male' : teamData.teamGenderId === 2 ? 'female' : 'mixed',
-          saison: '2024/2025',
-          team_typ: 'eigen',
-          created_at: new Date()
-        }));
+        const teams: Team[] = clubData.teams.map((teamData: any) => {
+          // ✅ Extrahiere Saison aus seasons
+          const saison = teamData.seasons?.[0]?.seasonName || '2024/2025';
+          
+          return {
+            team_id: teamData.teamPermanentId || `team_${Math.random()}`,
+            verein_id: clubData.clubId,
+            name: teamData.teamname || 'Unbekanntes Team',
+            kurzname: teamData.teamnameSmall || undefined,  // ✅ NEU: Nur wenn vorhanden
+            team_nummer: teamData.teamNumber || undefined,   // ✅ NEU: Für Sortierung
+            liga_id: teamData.seasons?.[0]?.ligen?.[0]?.ligaId || '',
+            liga_name: teamData.seasons?.[0]?.ligen?.[0]?.liganame || '',
+            altersklasse: this.extractAltersklasse(teamData.teamAkj),  // ✅ Korrekte Extraktion mit Validierung!
+            altersklasse_id: teamData.teamAkjId || 0,
+            geschlecht: teamData.teamGenderId === 1 ? 'male' : teamData.teamGenderId === 2 ? 'female' : 'mixed',
+            saison: saison,
+            team_typ: 'eigen',
+            created_at: new Date()
+          };
+        });
 
         // Alphabetisch sortieren
         teams.sort((a, b) => a.name.localeCompare(b.name));

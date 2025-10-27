@@ -33,7 +33,7 @@ import type {
 } from '../types';
 
 const DB_NAME = 'BasketballPWA';
-const DB_VERSION = 5; // User-Tabelle + externe IDs + team_typ hinzugefügt!
+const DB_VERSION = 6; // v6.0: team_id aus Spiel entfernt!
 
 /**
  * Database Schema
@@ -67,7 +67,7 @@ class BasketballDatabase extends Dexie {
   constructor() {
     super(DB_NAME);
     
-    // Version 5: User-Tabelle + Externe IDs + team_typ
+    // Version 6: team_id aus Spiel entfernt
     this.version(DB_VERSION).stores({
       // ========== USER (TRAINER) ==========
       users: 'user_id, name, email, created_at',
@@ -87,9 +87,9 @@ class BasketballDatabase extends Dexie {
       ligen: 'liga_id, bbb_liga_id, saison, altersklasse, name',
       liga_teilnahmen: 'teilnahme_id, liga_id, verein_id, team_id',
       
-      // ========== SPIELPLAN & SPIELE (BBB-Integration v5) ==========
+      // ========== SPIELPLAN & SPIELE (BBB-Integration v6) ==========
       spielplaene: 'spielplan_id, team_id, saison, bbb_spielplan_url',
-      spiele: 'spiel_id, extern_spiel_id, liga_id, spielplan_id, team_id, heim_team_id, gast_team_id, datum, spielnr, spieltag, status, [team_id+datum], [spielplan_id+spielnr], [team_id+status], [liga_id+datum]',
+      spiele: 'spiel_id, extern_spiel_id, liga_id, spielplan_id, heim_team_id, gast_team_id, datum, spielnr, spieltag, status, [heim_team_id+datum], [gast_team_id+datum], [spielplan_id+spielnr], [liga_id+datum]',
       liga_ergebnisse: 'id, ligaid, spielnr, datum, [heimteam+gastteam]',
       liga_tabellen: 'id, ligaid, teamname, [ligaid+platz], [ligaid+teamname]',
       
@@ -109,6 +109,16 @@ class BasketballDatabase extends Dexie {
       // ========== NOTIZEN & ARCHIV ==========
       spieler_notizen: 'notiz_id, spieler_id, datum, kategorie, vertraulich',
       saison_archive: 'archiv_id, team_id, saison, archiviert_am'
+    }).upgrade(tx => {
+      console.log('⚠️  Migrating to v6.0: Removing team_id from Spiel...');
+      
+      // Migration: team_id aus allen Spielen entfernen
+      return tx.table('spiele').toCollection().modify(spiel => {
+        if ('team_id' in spiel) {
+          delete spiel.team_id;
+          console.log(`✅ Removed team_id from Spiel ${spiel.spiel_id}`);
+        }
+      });
     });
 
     // Migration von älteren Versionen

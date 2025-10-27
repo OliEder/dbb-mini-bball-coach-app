@@ -170,22 +170,27 @@ describe('BBBApiService', () => {
     it('sollte Spielplan-Daten abrufen', async () => {
       const mockData = {
         data: {
-          ligaId: 12345,
-          liganame: 'Test Liga',
-          spielplan: [
+          ligaData: {
+            ligaId: 12345,
+            liganame: 'Test Liga'
+          },
+          matches: [
             {
-              spielid: 1,
-              nr: 1,
-              tag: 1,
-              datum: '2025-10-23',
-              uhrzeit: '18:00',
-              heimteamid: 100,
-              heimteamname: 'Home Team',
-              gastteamid: 200,
-              gastteamname: 'Away Team',
-              halle: 'Test Halle',
-              heimTore: null,
-              gastTore: null,
+              matchId: 1,
+              matchNo: 1,
+              matchDay: 1,
+              kickoffDate: '2025-10-23',
+              kickoffTime: '18:00',
+              homeTeam: {
+                seasonTeamId: 100,
+                teamname: 'Home Team'
+              },
+              guestTeam: {
+                seasonTeamId: 200,
+                teamname: 'Away Team'
+              },
+              venue: 'Test Halle',
+              result: null
             },
           ],
         },
@@ -205,6 +210,15 @@ describe('BBBApiService', () => {
         matchId: 1,
         gameNumber: 1,
         gameDay: 1,
+        homeTeam: {
+          teamId: 100,
+          teamName: 'Home Team'
+        },
+        awayTeam: {
+          teamId: 200,
+          teamName: 'Away Team'
+        },
+        status: 'scheduled'
       });
     });
   });

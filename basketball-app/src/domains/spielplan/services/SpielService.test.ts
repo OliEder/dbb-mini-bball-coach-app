@@ -12,7 +12,9 @@ import type { Spiel, Team, Verein, Spielplan, Halle } from '@/shared/types';
 
 describe('SpielService', () => {
   let testTeam: Team;
+  let gegnerTeam: Team;
   let testVerein: Verein;
+  let gegnerVerein: Verein;
   let testSpielplan: Spielplan;
   let testHalle: Halle;
 
@@ -30,6 +32,15 @@ describe('SpielService', () => {
     };
     await db.vereine.add(testVerein);
 
+    // Create gegner verein
+    gegnerVerein = {
+      verein_id: crypto.randomUUID(),
+      name: 'Gegner Verein',
+      ist_eigener_verein: false,
+      created_at: new Date(),
+    };
+    await db.vereine.add(gegnerVerein);
+
     // Create test team
     testTeam = {
       team_id: crypto.randomUUID(),
@@ -42,6 +53,19 @@ describe('SpielService', () => {
       created_at: new Date(),
     };
     await db.teams.add(testTeam);
+
+    // Create gegner team
+    gegnerTeam = {
+      team_id: crypto.randomUUID(),
+      verein_id: gegnerVerein.verein_id,
+      name: 'Gegner Team',
+      altersklasse: 'U10',
+      saison: '2025/2026',
+      trainer: 'Gegner Trainer',
+      team_typ: 'gegner',
+      created_at: new Date(),
+    };
+    await db.teams.add(gegnerTeam);
 
     // Create test spielplan
     testSpielplan = {
@@ -70,7 +94,8 @@ describe('SpielService', () => {
     it('sollte ein Heimspiel erfolgreich erstellen', async () => {
       const spielData: Omit<Spiel, 'spiel_id' | 'created_at'> = {
         spielplan_id: testSpielplan.spielplan_id,
-        team_id: testTeam.team_id,
+        heim_team_id: testTeam.team_id,  // ✅ v6.0: Heimteam-ID
+        gast_team_id: gegnerTeam.team_id, // ✅ v6.0: Gastteam-ID
         spielnr: 1,
         spieltag: 1,
         datum: new Date('2025-11-15'),
@@ -93,7 +118,8 @@ describe('SpielService', () => {
 
     it('sollte ein Auswärtsspiel erstellen können', async () => {
       const spielData: Omit<Spiel, 'spiel_id' | 'created_at'> = {
-        team_id: testTeam.team_id,
+        heim_team_id: gegnerTeam.team_id, // ✅ v6.0: Gastgeber ist Gegner
+        gast_team_id: testTeam.team_id,   // ✅ v6.0: Wir sind Gast
         datum: new Date('2025-11-22'),
         uhrzeit: '16:00',
         heim: 'Gegner Team',
@@ -111,7 +137,7 @@ describe('SpielService', () => {
 
     it('sollte Validierungsfehler bei fehlenden Pflichtfeldern werfen', async () => {
       const invalidData = {
-        team_id: testTeam.team_id,
+        // ❌ Keine heim_team_id oder gast_team_id!
         datum: new Date(),
         heim: '',
         gast: 'Test',
@@ -129,7 +155,8 @@ describe('SpielService', () => {
   describe('getSpielById', () => {
     it('sollte ein Spiel anhand der ID finden', async () => {
       const created = await spielService.createSpiel({
-        team_id: testTeam.team_id,
+        heim_team_id: testTeam.team_id,
+        gast_team_id: gegnerTeam.team_id,
         datum: new Date('2025-11-15'),
         heim: testTeam.name,
         gast: 'Gegner',
@@ -153,7 +180,8 @@ describe('SpielService', () => {
   describe('getSpieleByTeam', () => {
     it('sollte alle Spiele eines Teams zurückgeben', async () => {
       await spielService.createSpiel({
-        team_id: testTeam.team_id,
+        heim_team_id: testTeam.team_id,
+        gast_team_id: gegnerTeam.team_id,
         datum: new Date('2025-11-15'),
         heim: testTeam.name,
         gast: 'Gegner 1',
@@ -163,7 +191,8 @@ describe('SpielService', () => {
       });
 
       await spielService.createSpiel({
-        team_id: testTeam.team_id,
+        heim_team_id: gegnerTeam.team_id,
+        gast_team_id: testTeam.team_id,
         datum: new Date('2025-11-22'),
         heim: 'Gegner 2',
         gast: testTeam.name,
@@ -175,12 +204,12 @@ describe('SpielService', () => {
       const spiele = await spielService.getSpieleByTeam(testTeam.team_id);
 
       expect(spiele).toHaveLength(2);
-      expect(spiele.every(s => s.team_id === testTeam.team_id)).toBe(true);
     });
 
     it('sollte nur Heimspiele zurückgeben wenn Filter gesetzt', async () => {
       await spielService.createSpiel({
-        team_id: testTeam.team_id,
+        heim_team_id: testTeam.team_id,
+        gast_team_id: gegnerTeam.team_id,
         datum: new Date('2025-11-15'),
         heim: testTeam.name,
         gast: 'Gegner 1',
@@ -190,7 +219,8 @@ describe('SpielService', () => {
       });
 
       await spielService.createSpiel({
-        team_id: testTeam.team_id,
+        heim_team_id: gegnerTeam.team_id,
+        gast_team_id: testTeam.team_id,
         datum: new Date('2025-11-22'),
         heim: 'Gegner 2',
         gast: testTeam.name,
@@ -209,7 +239,8 @@ describe('SpielService', () => {
 
     it('sollte nach Status filtern', async () => {
       await spielService.createSpiel({
-        team_id: testTeam.team_id,
+        heim_team_id: testTeam.team_id,
+        gast_team_id: gegnerTeam.team_id,
         datum: new Date('2025-11-15'),
         heim: testTeam.name,
         gast: 'Gegner',
@@ -219,7 +250,8 @@ describe('SpielService', () => {
       });
 
       await spielService.createSpiel({
-        team_id: testTeam.team_id,
+        heim_team_id: testTeam.team_id,
+        gast_team_id: gegnerTeam.team_id,
         datum: new Date('2025-10-01'),
         heim: testTeam.name,
         gast: 'Gegner 2',
@@ -246,7 +278,8 @@ describe('SpielService', () => {
       const future2 = new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000); // +14 Tage
 
       await spielService.createSpiel({
-        team_id: testTeam.team_id,
+        heim_team_id: testTeam.team_id,
+        gast_team_id: gegnerTeam.team_id,
         datum: future2,
         heim: testTeam.name,
         gast: 'Gegner 2',
@@ -256,7 +289,8 @@ describe('SpielService', () => {
       });
 
       const nextSpiel = await spielService.createSpiel({
-        team_id: testTeam.team_id,
+        heim_team_id: testTeam.team_id,
+        gast_team_id: gegnerTeam.team_id,
         datum: future1,
         heim: testTeam.name,
         gast: 'Gegner 1',
@@ -275,7 +309,8 @@ describe('SpielService', () => {
       const past = new Date('2025-01-01');
 
       await spielService.createSpiel({
-        team_id: testTeam.team_id,
+        heim_team_id: testTeam.team_id,
+        gast_team_id: gegnerTeam.team_id,
         datum: past,
         heim: testTeam.name,
         gast: 'Gegner',
@@ -292,7 +327,8 @@ describe('SpielService', () => {
   describe('updateSpiel', () => {
     it('sollte ein Spiel aktualisieren', async () => {
       const created = await spielService.createSpiel({
-        team_id: testTeam.team_id,
+        heim_team_id: testTeam.team_id,
+        gast_team_id: gegnerTeam.team_id,
         datum: new Date('2025-11-15'),
         heim: testTeam.name,
         gast: 'Gegner',
@@ -324,7 +360,8 @@ describe('SpielService', () => {
   describe('deleteSpiel', () => {
     it('sollte ein Spiel löschen', async () => {
       const created = await spielService.createSpiel({
-        team_id: testTeam.team_id,
+        heim_team_id: testTeam.team_id,
+        gast_team_id: gegnerTeam.team_id,
         datum: new Date('2025-11-15'),
         heim: testTeam.name,
         gast: 'Gegner',
@@ -344,7 +381,8 @@ describe('SpielService', () => {
     it('sollte Spiel anhand der BBB-Spielnummer finden', async () => {
       await spielService.createSpiel({
         spielplan_id: testSpielplan.spielplan_id,
-        team_id: testTeam.team_id,
+        heim_team_id: testTeam.team_id,
+        gast_team_id: gegnerTeam.team_id,
         spielnr: 42,
         datum: new Date('2025-11-15'),
         heim: testTeam.name,
@@ -375,7 +413,8 @@ describe('SpielService', () => {
   describe('countSpieleByStatus', () => {
     it('sollte Spiele nach Status zählen', async () => {
       await spielService.createSpiel({
-        team_id: testTeam.team_id,
+        heim_team_id: testTeam.team_id,
+        gast_team_id: gegnerTeam.team_id,
         datum: new Date('2025-11-15'),
         heim: testTeam.name,
         gast: 'Gegner 1',
@@ -385,7 +424,8 @@ describe('SpielService', () => {
       });
 
       await spielService.createSpiel({
-        team_id: testTeam.team_id,
+        heim_team_id: testTeam.team_id,
+        gast_team_id: gegnerTeam.team_id,
         datum: new Date('2025-11-22'),
         heim: testTeam.name,
         gast: 'Gegner 2',
@@ -395,7 +435,8 @@ describe('SpielService', () => {
       });
 
       await spielService.createSpiel({
-        team_id: testTeam.team_id,
+        heim_team_id: testTeam.team_id,
+        gast_team_id: gegnerTeam.team_id,
         datum: new Date('2025-10-01'),
         heim: testTeam.name,
         gast: 'Gegner 3',

@@ -173,7 +173,9 @@ describe('BBBSyncService', () => {
       expect(ligen[0]).toMatchObject({
         name: 'U10 Bezirksliga Oberpfalz',
         bbb_liga_id: '12345',
+        altersklasse: 'U10',  // ✅ Extrahiert aus Liga-Namen
       });
+      // Saison wird aus aktuellem Datum berechnet (z.B. 2025/26 wenn Test im Aug-Dez 2025 läuft)
 
       // Verify Vereine created
       const vereine = await db.vereine.toArray();
@@ -184,10 +186,14 @@ describe('BBBSyncService', () => {
       // Verify Teams created
       const teams = await db.teams.toArray();
       expect(teams).toHaveLength(2);
-      expect(teams.find(t => t.name === 'SV Postbauer U10')).toMatchObject({
+      const svTeam = teams.find(t => t.name === 'SV Postbauer U10');
+      expect(svTeam).toBeDefined();
+      expect(svTeam).toMatchObject({
         extern_team_id: '111',
         team_typ: 'gegner', // Default
+        altersklasse: 'U10',  // ✅ Von Liga übernommen
       });
+      // Saison wird von Liga übernommen (dynamisch basierend auf Datum)
 
       // Verify Spielplan created
       const spiele = await db.spiele.toArray();
@@ -199,7 +205,9 @@ describe('BBBSyncService', () => {
         heim: 'SV Postbauer U10',
         gast: 'TSV Neumarkt U10',
         status: 'geplant',
+        altersklasse: 'U10',  // ✅ Von Liga übernommen
       });
+      // Saison ist nicht im Spiel-Entity
 
       // Verify Halle created
       const hallen = await db.hallen.toArray();
@@ -245,7 +253,7 @@ describe('BBBSyncService', () => {
         verein_id: 'test-verein',
         name: 'Test Team',
         altersklasse: 'U10',
-        saison: '2025/26',
+        saison: '2025/26',  // Beliebiger Wert für Test
         trainer: 'Test Trainer',
         team_typ: 'gegner',
         created_at: new Date(),
@@ -390,6 +398,145 @@ describe('BBBSyncService', () => {
           'Liga 333',
         ])
       );
+    });
+  });
+
+  describe('Altersklasse und Saison Extraktion', () => {
+    it('sollte Altersklasse aus Liga-Namen extrahieren', async () => {
+      const testCases = [
+        { liganame: 'U14 männlich Bezirksoberliga', expectedAK: 'U14' },
+        { liganame: 'U16 weiblich Landesliga', expectedAK: 'U16' },
+        { liganame: 'U10 mixed Bezirksliga', expectedAK: 'U10' },
+        { liganame: 'U8 Minibasketball', expectedAK: 'U8' },
+      ];
+
+      for (const testCase of testCases) {
+        await db.delete();
+        await db.open();
+
+        vi.mocked(bbbApiService.getTabelle).mockResolvedValue({
+          ligaId: 12345,
+          liganame: testCase.liganame,
+          teams: [],
+        } as DBBTableResponse);
+
+        vi.mocked(bbbApiService.getSpielplan).mockResolvedValue({
+          ligaId: 12345,
+          liganame: testCase.liganame,
+          games: [],
+        } as DBBSpielplanResponse);
+
+        await service.syncLiga(12345, { skipMatchInfo: true });
+
+        // ✅ Korrekter Weg um erste Liga zu holen
+        const ligen = await db.ligen.toArray();
+        expect(ligen.length).toBeGreaterThan(0);
+        expect(ligen[0].altersklasse).toBe(testCase.expectedAK);
+      }
+    });
+
+    it('sollte Saison aus Liga-Namen extrahieren', async () => {
+      const testCases = [
+        { liganame: 'U14 männlich 2024/25 Bezirksoberliga', expectedSaison: '2024/25' },
+        { liganame: 'U16 weiblich 2025-26 Landesliga', expectedSaison: '2025/26' },
+        { liganame: 'U10 mixed 2023/2024 Bezirksliga', expectedSaison: '2023/24' },
+      ];
+
+      for (const testCase of testCases) {
+        await db.delete();
+        await db.open();
+
+        vi.mocked(bbbApiService.getTabelle).mockResolvedValue({
+          ligaId: 12345,
+          liganame: testCase.liganame,
+          teams: [],
+        } as DBBTableResponse);
+
+        vi.mocked(bbbApiService.getSpielplan).mockResolvedValue({
+          ligaId: 12345,
+          liganame: testCase.liganame,
+          games: [],
+        } as DBBSpielplanResponse);
+
+        await service.syncLiga(12345, { skipMatchInfo: true });
+
+        // ✅ Korrekter Weg um erste Liga zu holen
+        const ligen = await db.ligen.toArray();
+        expect(ligen.length).toBeGreaterThan(0);
+        expect(ligen[0].saison).toBe(testCase.expectedSaison);
+      }
+    });
+
+    it('sollte Fallback-Saison verwenden wenn nicht im Namen', async () => {
+      vi.mocked(bbbApiService.getTabelle).mockResolvedValue({
+        ligaId: 12345,
+        liganame: 'U10 Bezirksliga Oberpfalz',  // Keine Saison im Namen
+        teams: [],
+      } as DBBTableResponse);
+
+      vi.mocked(bbbApiService.getSpielplan).mockResolvedValue({
+        ligaId: 12345,
+        liganame: 'U10 Bezirksliga Oberpfalz',
+        games: [],
+      } as DBBSpielplanResponse);
+
+      await service.syncLiga(12345, { skipMatchInfo: true });
+
+      // ✅ Korrekter Weg um erste Liga zu holen
+      const ligen = await db.ligen.toArray();
+      expect(ligen.length).toBeGreaterThan(0);
+      // Sollte aktuelle Saison basierend auf Datum haben
+      expect(ligen[0].saison).toMatch(/\d{4}\/\d{2}/);
+    });
+
+    it('sollte Team-Altersklasse aus Team-Namen extrahieren, nicht von Liga', async () => {
+      // ✅ WICHTIGER TEST: U12-Team in U14-Liga (hochspielen)
+      await db.delete();
+      await db.open();
+
+      const ligaName = 'U14 männlich Bezirksoberliga';
+      const teamName = 'SV Postbauer U12';  // U12 Team spielt in U14 Liga hoch!
+
+      vi.mocked(bbbApiService.getTabelle).mockResolvedValue({
+        ligaId: 12345,
+        liganame: ligaName,
+        teams: [
+          {
+            position: 1,
+            teamId: 111,
+            teamName: teamName,
+            clubId: 10,
+            clubName: 'SV Postbauer',
+            games: 10,
+            wins: 8,
+            losses: 2,
+            points: 16,
+            scoredPoints: 450,
+            concededPoints: 380,
+            pointsDifference: 70,
+          }
+        ]
+      } as DBBTableResponse);
+
+      vi.mocked(bbbApiService.getSpielplan).mockResolvedValue({
+        ligaId: 12345,
+        liganame: ligaName,
+        games: [],
+      } as DBBSpielplanResponse);
+
+      await service.syncLiga(12345, { skipMatchInfo: true });
+
+      // Verify Liga hat U14
+      const liga = await db.ligen.toArray();
+      expect(liga[0].altersklasse).toBe('U14');
+
+      // Verify Team hat U12 (nicht U14!)
+      const team = await db.teams.toArray();
+      expect(team[0].altersklasse).toBe('U12');  // ✅ Von Team-Namen!
+      expect(team[0].name).toBe(teamName);
+
+      // Verify Saison ist von Liga übernommen
+      expect(team[0].saison).toBe(liga[0].saison);
     });
   });
 });

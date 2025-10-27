@@ -188,24 +188,18 @@ describe('BBBSyncService', () => {
     });
 
     it('should throw error if Liga not found when syncing Spielplan', async () => {
-      // ARRANGE - Mock getTabelle to NOT create Liga
-      mockBBBApiService.getTabelle.mockResolvedValueOnce({
-        ligaId: 99999,
-        liganame: 'Wrong Liga',
-        teams: []
-      });
-
-      mockBBBApiService.getSpielplan.mockResolvedValueOnce({
-        games: []
-      });
-
-      // ACT - Sync different Liga
-      await syncService.syncLiga(99999, { skipMatchInfo: true });
-
-      // Manually clear to simulate missing Liga
+      // ARRANGE - Ensure DB is completely empty
       await db.ligen.clear();
+      await db.teams.clear();
+      
+      // Verify Liga doesn't exist
+      const ligaCheck = await db.ligen
+        .where('bbb_liga_id')
+        .equals('99999')
+        .first();
+      expect(ligaCheck).toBeUndefined();
 
-      // ASSERT - Should throw when Liga not found
+      // Mock getSpielplan - will be called before Liga check fails
       mockBBBApiService.getSpielplan.mockResolvedValueOnce({
         games: [
           {
@@ -221,9 +215,88 @@ describe('BBBSyncService', () => {
         ]
       });
 
-      await expect(syncService.syncLiga(99999, { skipMatchInfo: true }))
+      // ACT & ASSERT - Liga 99999 doesn't exist in DB, should throw
+      await expect(syncService.syncSpielplan(99999))
         .rejects
         .toThrow('Liga 99999 not found in DB');
+    });
+  });
+
+  describe('Altersklassen-Extraktion', () => {
+    it('should extract U10 from Liga name', async () => {
+      mockBBBApiService.getTabelle.mockResolvedValueOnce({
+        ligaId: 50000,
+        liganame: 'U10 mixed Bezirksliga Oberpfalz',
+        teams: []
+      });
+
+      mockBBBApiService.getSpielplan.mockResolvedValueOnce({ games: [] });
+
+      await syncService.syncLiga(50000, { skipMatchInfo: true });
+
+      const liga = await db.ligen.where('bbb_liga_id').equals('50000').first();
+      expect(liga?.altersklasse).toBe('U10');
+    });
+
+    it('should extract U21 from Liga name', async () => {
+      mockBBBApiService.getTabelle.mockResolvedValueOnce({
+        ligaId: 50001,
+        liganame: 'U21 männlich Regionalliga',
+        teams: []
+      });
+
+      mockBBBApiService.getSpielplan.mockResolvedValueOnce({ games: [] });
+
+      await syncService.syncLiga(50001, { skipMatchInfo: true });
+
+      const liga = await db.ligen.where('bbb_liga_id').equals('50001').first();
+      expect(liga?.altersklasse).toBe('U21');
+    });
+
+    it('should extract U23 from Liga name', async () => {
+      mockBBBApiService.getTabelle.mockResolvedValueOnce({
+        ligaId: 50002,
+        liganame: 'U23 weiblich Bezirksoberliga',
+        teams: []
+      });
+
+      mockBBBApiService.getSpielplan.mockResolvedValueOnce({ games: [] });
+
+      await syncService.syncLiga(50002, { skipMatchInfo: true });
+
+      const liga = await db.ligen.where('bbb_liga_id').equals('50002').first();
+      expect(liga?.altersklasse).toBe('U23');
+    });
+
+    it('should handle Senioren Liga', async () => {
+      mockBBBApiService.getTabelle.mockResolvedValueOnce({
+        ligaId: 50003,
+        liganame: 'Herren Bezirksliga Oberpfalz',
+        teams: []
+      });
+
+      mockBBBApiService.getSpielplan.mockResolvedValueOnce({ games: [] });
+
+      await syncService.syncLiga(50003, { skipMatchInfo: true });
+
+      const liga = await db.ligen.where('bbb_liga_id').equals('50003').first();
+      // Bei fehlender UXX Altersklasse sollte Fallback auf Senioren erfolgen
+      expect(liga?.altersklasse).toBe('Senioren');
+    });
+
+    it('should handle Damen Liga as Senioren', async () => {
+      mockBBBApiService.getTabelle.mockResolvedValueOnce({
+        ligaId: 50004,
+        liganame: 'Damen Regionalliga',
+        teams: []
+      });
+
+      mockBBBApiService.getSpielplan.mockResolvedValueOnce({ games: [] });
+
+      await syncService.syncLiga(50004, { skipMatchInfo: true });
+
+      const liga = await db.ligen.where('bbb_liga_id').equals('50004').first();
+      expect(liga?.altersklasse).toBe('Senioren');
     });
   });
 
@@ -342,8 +415,8 @@ describe('BBBSyncService', () => {
     });
 
     it('should not create duplicate Teams', async () => {
-      // ARRANGE
-      mockBBBApiService.getTabelle.mockResolvedValueOnce({
+      // ARRANGE - Mock responses for BOTH sync calls
+      const mockTableResponse = {
         ligaId: 51961,
         liganame: 'Test Liga',
         teams: [
@@ -362,11 +435,19 @@ describe('BBBSyncService', () => {
             pointsDifference: 0
           }
         ]
-      });
+      };
 
-      mockBBBApiService.getSpielplan.mockResolvedValueOnce({
+      const mockSpielplanResponse = {
         games: []
-      });
+      };
+
+      // First sync
+      mockBBBApiService.getTabelle.mockResolvedValueOnce(mockTableResponse);
+      mockBBBApiService.getSpielplan.mockResolvedValueOnce(mockSpielplanResponse);
+
+      // Second sync
+      mockBBBApiService.getTabelle.mockResolvedValueOnce(mockTableResponse);
+      mockBBBApiService.getSpielplan.mockResolvedValueOnce(mockSpielplanResponse);
 
       // ACT - Sync twice
       await syncService.syncLiga(51961, { skipMatchInfo: true });
