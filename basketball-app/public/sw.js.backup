@@ -1,0 +1,65 @@
+// Minimaler Service Worker ohne Workbox
+// Platziere diese Datei in public/sw.js
+
+const CACHE_NAME = 'basketball-app-v1';
+const BASE_URL = '/dbb-mini-bball-coach-app/';
+
+// Dateien die beim Install gecached werden sollen
+const urlsToCache = [
+  BASE_URL,
+  BASE_URL + 'index.html'
+];
+
+// Install Event - Cache kritische Dateien
+self.addEventListener('install', (event) => {
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then((cache) => {
+        console.log('Opened cache');
+        return cache.addAll(urlsToCache);
+      })
+  );
+  self.skipWaiting();
+});
+
+// Activate Event - Alte Caches löschen
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames.map((cacheName) => {
+          if (cacheName !== CACHE_NAME) {
+            console.log('Deleting old cache:', cacheName);
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    })
+  );
+  self.clients.claim();
+});
+
+// Fetch Event - Network First mit Cache Fallback
+self.addEventListener('fetch', (event) => {
+  event.respondWith(
+    fetch(event.request)
+      .then((response) => {
+        // Clone response da sie nur einmal verwendet werden kann
+        const responseToCache = response.clone();
+        
+        // Cache successful responses
+        if (response.status === 200) {
+          caches.open(CACHE_NAME)
+            .then((cache) => {
+              cache.put(event.request, responseToCache);
+            });
+        }
+        
+        return response;
+      })
+      .catch(() => {
+        // Bei Netzwerkfehler aus Cache laden
+        return caches.match(event.request);
+      })
+  );
+});

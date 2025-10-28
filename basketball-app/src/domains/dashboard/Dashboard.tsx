@@ -29,6 +29,7 @@ import { TabellenAnsicht, type TabellenEintrag } from '@/domains/spielplan/compo
 import { tabellenService } from '@/domains/spielplan/services/TabellenService';
 import { TeamSwitcher } from '@/shared/components/TeamSwitcher';
 import { TeamOverview } from './components/TeamOverview';
+import { SettingsView } from '@/domains/settings/components/SettingsView';
 import { debugTeamData } from '@/shared/utils/debugTeamData';
 import { repairU10Spiele } from '@/shared/utils/repairU10Spiele';
 
@@ -507,15 +508,7 @@ export function Dashboard() {
         )}
 
         {currentView === 'einstellungen' && (
-          <div className="card text-center py-12">
-            <Settings className="w-16 h-16 text-gray-300 mx-auto mb-4" aria-hidden="true" />
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">
-              Einstellungen
-            </h3>
-            <p className="text-gray-600">
-              Die Einstellungen werden in Kürze verfügbar sein.
-            </p>
-          </div>
+          <SettingsView />
         )}
       </main>
     </div>

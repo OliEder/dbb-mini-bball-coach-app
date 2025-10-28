@@ -5,9 +5,6 @@ import path from 'path';
 
 // https://vitejs.dev/config/
 export default defineConfig(() => {
-  // Base path für GitHub Pages
-  // Wenn auf olieder.github.io deployed: '/'
-  // Wenn auf olieder.github.io/repo-name deployed: '/repo-name/'
   const base = process.env.BASE_URL || '/dbb-mini-bball-coach-app/';
   
   return {
@@ -16,8 +13,8 @@ export default defineConfig(() => {
       react(),
       VitePWA({
         registerType: 'autoUpdate',
-        includeAssets: [],
-        injectRegister: 'auto',  // Automatische Registration ohne UI
+        injectRegister: 'auto',
+        
         manifest: {
           name: 'Basketball Team Manager',
           short_name: 'BBall Manager',
@@ -25,41 +22,30 @@ export default defineConfig(() => {
           theme_color: '#1e3a8a',
           background_color: '#ffffff',
           display: 'standalone',
+          scope: base,
           start_url: base,
           icons: []
         },
+        
         workbox: {
+          // Minimale Config ohne Glob-Operationen
           globPatterns: [],
+          
+          // Navigation Fallback für SPA
           navigateFallback: 'index.html',
-          navigateFallbackDenylist: [/^\/api/],
+          navigateFallbackDenylist: [/^\/api/, /\.(js|css|png|jpg|jpeg|svg)$/],
+          
+          // Runtime Caching
           runtimeCaching: [
             {
-              // HTML-Seiten
-              urlPattern: ({ request }) => request.mode === 'navigate',
-              handler: 'NetworkFirst',
-              options: {
-                cacheName: 'pages-cache',
-                networkTimeoutSeconds: 3
-              }
-            },
-            {
-              // JS und CSS
-              urlPattern: /\.(js|css)$/,
-              handler: 'StaleWhileRevalidate',
-              options: {
-                cacheName: 'assets-cache'
-              }
-            },
-            {
-              // BBB API
               urlPattern: /^https:\/\/www\.basketball-bund\.net\/.*/i,
               handler: 'NetworkFirst',
               options: {
-                cacheName: 'bbb-api-cache',
+                cacheName: 'bbb-api',
                 networkTimeoutSeconds: 10,
                 expiration: {
-                  maxEntries: 50,
-                  maxAgeSeconds: 60 * 60 * 24 // 24 Stunden
+                  maxEntries: 100,
+                  maxAgeSeconds: 86400
                 },
                 cacheableResponse: {
                   statuses: [0, 200]
@@ -67,12 +53,10 @@ export default defineConfig(() => {
               }
             }
           ],
-          cleanupOutdatedCaches: true,
+          
+          skipWaiting: true,
           clientsClaim: true,
-          skipWaiting: true
-        },
-        devOptions: {
-          enabled: false  // PWA komplett in Development deaktiviert
+          cleanupOutdatedCaches: true
         }
       })
     ],

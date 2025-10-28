@@ -1,0 +1,17 @@
+{
+  "name": "Basketball Team Manager",
+  "short_name": "BBall Manager",
+  "description": "Basketball Team Management für Trainer",
+  "theme_color": "#1e3a8a",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "scope": "/dbb-mini-bball-coach-app/",
+  "start_url": "/dbb-mini-bball-coach-app/",
+  "icons": [
+    {
+      "src": "/vite.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
