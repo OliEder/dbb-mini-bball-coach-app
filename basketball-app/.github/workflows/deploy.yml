@@ -44,8 +44,8 @@ jobs:
       - name: Build PWA
         run: npm run build
         env:
-          # Wichtig für GitHub Pages - setzt den korrekten base path
-          BASE_URL: /olieder.github.io/dbb-mini-bball-coach-app/
+          # ✅ Root-Path für benchboss.de
+          BASE_URL: /
           
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
@@ -121,6 +121,6 @@ jobs:
         uses: treosh/lighthouse-ci-action@v11
         with:
           urls: |
-            https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/
+            https://benchboss.de
           uploadArtifacts: true
           temporaryPublicStorage: true

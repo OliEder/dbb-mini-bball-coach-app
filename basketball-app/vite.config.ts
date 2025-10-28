@@ -5,7 +5,8 @@ import path from 'path';
 
 // https://vitejs.dev/config/
 export default defineConfig(() => {
-  const base = process.env.BASE_URL || '/dbb-mini-bball-coach-app/';
+  // ✅ Root-Path für benchboss.de
+  const base = process.env.BASE_URL || '/';
   
   return {
     base,
@@ -16,9 +17,11 @@ export default defineConfig(() => {
         injectRegister: 'auto',
         
         manifest: {
-          name: 'Basketball Team Manager',
-          short_name: 'BBall Manager',
-          description: 'Basketball Team Management für Trainer',
+          name: 'BenchBoss - Basketball Team Manager',
+          short_name: 'BenchBoss',
+          description: 'Team Management & Lineup Planung für Basketball-Trainer',
+          id: '/',
+          orientation: 'portrait',
           theme_color: '#1e3a8a',
           background_color: '#ffffff',
           display: 'standalone',

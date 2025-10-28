@@ -1,16 +1,12 @@
-# Basketball Team Manager PWA
+# BenchBoss - Basketball Team Manager
 
-<<<<<<< HEAD
 [![Deploy to GitHub Pages](https://github.com/OliEder/dbb-mini-bball-coach-app/actions/workflows/deploy.yml/badge.svg)](https://github.com/OliEder/dbb-mini-bball-coach-app/actions/workflows/deploy.yml)
 [![Club Crawler](https://github.com/OliEder/dbb-mini-bball-coach-app/actions/workflows/crawler.yml/badge.svg)](https://github.com/OliEder/dbb-mini-bball-coach-app/actions/workflows/crawler.yml)
-=======
-[![Deploy to GitHub Pages](https://github.com/USERNAME/basketball-app/actions/workflows/deploy.yml/badge.svg)](https://github.com/USERNAME/basketball-app/actions/workflows/deploy.yml)
-[![Club Crawler](https://github.com/USERNAME/basketball-app/actions/workflows/crawler.yml/badge.svg)](https://github.com/USERNAME/basketball-app/actions/workflows/crawler.yml)
->>>>>>> c34e0aed0d7e14b9cafc932553a10e4d944f8f84
 
-## 🏀 Basketball Team Manager für Jugendtrainer
+## 🏀 Team Management & Lineup Planung für Basketball-Trainer
 
-Progressive Web App für Jugend-Basketball-Trainer (U8/U10/U12) im deutschen Basketball-System.
+Progressive Web App für Basketball-Trainer im deutschen Basketball-System.
+Optimiert für Minibasketball (U8/U10/U12), erweiterbar für alle Altersklassen.
 
 ### ✨ Features
 
@@ -22,13 +18,9 @@ Progressive Web App für Jugend-Basketball-Trainer (U8/U10/U12) im deutschen Bas
 - 🏆 **BBB Integration** - Automatischer Import von Liga-Daten
 - 📊 **Vereinsdaten** - Über 5000 deutsche Basketball-Vereine
 
-## 🚀 Live Demo
+## 🚀 Live App
 
-<<<<<<< HEAD
-👉 **[App starten](https://olieeder.github.io/dbb-mini-bball-coach-app/)**
-=======
-👉 **[App starten](https://USERNAME.github.io/basketball-app/)**
->>>>>>> c34e0aed0d7e14b9cafc932553a10e4d944f8f84
+👉 **[benchboss.de](https://benchboss.de)**
 
 ## 📱 Installation
 
@@ -47,7 +39,6 @@ Progressive Web App für Jugend-Basketball-Trainer (U8/U10/U12) im deutschen Bas
 ## 🛠️ Entwicklung
 
 ```bash
-<<<<<<< HEAD
 # In den App-Ordner wechseln
 cd basketball-app
 
