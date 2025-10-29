@@ -4,7 +4,8 @@ import { VitePWA } from 'vite-plugin-pwa';
 import path from 'path';
 // https://vitejs.dev/config/
 export default defineConfig(() => {
-    const base = process.env.BASE_URL || '/dbb-mini-bball-coach-app/';
+    // ✅ HARDCODED für benchboss.de - ignoriert ENV
+    const base = '/';
     return {
         base,
         plugins: [
@@ -13,9 +14,11 @@ export default defineConfig(() => {
                 registerType: 'autoUpdate',
                 injectRegister: 'auto',
                 manifest: {
-                    name: 'Basketball Team Manager',
-                    short_name: 'BBall Manager',
-                    description: 'Basketball Team Management für Trainer',
+                    name: 'BenchBoss - Basketball Team Manager',
+                    short_name: 'BenchBoss',
+                    description: 'Team Management & Lineup Planung für Basketball-Trainer',
+                    id: '/',
+                    orientation: 'portrait',
                     theme_color: '#1e3a8a',
                     background_color: '#ffffff',
                     display: 'standalone',
