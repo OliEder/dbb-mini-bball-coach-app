@@ -37,7 +37,7 @@
 		var f = document.spielplanliste;
 		var ms_liga_id = f.cbMannschaftenFilter[f.cbMannschaftenFilter.selectedIndex].value;;
 		var spieltag = f.cbSpieltagFilter[f.cbSpieltagFilter.selectedIndex].value;
-		location.href='servlet/KalenderDienst?typ=2&liga_id=51961&ms_liga_id=' + ms_liga_id + '&spt=' + spieltag;
+		location.href = 'servlet/KalenderDienst?typ=2&liga_id=51961&ms_liga_id=' + encodeURIComponent(ms_liga_id) + '&spt=' + encodeURIComponent(spieltag);
 	}
 </script>
 
