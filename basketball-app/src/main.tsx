@@ -36,7 +36,7 @@ if (import.meta.env.DEV) {
 if ('serviceWorker' in navigator && import.meta.env.PROD) {
   window.addEventListener('load', () => {
     navigator.serviceWorker
-      .register('/sw.js')
+      .register('/service-worker.js')
       .then((registration) => {
         console.log('✅ PROD: Service Worker registered:', registration);
       })
