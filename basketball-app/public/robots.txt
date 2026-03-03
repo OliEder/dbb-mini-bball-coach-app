@@ -1,9 +1,5 @@
-# Basketball Team Manager PWA
-<<<<<<< HEAD
-# https://olieeder.github.io/dbb-mini-bball-coach-app/
-=======
-# https://USERNAME.github.io/basketball-app/
->>>>>>> c34e0aed0d7e14b9cafc932553a10e4d944f8f84
+# BenchBoss Basketball Team Manager
+# https://benchboss.de
 
 User-agent: *
 Allow: /
@@ -16,8 +12,4 @@ Allow: /sw.js
 # No need to crawl source maps
 Disallow: /*.map
 
-<<<<<<< HEAD
-Sitemap: https://olieeder.github.io/dbb-mini-bball-coach-app/sitemap.xml
-=======
-Sitemap: https://USERNAME.github.io/basketball-app/sitemap.xml
->>>>>>> c34e0aed0d7e14b9cafc932553a10e4d944f8f84
+Sitemap: https://benchboss.de/sitemap.xml
