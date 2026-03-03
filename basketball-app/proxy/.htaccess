@@ -1,0 +1,8 @@
+# CORS Proxy für api.benchboss.de
+# Leitet alle /rest/* Requests an proxy.php weiter
+
+RewriteEngine On
+
+# /rest/* → proxy.php (mit originalem Request-URI)
+RewriteCond %{REQUEST_URI} ^/rest/
+RewriteRule ^ proxy.php [L]
