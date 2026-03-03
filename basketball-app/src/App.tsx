@@ -184,7 +184,7 @@ function App() {
   }
 
   return (
-    <BrowserRouter basename="/dbb-mini-bball-coach-app">
+    <BrowserRouter>
       <Routes>
         <Route path="/" element={<RootRedirect />} />
         <Route path="/onboarding" element={<SimplifiedOnboardingContainer />} />
