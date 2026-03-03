@@ -1,6 +1,5 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@config "../tailwind.config.js";
 
 /* WCAG 2.0 AA compliant base styles */
 @layer base {
@@ -63,22 +62,34 @@
   }
 
   .btn-primary {
-    @apply btn bg-primary-600 text-white hover:bg-primary-700;
+    @apply px-4 py-2 rounded-lg font-medium transition-colors;
+    @apply focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2;
+    @apply disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply bg-primary-600 text-white hover:bg-primary-700;
     @apply focus-visible:outline-primary-600;
   }
 
   .btn-secondary {
-    @apply btn bg-gray-200 text-gray-900 hover:bg-gray-300;
+    @apply px-4 py-2 rounded-lg font-medium transition-colors;
+    @apply focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2;
+    @apply disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply bg-gray-200 text-gray-900 hover:bg-gray-300;
     @apply focus-visible:outline-gray-600;
   }
 
   .btn-success {
-    @apply btn bg-success-600 text-white hover:bg-success-700;
+    @apply px-4 py-2 rounded-lg font-medium transition-colors;
+    @apply focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2;
+    @apply disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply bg-success-600 text-white hover:bg-success-700;
     @apply focus-visible:outline-success-600;
   }
 
   .btn-danger {
-    @apply btn bg-error-600 text-white hover:bg-error-700;
+    @apply px-4 py-2 rounded-lg font-medium transition-colors;
+    @apply focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2;
+    @apply disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply bg-error-600 text-white hover:bg-error-700;
     @apply focus-visible:outline-error-600;
   }
 
@@ -115,18 +126,22 @@
   }
 
   .alert-info {
-    @apply alert bg-primary-50 border-primary-600 text-primary-900;
+    @apply px-4 py-3 rounded-lg border-2;
+    @apply bg-primary-50 border-primary-600 text-primary-900;
   }
 
   .alert-success {
-    @apply alert bg-success-50 border-success-600 text-success-900;
+    @apply px-4 py-3 rounded-lg border-2;
+    @apply bg-success-50 border-success-600 text-success-900;
   }
 
   .alert-warning {
-    @apply alert bg-warning-50 border-warning-600 text-warning-900;
+    @apply px-4 py-3 rounded-lg border-2;
+    @apply bg-warning-50 border-warning-600 text-warning-900;
   }
 
   .alert-error {
-    @apply alert bg-error-50 border-error-600 text-error-900;
+    @apply px-4 py-3 rounded-lg border-2;
+    @apply bg-error-50 border-error-600 text-error-900;
   }
 }
