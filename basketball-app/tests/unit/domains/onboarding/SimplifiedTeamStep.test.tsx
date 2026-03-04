@@ -7,34 +7,37 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { SimplifiedTeamStep } from '@domains/onboarding/components/SimplifiedTeamStep';
-import type { Team } from '@shared/types';
+import { SimplifiedTeamStep } from '@/domains/onboarding/components/SimplifiedTeamStep';
+import type { TeamWithParticipationData } from '@/shared/services/ClubDataLoader';
 
 // Mock ClubDataLoader - WICHTIG: Vor dem Import!
-vi.mock('@shared/services/ClubDataLoader', () => ({
+vi.mock('@/shared/services/ClubDataLoader', () => ({
   clubDataLoader: {
     loadTeamsForClub: vi.fn()
   }
 }));
 
 // Nach dem Mock importieren
-import { clubDataLoader } from '@shared/services/ClubDataLoader';
+import { clubDataLoader } from '@/shared/services/ClubDataLoader';
 
 const createMockTeam = (
   id: string,
   vereinId: string,
   name: string,
   ligaName?: string
-): Team => ({
+): TeamWithParticipationData => ({
   team_id: id,
+  extern_permanent_id: id,
   verein_id: vereinId,
   name,
-  liga_id: ligaName ? 'liga_' + id : '',
-  liga_name: ligaName || '',
+  liga_id: ligaName ? 'liga_' + id : undefined,
+  liga_name: ligaName || undefined,
   altersklasse_id: 1,
+  altersklasse: 'U12',
   geschlecht: 'male',
   saison: '2024/2025',
   team_typ: 'eigen',
+  trainer: '',
   created_at: new Date()
 });
 

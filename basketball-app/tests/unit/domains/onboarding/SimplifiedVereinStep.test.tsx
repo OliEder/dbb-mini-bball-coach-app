@@ -7,11 +7,11 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { SimplifiedVereinStep } from '@domains/onboarding/components/SimplifiedVereinStep';
-import type { Verein } from '@shared/types';
+import { SimplifiedVereinStep } from '@/domains/onboarding/components/SimplifiedVereinStep';
+import type { Verein } from '@/shared/types';
 
 // Mock ClubDataLoader - WICHTIG: Vor dem Import!
-vi.mock('@shared/services/ClubDataLoader', () => ({
+vi.mock('@/shared/services/ClubDataLoader', () => ({
   clubDataLoader: {
     loadAllClubs: vi.fn(),
     clearCache: vi.fn()
@@ -19,7 +19,7 @@ vi.mock('@shared/services/ClubDataLoader', () => ({
 }));
 
 // Nach dem Mock importieren
-import { clubDataLoader } from '@shared/services/ClubDataLoader';
+import { clubDataLoader } from '@/shared/services/ClubDataLoader';
 
 const createMockVerein = (id: string, name: string, kurzname: string, verbandIds: number[]): Verein => ({
   verein_id: id,

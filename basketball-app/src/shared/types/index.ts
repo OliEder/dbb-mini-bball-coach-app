@@ -84,24 +84,55 @@ export interface Verein {
 
 // ==================== TEAM ====================
 
+/**
+ * Team Entity (v7.0)
+ * 
+ * BREAKING CHANGE in v7.0:
+ * - extern_team_id → extern_permanent_id (bleibt über Saisons konstant)
+ * - altersklasse, saison, liga_id → TeamLigaParticipation (neue Tabelle)
+ * 
+ * Ein Team ist die permanente Organisation (z.B. "TSV Pilsach U12").
+ * Altersklasse und Saison ändern sich jährlich → eigene Tabelle!
+ */
 export interface Team {
   team_id: UUID;
-  extern_team_id?: string;  // teamId aus DBB API
+  extern_permanent_id?: string;  // Permanente Team-ID aus DBB API (bleibt über Saisons)
   verein_id: UUID;
   user_id?: UUID;  // Zuordnung zum Trainer (nur bei team_typ='eigen')
   bbb_mannschafts_id?: string;
   name: string;
-  altersklasse: Altersklasse;
-  altersklasse_id?: number;  // Altersklasse als ID (aus BBB API)
   geschlecht?: 'male' | 'female' | 'mixed';  // Geschlecht des Teams
-  saison: string;  // z.B. "2025/2026"
   trainer: string;
   team_typ: TeamTyp;  // 'eigen' oder 'gegner'
-  liga_id?: string;  // BBB Liga-ID (z.B. "12345")
-  liga_name?: string;  // BBB Liga-Name (z.B. "U10 Bezirksliga Oberpfalz")
-  leistungsorientiert?: boolean;  // nur U12
   created_at: Date;
   updated_at?: Date;
+}
+
+/**
+ * Team Liga Participation (v7.0 - NEU)
+ * 
+ * Historisiert die Teilnahme eines Teams an einer Liga/Saison.
+ * 
+ * Beispiel:
+ * - TSV Pilsach U12 (team_id: 123) spielt 2024/25 in U12 Bezirksliga (altersklasse_id: 5)
+ * - TSV Pilsach U12 (team_id: 123) spielt 2025/26 in U13 Bezirksliga (altersklasse_id: 6)
+ * 
+ * → 2 Einträge in team_liga_participations
+ * → 1 Team in teams
+ */
+export interface TeamLigaParticipation {
+  id: number;  // Auto-increment Primary Key
+  team_id: UUID;  // Foreign Key → teams
+  extern_team_id?: string;  // teamId aus BBB API für diese Saison (ändert sich!)
+  saison: string;  // z.B. "2024/25"
+  altersklasse: Altersklasse;  // z.B. "U12"
+  altersklasse_id?: number;  // Altersklasse als ID (aus BBB API)
+  liga_id?: string;  // BBB Liga-ID (z.B. "12345")
+  liga_name?: string;  // BBB Liga-Name (z.B. "U12 Bezirksliga Oberpfalz")
+  leistungsorientiert?: boolean;  // nur U12
+  ist_aktiv: boolean;  // Aktuelle Saison? (pro Team nur 1 aktiv!)
+  sync_am?: Date;  // Letzter Sync mit BBB
+  created_at: Date;
 }
 
 // ==================== SPIELER ====================
@@ -553,7 +584,8 @@ export interface WamDataResponse {
 // Competition Table Response
 export interface DBBTabellenEintrag {
   position: number;
-  teamId: number;
+  teamId: number;         // seasonTeamId (saisonspezifisch)
+  teamPermanentId?: number; // teamPermanentId (konstant über Saisons)
   teamName: string;
   clubId: number;
   clubName: string;
@@ -580,13 +612,15 @@ export interface DBBSpielplanEintrag {
   date: string;
   time: string;
   homeTeam: {
-    teamId: number;
+    teamId: number;          // seasonTeamId (saisonspezifisch)
+    teamPermanentId?: number; // teamPermanentId (konstant über Saisons)
     teamName: string;
     clubId: number;
     clubName: string;
   };
   awayTeam: {
-    teamId: number;
+    teamId: number;          // seasonTeamId (saisonspezifisch)
+    teamPermanentId?: number; // teamPermanentId (konstant über Saisons)
     teamName: string;
     clubId: number;
     clubName: string;
@@ -700,18 +734,26 @@ export interface CreateVereinInput {
   bbb_kontakt_id?: string;
 }
 
-// CreateTeamInput
+// CreateTeamInput (v7.0 - simplified)
 export interface CreateTeamInput {
   verein_id: UUID;
   name: string;
-  altersklasse: Altersklasse;
-  altersklasse_id?: number;
   geschlecht?: 'male' | 'female' | 'mixed';
-  saison: string;
   trainer: string;
   team_typ?: TeamTyp;  // Default: 'eigen'
+  user_id?: UUID;
+  extern_permanent_id?: string;
+}
+
+// CreateTeamLigaParticipationInput (v7.0 - NEW)
+export interface CreateTeamLigaParticipationInput {
+  team_id: UUID;
+  extern_team_id?: string;
+  saison: string;
+  altersklasse: Altersklasse;
+  altersklasse_id?: number;
   liga_id?: string;
   liga_name?: string;
   leistungsorientiert?: boolean;
-  user_id?: UUID;
+  ist_aktiv?: boolean;  // Default: true
 }

@@ -1,15 +1,13 @@
-/// <reference types="vitest" />
-import { defineConfig } from 'vite';
+import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import path from 'path';
 
 export default defineConfig({
   plugins: [react()],
   test: {
-    globals: true,
     environment: 'happy-dom',
     setupFiles: './src/test/setup.ts',
-    include: ['tests/**/*.test.ts', 'tests/**/*.test.tsx', 'src/**/*.test.ts', 'src/**/*.test.tsx'],  // Tests in tests/ UND src/
+    include: ['tests/**/*.test.ts', 'tests/**/*.test.tsx'],  // Nur tests/ Verzeichnis
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],

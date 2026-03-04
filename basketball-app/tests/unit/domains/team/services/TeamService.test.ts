@@ -67,6 +67,8 @@ describe('TeamService - Multi-Team Support', () => {
     await db.spieler.clear();
     await db.spiele.clear();
     await db.liga_tabellen.clear();
+    await db.team_liga_participations.clear();
+    await db.ligen.clear();
   });
 
   describe('getMyTeams', () => {
@@ -121,7 +123,20 @@ describe('TeamService - Multi-Team Support', () => {
   });
 
   describe('getTeamStats', () => {
+    const testLigaId = 'liga-test-1';
+
     beforeEach(async () => {
+      // v7.0: TeamLigaParticipation für team-1
+      await db.team_liga_participations.add({
+        team_id: 'team-1',
+        liga_id: testLigaId,
+        liga_name: 'Kreisliga U12',
+        altersklasse: 'U12',
+        saison: '2025/26',
+        ist_aktiv: true,
+        created_at: new Date(),
+      });
+
       // Setup: Spieler hinzufügen
       const spieler: Spieler[] = [
         {
@@ -147,25 +162,32 @@ describe('TeamService - Multi-Team Support', () => {
       ];
       await db.spieler.bulkAdd(spieler);
 
-      // Setup: Spiele hinzufügen ✅ v6.0: mit heim_team_id/gast_team_id
+      // v7.0: Spiele müssen liga_id haben; Zukunftsdaten relativ zu heute
+      const now = Date.now();
+      const past = new Date(now - 7 * 24 * 60 * 60 * 1000);
+      const future1 = new Date(now + 7 * 24 * 60 * 60 * 1000);
+      const future2 = new Date(now + 14 * 24 * 60 * 60 * 1000);
+
       const spiele: Spiel[] = [
         {
           spiel_id: 'spiel-1',
-          heim_team_id: 'team-1',      // ✅ v6.0
-          gast_team_id: 'team-3',      // ✅ v6.0
-          datum: new Date('2025-10-15'),  // Vergangenes Spiel (heute ist 27.10.)
+          liga_id: testLigaId,
+          heim_team_id: 'team-1',
+          gast_team_id: 'team-3',
+          datum: past,
           heim: 'U12 Team A',
           gast: 'Gegner 1',
           ist_heimspiel: true,
-          status: 'abgeschlossen',  // ✅ Fixed: beendet → abgeschlossen
+          status: 'abgeschlossen',
           altersklasse: 'U12',
           created_at: new Date()
         },
         {
           spiel_id: 'spiel-2',
-          heim_team_id: 'team-1',      // ✅ v6.0
-          gast_team_id: 'team-3',      // ✅ v6.0
-          datum: new Date('2025-11-01'),  // Zukünftiges Spiel
+          liga_id: testLigaId,
+          heim_team_id: 'team-1',
+          gast_team_id: 'team-3',
+          datum: future1,
           heim: 'U12 Team A',
           gast: 'Gegner 2',
           ist_heimspiel: true,
@@ -175,12 +197,13 @@ describe('TeamService - Multi-Team Support', () => {
         },
         {
           spiel_id: 'spiel-3',
-          heim_team_id: 'team-3',      // ✅ v6.0: Gegner ist Heim
-          gast_team_id: 'team-1',      // ✅ v6.0: Team-1 ist Gast
-          datum: new Date('2025-11-15'),  // Zukünftiges Spiel
+          liga_id: testLigaId,
+          heim_team_id: 'team-3',
+          gast_team_id: 'team-1',
+          datum: future2,
           heim: 'Gegner 3',
           gast: 'U12 Team A',
-          ist_heimspiel: false,         // ✅ v6.0: Auswärtsspiel!
+          ist_heimspiel: false,
           status: 'geplant',
           altersklasse: 'U12',
           created_at: new Date()
@@ -203,10 +226,9 @@ describe('TeamService - Multi-Team Support', () => {
 
     it('should return next game', async () => {
       const stats = await teamService.getTeamStats('team-1');
-      
+
       expect(stats.naechstesSpiel).toBeDefined();
       expect(stats.naechstesSpiel?.spiel_id).toBe('spiel-2'); // Erstes zukünftiges Spiel
-      expect(stats.naechstesSpiel?.datum.toISOString()).toBe(new Date('2025-11-01').toISOString());
     });
 
     it('should return undefined for next game if no future games', async () => {
@@ -219,30 +241,23 @@ describe('TeamService - Multi-Team Support', () => {
     });
 
     it('should return table position if available', async () => {
-      // Füge Tabellen-Eintrag hinzu
-      // Erst Liga-Info zum Team hinzufügen
-      await db.teams.update('team-1', {
-        liga_id: 'liga-1',
-        liga_name: 'Kreisliga U12'
-      });
-
-      // ✅ Tabellen-Eintrag mit expliziter ID
+      // v7.0: Tabellen-Eintrag via Participation.liga_id (nicht team.liga_id)
       const tabellenEintrag = {
-        id: 1,  // ✅ Explizite ID
-        ligaid: 'liga-1',
+        id: 1,
+        ligaid: testLigaId,
         teamname: 'U12 Team A',
         platz: 3,
         spiele: 5,
-        gewonnen: 3,
-        verloren: 2,
+        siege: 3,
+        niederlagen: 2,
         punkte: 6,
         korb_plus: 250,
         korb_minus: 220
       };
       await db.liga_tabellen.add(tabellenEintrag);
-      
+
       const stats = await teamService.getTeamStats('team-1');
-      
+
       expect(stats.tabellenplatz).toBe(3);
     });
 

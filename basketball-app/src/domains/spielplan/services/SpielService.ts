@@ -1,10 +1,14 @@
 /**
- * SpielService - Domain Service für Spiel-Management
+ * SpielService - Domain Service für Spiel-Management (DBv7)
  * 
  * Domain-Driven Design:
  * - Zentrale Business-Logik für Spiele
  * - CRUD-Operationen mit Validierung
  * - BBB-Integration Support
+ * 
+ * ✅ DBv7: Integration mit team_liga_participations
+ * - Spiele werden über aktive Liga-Participations gefiltert
+ * - Unterstützt Multi-Saison/Multi-Liga Szenarien
  * 
  * WCAG 2.0 AA:
  * - Fehlerbehandlung mit klaren Meldungen
@@ -21,6 +25,90 @@ export interface SpielFilter {
 }
 
 class SpielService {
+  /**
+   * Gibt Liga-IDs von aktiven Team-Participations zurück
+   * 
+   * ✅ DBv7: Verwendet team_liga_participations
+   * ✅ v7.1 HOTFIX: Simple Index statt Compound
+   * 
+   * @param teamId - Team-ID
+   * @returns Array von Liga-IDs (leer wenn keine aktiven Participations)
+   */
+  async getAktiveParticipationLigaIds(teamId: string): Promise<string[]> {
+    // ✅ v7.1: Use simple team_id index, then filter by ist_aktiv
+    const allParticipations = await db.team_liga_participations
+      .where('team_id')
+      .equals(teamId)
+      .toArray();
+    
+    // Filter for active participations
+    const participations = allParticipations.filter(p => p.ist_aktiv === true);
+
+    return participations
+      .map(p => p.liga_id)
+      .filter((id): id is string => id !== undefined);
+  }
+
+  /**
+   * Gibt alle Spiele eines Teams zurück (DBv7-kompatibel)
+   * 
+   * ✅ DBv7: Lädt Spiele über aktive team_liga_participations
+   * 
+   * @param teamId - Team-ID
+   * @returns Spiele sortiert nach Datum
+   */
+  async getSpiele(teamId: string): Promise<Spiel[]> {
+    // 1. Hole aktive Liga-IDs für Team
+    const ligaIds = await this.getAktiveParticipationLigaIds(teamId);
+
+    if (ligaIds.length === 0) {
+      return [];
+    }
+
+    // 2. Lade Spiele aus allen aktiven Ligen
+    const spieleByLiga = await Promise.all(
+      ligaIds.map(ligaId => this.getSpielByLiga(ligaId))
+    );
+
+    // 3. Flatten & Filtere nach Team (heim oder gast)
+    const allSpiele = spieleByLiga.flat();
+    const teamSpiele = allSpiele.filter(
+      s => s.heim_team_id === teamId || s.gast_team_id === teamId
+    );
+
+    // 4. Deduplizieren (falls Team in mehreren Ligen)
+    const spieleMap = new Map<string, Spiel>();
+    teamSpiele.forEach(spiel => {
+      spieleMap.set(spiel.spiel_id, spiel);
+    });
+
+    // 5. Sortiere nach Datum
+    const spiele = Array.from(spieleMap.values());
+    spiele.sort((a, b) => new Date(a.datum).getTime() - new Date(b.datum).getTime());
+
+    return spiele;
+  }
+
+  /**
+   * Gibt alle Spiele einer Liga zurück
+   * 
+   * ✅ DBv7: Lädt alle Spiele einer Liga (für Benchmark-Analyse)
+   * 
+   * @param ligaId - Liga-ID
+   * @returns Spiele sortiert nach Datum
+   */
+  async getSpielByLiga(ligaId: string): Promise<Spiel[]> {
+    const spiele = await db.spiele
+      .where('liga_id')
+      .equals(ligaId)
+      .toArray();
+
+    // Sort by date
+    spiele.sort((a, b) => new Date(a.datum).getTime() - new Date(b.datum).getTime());
+
+    return spiele;
+  }
+
   /**
    * Erstellt ein neues Spiel
    * 
@@ -51,9 +139,9 @@ class SpielService {
   }
 
   /**
-   * Gibt alle Spiele eines Teams zurück
+   * Gibt alle Spiele eines Teams zurück (Backward Compatibility)
    * 
-   * ✅ v6.0: Sucht nach heim_team_id UND gast_team_id (team_id entfernt!)
+   * ✅ DBv7: Alias für getSpiele() mit zusätzlichen Filtern
    * 
    * @param teamId - Team-ID
    * @param filter - Optionale Filter (ist_heimspiel, status, spielplan_id)
@@ -62,18 +150,8 @@ class SpielService {
     teamId: string,
     filter?: SpielFilter
   ): Promise<Spiel[]> {
-    // ✅ v6.0: Suche nur nach heim_team_id und gast_team_id
-    const spieleByHeimId = await db.spiele.where('heim_team_id').equals(teamId).toArray();
-    const spieleByGastId = await db.spiele.where('gast_team_id').equals(teamId).toArray();
-
-    // Merge & Deduplizieren (Spiel kann mehrfach gefunden werden)
-    const spieleMap = new Map<string, Spiel>();
-    
-    [...spieleByHeimId, ...spieleByGastId].forEach(spiel => {
-      spieleMap.set(spiel.spiel_id, spiel);
-    });
-    
-    let spiele = Array.from(spieleMap.values());
+    // Nutze neue getSpiele() Methode
+    let spiele = await this.getSpiele(teamId);
 
     // Apply filters
     if (filter?.ist_heimspiel !== undefined) {
@@ -87,9 +165,6 @@ class SpielService {
     if (filter?.spielplan_id) {
       spiele = spiele.filter(s => s.spielplan_id === filter.spielplan_id);
     }
-
-    // Sort by date
-    spiele.sort((a, b) => new Date(a.datum).getTime() - new Date(b.datum).getTime());
 
     return spiele;
   }

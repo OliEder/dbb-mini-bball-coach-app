@@ -7,7 +7,7 @@
  */
 
 import { describe, it, expect, beforeEach } from 'vitest';
-import { clubDataLoader } from '@shared/services/ClubDataLoader';
+import { clubDataLoader } from '@/shared/services/ClubDataLoader';
 
 describe('ClubDataLoader', () => {
   beforeEach(() => {

@@ -4,7 +4,7 @@
  * Tests für Multi-Team Funktionalität im App Store
  */
 
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { useAppStore } from '@/stores/appStore';
 
 describe('AppStore - Multi-Team Support', () => {

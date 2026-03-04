@@ -20,11 +20,9 @@
     "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true,
 
-    /* Paths - ohne baseUrl */
+    /* Paths */
     "paths": {
-      "@/*": ["./src/*"],
-      "@domains/*": ["./src/domains/*"],
-      "@shared/*": ["./src/shared/*"]
+      "@/*": ["./src/*"]
     },
 
     /* Vite Types */
@@ -33,8 +31,12 @@
   "include": ["src"],
   "exclude": [
     "src/**/archive/**",
-    "src/**/__tests__/**/*.test.ts",
-    "src/**/__tests__/**/*.test.tsx"
+    "src/**/__tests__/**",
+    "src/**/*.test.ts",
+    "src/**/*.test.tsx",
+    "tests",
+    "node_modules",
+    "dist"
   ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

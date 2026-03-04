@@ -220,78 +220,78 @@ class TabellenService {
    */
   async loadTabelleForTeam(teamId: string): Promise<TabellenEintrag[]> {
     console.log('🔍 TabellenService.loadTabelleForTeam() - Start für Team:', teamId);
-    
+
     try {
-      // Finde Team
-      const team = await db.teams.get(teamId);
-      
+      // v7.0: Team + aktive Participation parallel laden
+      const [team, participation] = await Promise.all([
+        db.teams.get(teamId),
+        db.team_liga_participations
+          .where('team_id')
+          .equals(teamId)
+          .and(p => p.ist_aktiv === true)
+          .first(),
+      ]);
+
       if (!team) {
         console.warn('⚠️ Kein Team gefunden:', teamId);
         return [];
       }
-      
+
       console.log('🏀 Team gefunden:', team.name);
-      console.log('🏀 Team liga_id:', team.liga_id);
-      
-      // ✅ Finde Spiele des Teams (team_id, heim_team_id ODER gast_team_id)
-      const spieleByTeamId = await db.spiele
-        .where('team_id')
-        .equals(teamId)
-        .toArray();
-      
+      console.log('🏀 Participation liga_id:', participation?.liga_id);
+
+      // Finde Spiele des Teams (nur heim_team_id ODER gast_team_id)
       const heimSpiele = await db.spiele
         .where('heim_team_id')
         .equals(teamId)
         .toArray();
-      
+
       const gastSpiele = await db.spiele
         .where('gast_team_id')
         .equals(teamId)
         .toArray();
-      
+
       // Merge & Deduplizieren
       const spieleMap = new Map<string, Spiel>();
-      [...spieleByTeamId, ...heimSpiele, ...gastSpiele].forEach(spiel => {
+      [...heimSpiele, ...gastSpiele].forEach(spiel => {
         spieleMap.set(spiel.spiel_id, spiel);
       });
-      
+
       const alleSpiele = Array.from(spieleMap.values());
-      
+
       console.log('🏀 Spiele gefunden:', alleSpiele.length);
       console.log('🏀 Spiele Details:', {
-        byTeamId: spieleByTeamId.length,
         byHeimId: heimSpiele.length,
         byGastId: gastSpiele.length
       });
-      
+
       if (alleSpiele.length === 0) {
         console.warn('⚠️ Keine Spiele gefunden für Team:', teamId);
         return [];
       }
-      
-      // ✅ Liga-ID Resolution: BBB-Liga-ID → Interne UUID
+
+      // v7.0: Liga-ID Resolution via Participation (primär) oder Spiel (Fallback)
       let ligaIdForQuery: string | undefined;
-      
-      if (team.liga_id) {
-        // Team hat liga_id - könnte BBB-ID oder UUID sein
-        console.log('🔍 Suche Liga mit BBB-ID oder UUID:', team.liga_id);
-        
-        // Versuche 1: Direkt als UUID (falls schon UUID)
-        let liga = await db.ligen.get(team.liga_id);
-        
+
+      if (participation?.liga_id) {
+        console.log('🔍 Suche Liga mit BBB-ID oder UUID:', participation.liga_id);
+
+        // Versuche 1: Direkt als UUID
+        let liga = await db.ligen.get(participation.liga_id);
+
         // Versuche 2: Als BBB-Liga-ID
         if (!liga) {
-          liga = await db.ligen.where('bbb_liga_id').equals(team.liga_id).first();
+          liga = await db.ligen.where('bbb_liga_id').equals(participation.liga_id).first();
         }
-        
+
         if (liga) {
-          ligaIdForQuery = liga.liga_id; // Interne UUID verwenden!
+          ligaIdForQuery = liga.liga_id;
           console.log('✅ Liga gefunden:', liga.name, '→ UUID:', ligaIdForQuery);
         } else {
-          console.warn('⚠️ Keine Liga gefunden für liga_id:', team.liga_id);
+          console.warn('⚠️ Keine Liga gefunden für liga_id:', participation.liga_id);
         }
       }
-      
+
       // Fallback: Aus erstem Spiel
       if (!ligaIdForQuery && alleSpiele[0].liga_id) {
         ligaIdForQuery = alleSpiele[0].liga_id;

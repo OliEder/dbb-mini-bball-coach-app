@@ -18,11 +18,23 @@ export async function debugTeamData() {
   teams.forEach(team => {
     console.log(`  - ${team.name}`, {
       team_id: team.team_id,
-      extern_team_id: team.extern_team_id,
-      liga_id: team.liga_id,
-      liga_name: team.liga_name,
+      extern_permanent_id: team.extern_permanent_id,
       team_typ: team.team_typ,
       user_id: team.user_id
+    });
+  });
+
+  // 1b. Team-Liga-Participations (v7.0)
+  const participations = await db.team_liga_participations.toArray();
+  console.log('\n🏆 TEAM-LIGA-PARTICIPATIONS:', participations.length);
+  participations.forEach(p => {
+    const team = teams.find(t => t.team_id === p.team_id);
+    console.log(`  - ${team?.name || p.team_id}:`, {
+      liga_id: p.liga_id,
+      altersklasse: p.altersklasse,
+      saison: p.saison,
+      ist_aktiv: p.ist_aktiv,
+      extern_team_id: p.extern_team_id,
     });
   });
   
@@ -106,44 +118,42 @@ export async function debugTeamData() {
     });
   });
   
-  // 6. Problem-Diagnose
+  // 6. Problem-Diagnose (v7.0)
   console.log('\n⚠️  PROBLEM-DIAGNOSE:');
-  
-  teams.forEach(team => {
-    if (team.team_typ === 'eigen' && team.user_id) {
-      // ✅ v6.0: team_id removed from Spiel
-      const teamSpiele = spiele.filter(s => s.heim_team_id === team.team_id || s.gast_team_id === team.team_id);
-      const heimSpiele = spiele.filter(s => s.heim_team_id === team.team_id);
-      const gastSpiele = spiele.filter(s => s.gast_team_id === team.team_id);
-      
-      console.log(`\n  Team: ${team.name}`);
-      console.log(`    - team_id: ${team.team_id}`);
-      console.log(`    - extern_team_id: ${team.extern_team_id || 'FEHLT!'}`);
-      console.log(`    - liga_id: ${team.liga_id || 'FEHLT!'}`);
-      console.log(`    - Spiele mit team_id: ${teamSpiele.length}`);
-      console.log(`    - Heimspiele: ${heimSpiele.length}`);
-      console.log(`    - Auswärtsspiele: ${gastSpiele.length}`);
-      console.log(`    - GESAMT: ${heimSpiele.length + gastSpiele.length}`);
-      
-      if (team.liga_id) {
-        const tabellenEintrag = tabellen.find(t => 
-          t.ligaid === team.liga_id && t.teamname === team.name
-        );
-        console.log(`    - Tabellen-Eintrag: ${tabellenEintrag ? '✅ JA' : '❌ NEIN'}`);
-      }
-      
-      // Diagnose
-      if (!team.extern_team_id) {
-        console.log(`    ⚠️  PROBLEM: extern_team_id fehlt → Team-Merge fehlgeschlagen!`);
-      }
-      if (!team.liga_id) {
-        console.log(`    ⚠️  PROBLEM: liga_id fehlt → Keine Liga zugeordnet!`);
-      }
-      if (heimSpiele.length === 0 && gastSpiele.length === 0) {
-        console.log(`    ⚠️  PROBLEM: Keine Spiele gefunden mit heim_team_id/gast_team_id!`);
-      }
+
+  for (const team of teams.filter(t => t.team_typ === 'eigen' && t.user_id)) {
+    const heimSpiele = spiele.filter(s => s.heim_team_id === team.team_id);
+    const gastSpiele = spiele.filter(s => s.gast_team_id === team.team_id);
+    const teamParticipation = participations.find(p => p.team_id === team.team_id && p.ist_aktiv);
+
+    console.log(`\n  Team: ${team.name}`);
+    console.log(`    - team_id: ${team.team_id}`);
+    console.log(`    - extern_permanent_id: ${team.extern_permanent_id || 'FEHLT!'}`);
+    console.log(`    - Participation liga_id: ${teamParticipation?.liga_id || 'FEHLT!'}`);
+    console.log(`    - Participation altersklasse: ${teamParticipation?.altersklasse || 'FEHLT!'}`);
+    console.log(`    - Participation saison: ${teamParticipation?.saison || 'FEHLT!'}`);
+    console.log(`    - Heimspiele: ${heimSpiele.length}`);
+    console.log(`    - Auswärtsspiele: ${gastSpiele.length}`);
+    console.log(`    - GESAMT: ${heimSpiele.length + gastSpiele.length}`);
+
+    if (teamParticipation?.liga_id) {
+      const tabellenEintrag = tabellen.find(t =>
+        t.ligaid === teamParticipation.liga_id && t.teamname === team.name
+      );
+      console.log(`    - Tabellen-Eintrag: ${tabellenEintrag ? '✅ JA' : '❌ NEIN'}`);
     }
-  });
+
+    // Diagnose
+    if (!team.extern_permanent_id) {
+      console.log(`    ⚠️  PROBLEM: extern_permanent_id fehlt → Team-Merge fehlgeschlagen!`);
+    }
+    if (!teamParticipation) {
+      console.log(`    ⚠️  PROBLEM: Keine aktive Participation → Keine Liga zugeordnet!`);
+    }
+    if (heimSpiele.length === 0 && gastSpiele.length === 0) {
+      console.log(`    ⚠️  PROBLEM: Keine Spiele gefunden mit heim_team_id/gast_team_id!`);
+    }
+  }
   
   console.log('\n🔍 ====== DEBUG ENDE ======\n');
   

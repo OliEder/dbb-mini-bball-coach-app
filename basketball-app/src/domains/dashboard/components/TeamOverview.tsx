@@ -111,7 +111,7 @@ export const TeamOverview: React.FC<TeamOverviewProps> = ({ onTeamSelect }) => {
                   {team.name}
                 </h3>
                 <p className="text-sm text-gray-500">
-                  {team.altersklasse} • {team.saison}
+                  {team.stats.altersklasse} • {team.stats.saison}
                 </p>
               </div>
               <ChevronRight 
@@ -148,9 +148,9 @@ export const TeamOverview: React.FC<TeamOverviewProps> = ({ onTeamSelect }) => {
             </div>
 
             {/* Liga-Info */}
-            {team.liga_name && (
+            {team.stats.liga_name && (
               <div className="mb-4 p-2 bg-gray-50 rounded-lg">
-                <div className="text-sm text-gray-700">{team.liga_name}</div>
+                <div className="text-sm text-gray-700">{team.stats.liga_name}</div>
                 {team.stats.tabellenplatz && (
                   <div className="flex items-center gap-1 text-xs text-gray-500 mt-1">
                     <TrendingUp className="w-3 h-3" aria-hidden="true" />

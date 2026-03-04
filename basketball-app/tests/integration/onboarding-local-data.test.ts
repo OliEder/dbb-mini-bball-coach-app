@@ -8,7 +8,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { clubDataService } from '@shared/services/ClubDataService';
+import { clubDataService } from '@/shared/services/ClubDataService';
 
 describe('Onboarding V3: Lokale Club-Daten Integration', () => {
   

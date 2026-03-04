@@ -1,8 +1,14 @@
 /**
- * Basketball PWA - Dexie Database v4.0
+ * Basketball PWA - Dexie Database v7.1
  * 
- * WICHTIG: Version 4.0 - Compound-Indizes für Performance
- * Alte Versionen werden automatisch gelöscht!
+ * WICHTIG: Version 7.1 - HOTFIX für team_liga_participations Index
+ * - Entfernt problematischen [team_id+ist_aktiv] Compound-Index
+ * - ist_aktiv bleibt als Simple-Index (true/false Support)
+ * 
+ * v7.0: Team Liga Participation Historisierung
+ * - Team Interface vereinfacht (permanente Properties)
+ * - TeamLigaParticipation für Saison/Liga History
+ * Alte Versionen werden automatisch migriert!
  */
 
 import Dexie, { type EntityTable } from 'dexie';
@@ -10,6 +16,7 @@ import type {
   User,
   Verein,
   Team,
+  TeamLigaParticipation,
   Spieler,
   SpielerBewertung,
   Erziehungsberechtigte,
@@ -33,7 +40,7 @@ import type {
 } from '../types';
 
 const DB_NAME = 'BasketballPWA';
-const DB_VERSION = 6; // v6.0: team_id aus Spiel entfernt!
+const DB_VERSION = 9; // v7.2 HOTFIX: Force cache refresh
 
 /**
  * Database Schema
@@ -43,6 +50,7 @@ class BasketballDatabase extends Dexie {
   users!: EntityTable<User, 'user_id'>;
   vereine!: EntityTable<Verein, 'verein_id'>;
   teams!: EntityTable<Team, 'team_id'>;
+  team_liga_participations!: EntityTable<TeamLigaParticipation, 'id'>;
   spieler!: EntityTable<Spieler, 'spieler_id'>;
   bewertungen!: EntityTable<SpielerBewertung, 'bewertung_id'>;
   erziehungsberechtigte!: EntityTable<Erziehungsberechtigte, 'erz_id'>;
@@ -67,14 +75,18 @@ class BasketballDatabase extends Dexie {
   constructor() {
     super(DB_NAME);
     
-    // Version 6: team_id aus Spiel entfernt
+    // Version 9: FORCE CACHE REFRESH (identical to v8)
     this.version(DB_VERSION).stores({
       // ========== USER (TRAINER) ==========
       users: 'user_id, name, email, created_at',
       
-      // ========== VEREINE & TEAMS ==========
+      // ========== VEREINE & TEAMS (v7.0 - BREAKING) ==========
       vereine: 'verein_id, extern_verein_id, name, ist_eigener_verein, bbb_kontakt_id',
-      teams: 'team_id, extern_team_id, verein_id, user_id, name, saison, altersklasse, team_typ, bbb_mannschafts_id, [verein_id+name+saison], [user_id+team_typ]',
+      teams: 'team_id, extern_permanent_id, verein_id, user_id, name, geschlecht, team_typ, trainer, [verein_id+name], [user_id+team_typ]',
+      
+      // ✅ v7.1 HOTFIX: Removed [team_id+ist_aktiv] compound index
+      // ist_aktiv as simple index works better with true/false values
+      team_liga_participations: '++id, team_id, extern_team_id, saison, altersklasse, liga_id, ist_aktiv, [team_id+saison], [team_id+liga_id]',
       
       // ========== SPIELER ==========
       spieler: 'spieler_id, extern_spieler_id, team_id, verein_id, spieler_typ, [vorname+nachname], aktiv, tna_nr, mitgliedsnummer, [team_id+aktiv], trikotnummer',
@@ -109,16 +121,123 @@ class BasketballDatabase extends Dexie {
       // ========== NOTIZEN & ARCHIV ==========
       spieler_notizen: 'notiz_id, spieler_id, datum, kategorie, vertraulich',
       saison_archive: 'archiv_id, team_id, saison, archiviert_am'
-    }).upgrade(tx => {
-      console.log('⚠️  Migrating to v6.0: Removing team_id from Spiel...');
+    });
+
+    // Version 8: HOTFIX - Remove problematic compound index (LEGACY)
+    this.version(8).stores({
+      // ========== USER (TRAINER) ==========
+      users: 'user_id, name, email, created_at',
       
-      // Migration: team_id aus allen Spielen entfernen
-      return tx.table('spiele').toCollection().modify(spiel => {
-        if ('team_id' in spiel) {
-          delete spiel.team_id;
-          console.log(`✅ Removed team_id from Spiel ${spiel.spiel_id}`);
+      // ========== VEREINE & TEAMS (v7.0 - BREAKING) ==========
+      vereine: 'verein_id, extern_verein_id, name, ist_eigener_verein, bbb_kontakt_id',
+      teams: 'team_id, extern_permanent_id, verein_id, user_id, name, geschlecht, team_typ, trainer, [verein_id+name], [user_id+team_typ]',
+      
+      // ✅ v7.1 HOTFIX: Removed [team_id+ist_aktiv] compound index
+      // ist_aktiv as simple index works better with true/false values
+      team_liga_participations: '++id, team_id, extern_team_id, saison, altersklasse, liga_id, ist_aktiv, [team_id+saison], [team_id+liga_id]',
+      
+      // ========== SPIELER ==========
+      spieler: 'spieler_id, extern_spieler_id, team_id, verein_id, spieler_typ, [vorname+nachname], aktiv, tna_nr, mitgliedsnummer, [team_id+aktiv], trikotnummer',
+      bewertungen: 'bewertung_id, spieler_id, bewertungs_typ, saison, [saison+altersklasse], gueltig_ab',
+      erziehungsberechtigte: 'erz_id, [vorname+nachname], email',
+      spieler_erziehungsberechtigte: 'se_id, spieler_id, erz_id, ist_notfallkontakt',
+      
+      // ========== HALLEN & LIGEN ==========
+      hallen: 'halle_id, verein_id, name, ort, bbb_halle_id',
+      ligen: 'liga_id, bbb_liga_id, saison, altersklasse, name',
+      liga_teilnahmen: 'teilnahme_id, liga_id, verein_id, team_id',
+      
+      // ========== SPIELPLAN & SPIELE (BBB-Integration v6) ==========
+      spielplaene: 'spielplan_id, team_id, saison, bbb_spielplan_url',
+      spiele: 'spiel_id, extern_spiel_id, liga_id, spielplan_id, heim_team_id, gast_team_id, datum, spielnr, spieltag, status, [heim_team_id+datum], [gast_team_id+datum], [spielplan_id+spielnr], [liga_id+datum]',
+      liga_ergebnisse: 'id, ligaid, spielnr, datum, [heimteam+gastteam]',
+      liga_tabellen: 'id, ligaid, teamname, [ligaid+platz], [ligaid+teamname]',
+      
+      // ========== TRIKOTS ==========
+      trikots: 'trikot_id, team_id, art, status, nummer, [team_id+art]',
+      
+      // ========== EINSATZPLANUNG ==========
+      einsaetze: 'einsatz_id, spiel_id, spieler_id, [spiel_id+position]',
+      achtel_statistiken: 'achtel_stat_id, spiel_id, achtel_nummer, [spiel_id+achtel_nummer]',
+      
+      // ========== TRAINING & PROBETRAINING ==========
+      trainings: 'training_id, team_id, datum, ist_probetraining, [team_id+datum]',
+      training_teilnahmen: 'teilnahme_id, training_id, spieler_id, [training_id+spieler_id]',
+      probetraining_teilnehmer: 'probe_id, vorname, status, aufgenommen_als_spieler_id',
+      probetraining_historie: 'historie_id, probe_id, training_id, datum',
+      
+      // ========== NOTIZEN & ARCHIV ==========
+      spieler_notizen: 'notiz_id, spieler_id, datum, kategorie, vertraulich',
+      saison_archive: 'archiv_id, team_id, saison, archiviert_am'
+    });
+
+    // Version 7: Team Liga Participation Historisierung (LEGACY - Migration)
+    this.version(7).stores({
+      users: 'user_id, name, email, created_at',
+      vereine: 'verein_id, extern_verein_id, name, ist_eigener_verein, bbb_kontakt_id',
+      teams: 'team_id, extern_permanent_id, verein_id, user_id, name, geschlecht, team_typ, trainer, [verein_id+name], [user_id+team_typ]',
+      team_liga_participations: '++id, team_id, extern_team_id, saison, altersklasse, liga_id, ist_aktiv, [team_id+saison], [team_id+liga_id], [team_id+ist_aktiv]',
+      spieler: 'spieler_id, extern_spieler_id, team_id, verein_id, spieler_typ, [vorname+nachname], aktiv, tna_nr, mitgliedsnummer, [team_id+aktiv], trikotnummer',
+      bewertungen: 'bewertung_id, spieler_id, bewertungs_typ, saison, [saison+altersklasse], gueltig_ab',
+      erziehungsberechtigte: 'erz_id, [vorname+nachname], email',
+      spieler_erziehungsberechtigte: 'se_id, spieler_id, erz_id, ist_notfallkontakt',
+      hallen: 'halle_id, verein_id, name, ort, bbb_halle_id',
+      ligen: 'liga_id, bbb_liga_id, saison, altersklasse, name',
+      liga_teilnahmen: 'teilnahme_id, liga_id, verein_id, team_id',
+      spielplaene: 'spielplan_id, team_id, saison, bbb_spielplan_url',
+      spiele: 'spiel_id, extern_spiel_id, liga_id, spielplan_id, heim_team_id, gast_team_id, datum, spielnr, spieltag, status, [heim_team_id+datum], [gast_team_id+datum], [spielplan_id+spielnr], [liga_id+datum]',
+      liga_ergebnisse: 'id, ligaid, spielnr, datum, [heimteam+gastteam]',
+      liga_tabellen: 'id, ligaid, teamname, [ligaid+platz], [ligaid+teamname]',
+      trikots: 'trikot_id, team_id, art, status, nummer, [team_id+art]',
+      einsaetze: 'einsatz_id, spiel_id, spieler_id, [spiel_id+position]',
+      achtel_statistiken: 'achtel_stat_id, spiel_id, achtel_nummer, [spiel_id+achtel_nummer]',
+      trainings: 'training_id, team_id, datum, ist_probetraining, [team_id+datum]',
+      training_teilnahmen: 'teilnahme_id, training_id, spieler_id, [training_id+spieler_id]',
+      probetraining_teilnehmer: 'probe_id, vorname, status, aufgenommen_als_spieler_id',
+      probetraining_historie: 'historie_id, probe_id, training_id, datum',
+      spieler_notizen: 'notiz_id, spieler_id, datum, kategorie, vertraulich',
+      saison_archive: 'archiv_id, team_id, saison, archiviert_am'
+    }).upgrade(async tx => {
+      console.log('⚠️  Migrating to v7.0: Team Liga Participation Historisierung...');
+      
+      // Migration v6→v7: Team Properties → TeamLigaParticipation
+      const oldTeams = await tx.table('teams').toArray() as any[];
+      console.log(`📊 Migriere ${oldTeams.length} Teams...`);
+      
+      for (const oldTeam of oldTeams) {
+        // 1. Erstelle TeamLigaParticipation aus Team-Daten
+        if (oldTeam.altersklasse && oldTeam.saison) {
+          const participation = {
+            team_id: oldTeam.team_id,
+            extern_team_id: oldTeam.extern_team_id,
+            saison: oldTeam.saison,
+            altersklasse: oldTeam.altersklasse,
+            altersklasse_id: oldTeam.altersklasse_id,
+            liga_id: oldTeam.liga_id,
+            liga_name: oldTeam.liga_name,
+            leistungsorientiert: oldTeam.leistungsorientiert,
+            ist_aktiv: true,
+            created_at: new Date()
+          };
+          
+          await tx.table('team_liga_participations').add(participation);
+          console.log(`✅ Created Participation for Team ${oldTeam.name} (${oldTeam.saison})`);
         }
-      });
+        
+        // 2. Update Team: Remove old properties
+        await tx.table('teams').update(oldTeam.team_id, {
+          extern_permanent_id: oldTeam.extern_team_id,
+          extern_team_id: undefined,
+          altersklasse: undefined,
+          altersklasse_id: undefined,
+          saison: undefined,
+          liga_id: undefined,
+          liga_name: undefined,
+          leistungsorientiert: undefined
+        } as any);
+      }
+      
+      console.log('✅ Migration v7.0 complete!');
     });
 
     // Migration von älteren Versionen
@@ -233,6 +352,7 @@ export async function exportDatabase(): Promise<string> {
     data: {
       vereine: await db.vereine.toArray(),
       teams: await db.teams.toArray(),
+      team_liga_participations: await db.team_liga_participations.toArray(),
       spieler: await db.spieler.toArray(),
       bewertungen: await db.bewertungen.toArray(),
       erziehungsberechtigte: await db.erziehungsberechtigte.toArray(),
@@ -271,15 +391,17 @@ export async function importDatabase(jsonData: string): Promise<void> {
   // Dexie unterstützt max 5 Tabellen pro Transaction
   // Daher in viele kleine Transaktionen aufteilen
   
-  // Transaction 1: Vereine, Teams, Spieler, Bewertungen
-  await db.transaction('rw', db.vereine, db.teams, db.spieler, db.bewertungen, async () => {
+  // Transaction 1: Vereine, Teams, Team Participations, Spieler
+  await db.transaction('rw', db.vereine, db.teams, db.team_liga_participations, db.spieler, db.bewertungen, async () => {
     await db.vereine.clear();
     await db.teams.clear();
+    await db.team_liga_participations.clear();
     await db.spieler.clear();
     await db.bewertungen.clear();
     
     if (data.vereine?.length) await db.vereine.bulkAdd(data.vereine);
     if (data.teams?.length) await db.teams.bulkAdd(data.teams);
+    if (data.team_liga_participations?.length) await db.team_liga_participations.bulkAdd(data.team_liga_participations);
     if (data.spieler?.length) await db.spieler.bulkAdd(data.spieler);
     if (data.bewertungen?.length) await db.bewertungen.bulkAdd(data.bewertungen);
   });

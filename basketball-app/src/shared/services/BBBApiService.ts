@@ -299,6 +299,7 @@ export class BBBApiService {
         .map((entry: any) => ({
           position: entry.rang || 0,
           teamId: entry.team?.seasonTeamId || 0,
+          teamPermanentId: entry.team?.teamPermanentId,
           teamName: entry.team?.teamname || '',
           clubId: entry.team?.clubId || entry.team?.seasonTeamId || 0,
           clubName: entry.team?.teamname?.split(' ')[0] || entry.team?.teamname || 'Unknown',
@@ -393,10 +394,12 @@ export class BBBApiService {
         time: match.kickoffTime || '',
         homeTeam: {
           teamId: match.homeTeam?.seasonTeamId || 0,
+          teamPermanentId: match.homeTeam?.teamPermanentId,
           teamName: match.homeTeam?.teamname || 'Unknown'
         },
         awayTeam: {
           teamId: match.guestTeam?.seasonTeamId || 0,
+          teamPermanentId: match.guestTeam?.teamPermanentId,
           teamName: match.guestTeam?.teamname || 'Unknown'
         },
         venue: match.venue ? {

@@ -17,9 +17,13 @@ import { useAppStore } from '@/stores/appStore';
 import { teamService } from '@/domains/team/services/TeamService';
 import type { Team } from '@/shared/types';
 
+interface TeamWithSubtitle extends Team {
+  subtitle: string;
+}
+
 export const TeamSwitcher: React.FC = () => {
   const { currentTeamId, myTeamIds, switchTeam } = useAppStore();
-  const [teams, setTeams] = useState<Team[]>([]);
+  const [teams, setTeams] = useState<TeamWithSubtitle[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -64,7 +68,20 @@ export const TeamSwitcher: React.FC = () => {
       const loadedTeams = await Promise.all(
         myTeamIds.map(id => teamService.getTeamById(id))
       );
-      setTeams(loadedTeams.filter(Boolean) as Team[]);
+      const validTeams = loadedTeams.filter(Boolean) as Team[];
+
+      // v7.0: Lade Participation für Subtitle (altersklasse • saison)
+      const teamsWithSubtitles: TeamWithSubtitle[] = await Promise.all(
+        validTeams.map(async (team) => {
+          const participation = await teamService.getActiveParticipation(team.team_id);
+          const subtitle = participation
+            ? `${participation.altersklasse} • ${participation.saison}`
+            : '';
+          return { ...team, subtitle };
+        })
+      );
+
+      setTeams(teamsWithSubtitles);
     } catch (error) {
       console.error('Failed to load teams:', error);
     } finally {
@@ -140,9 +157,9 @@ export const TeamSwitcher: React.FC = () => {
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
                     <p className="font-medium text-gray-900">{team.name}</p>
-                    <p className="text-sm text-gray-500">
-                      {team.altersklasse} • {team.saison}
-                    </p>
+                    {team.subtitle && (
+                      <p className="text-sm text-gray-500">{team.subtitle}</p>
+                    )}
                   </div>
                   {team.team_id === currentTeamId && (
                     <Check className="w-5 h-5 text-blue-600" aria-hidden="true" />

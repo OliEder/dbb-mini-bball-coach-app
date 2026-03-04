@@ -4,12 +4,13 @@
  * Global Test Configuration
  */
 
-import '@testing-library/jest-dom';
 import { afterEach, expect } from 'vitest';
+import * as jestDomMatchers from '@testing-library/jest-dom/matchers';
 import { cleanup } from '@testing-library/react';
 import { toHaveNoViolations } from 'jest-axe';
 
-// Extend expect with axe matchers
+// Extend expect with jest-dom and axe matchers
+expect.extend(jestDomMatchers);
 expect.extend(toHaveNoViolations);
 
 // Cleanup after each test

@@ -5,7 +5,39 @@
  * Kein Fetch nötig - direkte ES Module Imports
  */
 
-import type { Verein, Team, Altersklasse } from '@shared/types';
+import type { Verein, Altersklasse } from '@shared/types';
+
+/**
+ * Transfer-Objekt für Teams im Onboarding-Flow.
+ *
+ * Enthält neben den Team-Basis-Feldern auch die Participation-Daten
+ * (altersklasse, saison, liga_id, …) die beim Abschluss des Onboardings
+ * für die Erstellung von TeamLigaParticipation benötigt werden.
+ *
+ * Dieses Objekt wird NICHT direkt in die DB geschrieben.
+ */
+export interface TeamWithParticipationData {
+  /** Temporäre ID (= teamPermanentId aus BBB), nur für Frontend-Tracking */
+  team_id: string;
+  /** Permanente BBB-Team-ID (teamPermanentId) */
+  extern_permanent_id?: string;
+  verein_id: string;
+  name: string;
+  kurzname?: string;
+  team_nummer?: number;
+  geschlecht?: string;
+  trainer?: string;
+  team_typ: 'eigen' | 'gegner';
+  created_at: Date;
+  // Participation-Daten
+  altersklasse: Altersklasse;
+  altersklasse_id?: number;
+  saison: string;
+  liga_id?: string;
+  liga_name?: string;
+  /** Saison-spezifische Team-ID (teamCompetitionId aus BBB) */
+  extern_team_id?: string;
+}
 
 // Import metadata
 import metadata from '@shared/data/clubs-chunks/clubs-metadata.json';
@@ -48,7 +80,7 @@ export interface ClubDataFromJSON {
 export interface ClubEntry {
   verein: Verein;
   clubId: string;
-  teams?: Team[];
+  teams?: TeamWithParticipationData[];
 }
 
 class ClubDataLoader {
@@ -230,33 +262,36 @@ class ClubDataLoader {
   /**
    * Lädt Teams für einen spezifischen Club
    */
-  async loadTeamsForClub(clubId: string): Promise<Team[]> {
+  async loadTeamsForClub(clubId: string): Promise<TeamWithParticipationData[]> {
     // Finde den Chunk, der diesen Club enthält
     for (let i = 0; i < CHUNK_COUNT; i++) {
       const chunkData = await this.loadChunk(i);
-      
+
       // Suche den Club im Array
-      const clubData = chunkData.find(club => club.clubId === clubId);
-      
+      const clubData = chunkData.find((club: any) => club.clubId === clubId);
+
       if (clubData && clubData.teams) {
-        const teams: Team[] = clubData.teams.map((teamData: any) => {
-          // ✅ Extrahiere Saison aus seasons
+        const teams: TeamWithParticipationData[] = clubData.teams.map((teamData: any) => {
           const saison = teamData.seasons?.[0]?.seasonName || '2024/2025';
-          
+          const permanentId = teamData.teamPermanentId || `team_${Math.random()}`;
+
           return {
-            team_id: teamData.teamPermanentId || `team_${Math.random()}`,
+            team_id: permanentId,
+            extern_permanent_id: permanentId,
             verein_id: clubData.clubId,
             name: teamData.teamname || 'Unbekanntes Team',
-            kurzname: teamData.teamnameSmall || undefined,  // ✅ NEU: Nur wenn vorhanden
-            team_nummer: teamData.teamNumber || undefined,   // ✅ NEU: Für Sortierung
-            liga_id: teamData.seasons?.[0]?.ligen?.[0]?.ligaId || '',
-            liga_name: teamData.seasons?.[0]?.ligen?.[0]?.liganame || '',
-            altersklasse: this.extractAltersklasse(teamData.teamAkj),  // ✅ Korrekte Extraktion mit Validierung!
-            altersklasse_id: teamData.teamAkjId || 0,
+            kurzname: teamData.teamnameSmall || undefined,
+            team_nummer: teamData.teamNumber || undefined,
             geschlecht: teamData.teamGenderId === 1 ? 'male' : teamData.teamGenderId === 2 ? 'female' : 'mixed',
-            saison: saison,
-            team_typ: 'eigen',
-            created_at: new Date()
+            team_typ: 'eigen' as const,
+            created_at: new Date(),
+            // Participation-Daten
+            altersklasse: this.extractAltersklasse(teamData.teamAkj),
+            altersklasse_id: teamData.teamAkjId || undefined,
+            saison,
+            liga_id: teamData.seasons?.[0]?.ligen?.[0]?.ligaId || undefined,
+            liga_name: teamData.seasons?.[0]?.ligen?.[0]?.liganame || undefined,
+            extern_team_id: teamData.seasons?.[0]?.ligen?.[0]?.teamCompetitionId || undefined,
           };
         });
 

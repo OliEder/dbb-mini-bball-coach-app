@@ -10,6 +10,10 @@
  * - TeamOverview View
  * - Dynamischer Team-Wechsel
  * 
+ * v7.0: Team Liga Participation Support
+ * - Robustes Error Handling für Participations
+ * - Database Reset für Entwicklung
+ * 
  * WCAG 2.0 AA:
  * - Keyboard Navigation
  * - Screen Reader Support
@@ -19,9 +23,9 @@
 import React, { useEffect, useState } from 'react';
 import { useAppStore } from '@/stores/appStore';
 import { teamService } from '@/domains/team/services/TeamService';
-import { bbbSyncService } from '@/domains/bbb-api/services/BBBSyncService';
-import { db } from '@/shared/db/database';
-import { Home, Users, Calendar, ShirtIcon, BarChart3, Settings, RefreshCw, Layers } from 'lucide-react';
+import { bbbSyncService } from '@/shared/services/BBBSyncService';
+import { db, resetDatabase } from '@/shared/db/database';
+import { Home, Users, Calendar, ShirtIcon, BarChart3, Settings, RefreshCw, Layers, Trash2 } from 'lucide-react';
 import type { Team } from '@/shared/types';
 import { SpielerVerwaltung } from '@/domains/spieler/components/SpielerVerwaltung';
 import { SpielplanListe } from '@/domains/spielplan/components/SpielplanListe';
@@ -30,10 +34,58 @@ import { tabellenService } from '@/domains/spielplan/services/TabellenService';
 import { TeamSwitcher } from '@/shared/components/TeamSwitcher';
 import { TeamOverview } from './components/TeamOverview';
 import { SettingsView } from '@/domains/settings/components/SettingsView';
-import { debugTeamData } from '@/shared/utils/debugTeamData';
-import { repairU10Spiele } from '@/shared/utils/repairU10Spiele';
+import { spielService } from '@/domains/spielplan/services/SpielService';
 
 type View = 'overview' | 'teams' | 'spieler' | 'spielplan' | 'tabelle' | 'statistik' | 'einstellungen';
+
+/**
+ * TeamSubtitle - Zeigt Altersklasse + Saison aus Participation (v7.0)
+ * 
+ * ✅ ROBUSTES ERROR HANDLING:
+ * - Zeigt Fehlerstatus an
+ * - Bietet DB-Reset für Entwickler
+ */
+const TeamSubtitle: React.FC<{ teamId: string }> = ({ teamId }) => {
+  const [subtitle, setSubtitle] = useState<string>('');
+  const [error, setError] = useState<Error | null>(null);
+
+  useEffect(() => {
+    const loadParticipation = async () => {
+      try {
+        const participation = await teamService.getActiveParticipation(teamId);
+        if (participation) {
+          setSubtitle(`${participation.altersklasse} • Saison ${participation.saison}`);
+          setError(null);
+        } else {
+          setSubtitle('Keine aktive Saison');
+          setError(null);
+        }
+      } catch (err) {
+        console.error('Failed to load participation:', err);
+        setError(err as Error);
+        setSubtitle('Fehler beim Laden');
+      }
+    };
+    loadParticipation();
+  }, [teamId]);
+
+  if (error) {
+    return (
+      <div className="text-sm text-red-600 flex items-center gap-2">
+        <span>⚠️ DB-Fehler</span>
+        {process.env.NODE_ENV === 'development' && (
+          <span className="text-xs">(siehe Console)</span>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <p className="text-sm text-gray-600">
+      {subtitle || 'Lade...'}
+    </p>
+  );
+};
 
 export function Dashboard() {
   const currentTeamId = useAppStore(state => state.currentTeamId);
@@ -48,6 +100,7 @@ export function Dashboard() {
   const [tabelle, setTabelle] = useState<TabellenEintrag[]>([]);
   const [isSyncing, setIsSyncing] = useState(false);
   const [isInitialSync, setIsInitialSync] = useState(false);
+  const [hasDbError, setHasDbError] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -67,13 +120,21 @@ export function Dashboard() {
           myTeamIds.map(id => teamService.getTeamById(id))
         );
 
-        // Sammle alle eindeutigen Liga-IDs
+        // v7.0: Sammle alle eindeutigen Liga-IDs aus Participations
         const ligaIds = new Set<number>();
         for (const team of allTeams) {
-          if (team?.liga_id) {
-            const ligaIdMatch = team.liga_id.match(/\d+/);
-            if (ligaIdMatch) {
-              ligaIds.add(parseInt(ligaIdMatch[0], 10));
+          if (team) {
+            try {
+              const participation = await teamService.getActiveParticipation(team.team_id);
+              if (participation?.liga_id) {
+                const ligaIdMatch = participation.liga_id.match(/\d+/);
+                if (ligaIdMatch) {
+                  ligaIds.add(parseInt(ligaIdMatch[0], 10));
+                }
+              }
+            } catch (err) {
+              console.error(`⚠️ Fehler beim Laden der Participation für Team ${team.name}:`, err);
+              // Weiter mit nächstem Team
             }
           }
         }
@@ -121,6 +182,7 @@ export function Dashboard() {
 
       } catch (error) {
         console.error('❌ Auto-Sync fehlgeschlagen:', error);
+        // Kein hasDbError setzen - Auto-Sync ist optional
       } finally {
         setIsInitialSync(false);
       }
@@ -134,38 +196,55 @@ export function Dashboard() {
   const loadData = async () => {
     if (!currentTeamId) return;
 
-    const loadedTeam = await teamService.getTeamById(currentTeamId);
-    if (loadedTeam) {
-      setTeam(loadedTeam);
-      
-      const spielerCount = await db.spieler.where({ team_id: currentTeamId }).count();
-      const trikotCount = await db.trikots.where({ team_id: currentTeamId }).count();
-      const spieleCount = await db.spiele.where({ team_id: currentTeamId }).count();
-      
-      setStats({
-        spieler: spielerCount,
-        trikots: trikotCount,
-        spiele: spieleCount,
-      });
+    try {
+      const loadedTeam = await teamService.getTeamById(currentTeamId);
+      if (loadedTeam) {
+        setTeam(loadedTeam);
+        
+        const spielerCount = await db.spieler.where({ team_id: currentTeamId }).count();
+        const trikotCount = await db.trikots.where({ team_id: currentTeamId }).count();
+        
+        // ✅ v6.0: Verwende SpielService statt direkten DB-Zugriff
+        const spiele = await spielService.getSpiele(currentTeamId);
+        const spieleCount = spiele.length;
+        
+        setStats({
+          spieler: spielerCount,
+          trikots: trikotCount,
+          spiele: spieleCount,
+        });
 
-      // ⭐ Lade Tabellen-Daten aus der Datenbank
-      try {
-        const tabellenDaten = await tabellenService.loadTabelleForTeam(currentTeamId);
-        setTabelle(tabellenDaten);
-      } catch (error) {
-        console.error('Error loading tabelle:', error);
+        // ⚠️ Lade Tabellen-Daten aus der Datenbank
+        try {
+          const tabellenDaten = await tabellenService.loadTabelleForTeam(currentTeamId);
+          setTabelle(tabellenDaten);
+        } catch (error) {
+          console.error('Error loading tabelle:', error);
+        }
+        
+        setHasDbError(false);
       }
+    } catch (error) {
+      console.error('❌ Fehler beim Laden der Dashboard-Daten:', error);
+      setHasDbError(true);
     }
   };
 
   const handleSync = async () => {
-    if (!team?.liga_id || isSyncing) return;
-    
-    setIsSyncing(true);
+    if (!currentTeamId || isSyncing) return;
     
     try {
+      // v7.0: Hole Liga-ID aus Participation
+      const participation = await teamService.getActiveParticipation(currentTeamId);
+      if (!participation?.liga_id) {
+        alert('Keine Liga zugeordnet');
+        return;
+      }
+      
+      setIsSyncing(true);
+      
       // Extrahiere Liga-ID
-      const ligaIdMatch = team.liga_id.match(/\d+/);
+      const ligaIdMatch = participation.liga_id.match(/\d+/);
       if (!ligaIdMatch) {
         console.error('Keine gültige Liga-ID gefunden');
         return;
@@ -194,27 +273,84 @@ export function Dashboard() {
     setCurrentView('overview');
   };
 
-  const handleDebug = async () => {
-    console.log('🔍 Starte Team-Daten Debug...');
-    await debugTeamData();
-    console.log('✅ Debug abgeschlossen - siehe Console-Ausgabe oben');
-  };
-
-  const handleRepair = async () => {
-    if (!confirm('🔧 Möchtest du die U10-Spiele reparieren? Dies setzt fehlende heim_team_id/gast_team_id Felder.')) {
+  /**
+   * ⚠️ ENTWICKLER-TOOL: Database Reset
+   * Löscht ALLE Daten und startet Onboarding neu
+   */
+  const handleDatabaseReset = async () => {
+    if (!confirm('⚠️ WARNUNG: Alle Daten werden gelöscht!\n\nDies löscht die gesamte Datenbank und startet das Onboarding neu.\n\nFortfahren?')) {
       return;
     }
-    
-    console.log('🔧 Starte DB Repair...');
+
+    if (!confirm('🚨 LETZTE WARNUNG!\n\nAlle Teams, Spieler, Spiele und Einstellungen gehen verloren.\n\nWirklich fortfahren?')) {
+      return;
+    }
+
     try {
-      await repairU10Spiele();
-      alert('✅ Repair erfolgreich! Lade Seite neu...');
-      await loadData(); // Daten neu laden
+      console.log('🗑️ Starte Database Reset...');
+      await resetDatabase();
+      console.log('✅ Database Reset erfolgreich');
+      
+      // Leite zum Onboarding weiter
+      window.location.href = '/onboarding';
+      
     } catch (error) {
-      console.error('❌ Repair fehlgeschlagen:', error);
-      alert('❌ Repair fehlgeschlagen: ' + (error as Error).message);
+      console.error('❌ Database Reset fehlgeschlagen:', error);
+      alert('Reset fehlgeschlagen: ' + (error as Error).message);
     }
   };
+
+  // ⚠️ DB-Fehler Banner
+  if (hasDbError) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+        <div className="max-w-md w-full">
+          <div className="card bg-red-50 border-red-200">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Trash2 className="w-8 h-8 text-red-600" />
+              </div>
+              
+              <h2 className="text-xl font-bold text-gray-900 mb-2">
+                🚨 Datenbank-Fehler
+              </h2>
+              
+              <p className="text-gray-700 mb-4">
+                Es ist ein Fehler beim Laden der Datenbank aufgetreten. Dies kann durch 
+                inkompatible Daten aus einer älteren Version verursacht werden.
+              </p>
+              
+              <div className="space-y-3">
+                <button
+                  onClick={loadData}
+                  className="w-full btn-secondary"
+                >
+                  <RefreshCw className="w-5 h-5" />
+                  Neu laden
+                </button>
+                
+                {process.env.NODE_ENV === 'development' && (
+                  <button
+                    onClick={handleDatabaseReset}
+                    className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                  >
+                    <Trash2 className="w-5 h-5" />
+                    Datenbank zurücksetzen
+                  </button>
+                )}
+              </div>
+              
+              {process.env.NODE_ENV === 'development' && (
+                <p className="text-xs text-gray-600 mt-4">
+                  Entwickler-Modus: Öffne die Browser-Console für Details
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (!team) {
     return (
@@ -275,9 +411,7 @@ export function Dashboard() {
                 <h1 className="text-2xl font-bold text-gray-900">
                   {team.name}
                 </h1>
-                <p className="text-sm text-gray-600">
-                  {team.altersklasse} • Saison {team.saison}
-                </p>
+                <TeamSubtitle teamId={team.team_id} />
               </div>
             </div>
             
@@ -285,28 +419,20 @@ export function Dashboard() {
               {/* ✅ TeamSwitcher */}
               <TeamSwitcher />
               
-              {/* Debug & Repair Buttons (Development) */}
+              {/* ⚠️ DB Reset Button (Development Only) */}
               {process.env.NODE_ENV === 'development' && (
-                <div className="flex gap-2">
-                  <button
-                    onClick={handleDebug}
-                    className="flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors min-h-[44px]"
-                    title="Debug Team-Daten"
-                  >
-                    🔍 Debug
-                  </button>
-                  <button
-                    onClick={handleRepair}
-                    className="flex items-center gap-2 px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors min-h-[44px]"
-                    title="U10-Spiele reparieren"
-                  >
-                    🔧 Repair
-                  </button>
-                </div>
+                <button
+                  onClick={handleDatabaseReset}
+                  className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors min-h-[44px]"
+                  title="Datenbank zurücksetzen (ALLE Daten löschen)"
+                >
+                  <Trash2 className="w-5 h-5" />
+                  <span className="hidden sm:inline">DB Reset</span>
+                </button>
               )}
               
               {/* Sync Button */}
-              {team.liga_id && (
+              {currentTeamId && (
                 <button
                   onClick={handleSync}
                   disabled={isSyncing}
@@ -452,7 +578,7 @@ export function Dashboard() {
         {currentView === 'tabelle' && (
           <div className="space-y-4">
             {/* Status-Banner wenn keine Daten */}
-            {tabelle.length === 0 && team.liga_id && (
+            {tabelle.length === 0 && currentTeamId && (
               <div className="alert-warning">
                 <div className="flex items-center justify-between">
                   <div>
@@ -475,22 +601,10 @@ export function Dashboard() {
               </div>
             )}
             
-            {/* Info wenn keine Liga-ID */}
-            {!team.liga_id && (
-              <div className="alert-info">
-                <h3 className="font-semibold mb-1">
-                  ℹ️ Keine Liga zugeordnet
-                </h3>
-                <p className="text-sm">
-                  Diesem Team ist keine Liga zugeordnet. Tabellendaten können nicht geladen werden.
-                </p>
-              </div>
-            )}
-            
             <TabellenAnsicht 
               eintraege={tabelle}
               eigenerVerein={team.name}
-              title={`Tabelle - ${team.altersklasse} ${team.saison}`}
+              title={`Tabelle - ${team.name}`}
             />
           </div>
         )}
