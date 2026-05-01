@@ -22,7 +22,9 @@
 
     /* Paths */
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@shared/*": ["./src/shared/*"],
+      "@domains/*": ["./src/domains/*"]
     },
 
     /* Vite Types */
