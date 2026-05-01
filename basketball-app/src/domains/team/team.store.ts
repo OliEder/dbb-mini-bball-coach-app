@@ -7,7 +7,7 @@
 
 import { create } from 'zustand';
 import type { Team, UUID } from '@shared/types';
-import { teamService } from './team.service';
+import { teamService } from './services/TeamService';
 
 interface TeamStore {
   // State
@@ -21,7 +21,7 @@ interface TeamStore {
   loadTeamById: (team_id: UUID) => Promise<void>;
   setCurrentTeam: (team: Team | null) => void;
   createTeam: (dto: Parameters<typeof teamService.createTeam>[0]) => Promise<Team>;
-  updateTeam: (team_id: UUID, dto: Parameters<typeof teamService.updateTeam>[1]) => Promise<Team>;
+  updateTeam: (team_id: UUID, dto: Parameters<typeof teamService.updateTeam>[1]) => Promise<Team | undefined>;
   deleteTeam: (team_id: UUID) => Promise<void>;
   clearError: () => void;
 }
@@ -87,18 +87,19 @@ export const useTeamStore = create<TeamStore>((set, get) => ({
   updateTeam: async (team_id: UUID, dto) => {
     set({ isLoading: true, error: null });
     try {
-      const updatedTeam = await teamService.updateTeam(team_id, dto);
-      const teams = get().teams.map(t => t.team_id === team_id ? updatedTeam : t);
-      set({ 
-        teams, 
-        currentTeam: get().currentTeam?.team_id === team_id ? updatedTeam : get().currentTeam,
-        isLoading: false 
+      await teamService.updateTeam(team_id, dto);
+      const updatedTeam = await teamService.getTeamById(team_id);
+      const teams = get().teams.map(t => t.team_id === team_id ? (updatedTeam ?? t) : t);
+      set({
+        teams,
+        currentTeam: get().currentTeam?.team_id === team_id ? (updatedTeam ?? get().currentTeam) : get().currentTeam,
+        isLoading: false
       });
       return updatedTeam;
     } catch (error) {
-      set({ 
-        error: error instanceof Error ? error.message : 'Fehler beim Aktualisieren des Teams', 
-        isLoading: false 
+      set({
+        error: error instanceof Error ? error.message : 'Fehler beim Aktualisieren des Teams',
+        isLoading: false
       });
       throw error;
     }

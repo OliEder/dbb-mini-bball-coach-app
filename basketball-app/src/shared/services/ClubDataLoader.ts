@@ -5,7 +5,7 @@
  * Kein Fetch nötig - direkte ES Module Imports
  */
 
-import type { Verein, Altersklasse } from '@shared/types';
+import type { Verein, Altersklasse } from '@/shared/types';
 
 /**
  * Transfer-Objekt für Teams im Onboarding-Flow.
@@ -25,7 +25,7 @@ export interface TeamWithParticipationData {
   name: string;
   kurzname?: string;
   team_nummer?: number;
-  geschlecht?: string;
+  geschlecht?: 'male' | 'female' | 'mixed';
   trainer?: string;
   team_typ: 'eigen' | 'gegner';
   created_at: Date;
@@ -40,7 +40,7 @@ export interface TeamWithParticipationData {
 }
 
 // Import metadata
-import metadata from '@shared/data/clubs-chunks/clubs-metadata.json';
+import metadata from '@/shared/data/clubs-chunks/clubs-metadata.json';
 
 // Dynamischer Import aller Chunks
 const CHUNK_COUNT = 18; // 0-17
@@ -131,7 +131,7 @@ class ClubDataLoader {
 
     try {
       // Dynamischer Import des Chunks
-      const chunk = await import(`@shared/data/clubs-chunks/clubs-chunk-${chunkIndex}.json`);
+      const chunk = await import(`@/shared/data/clubs-chunks/clubs-chunk-${chunkIndex}.json`);
       const chunkData = chunk.default || chunk;
       
       // clubs ist ein Array in der JSON-Struktur

@@ -6,11 +6,12 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { BBBSyncService } from '@/shared/services/BBBSyncService';
+import { BBBSyncService } from '@/domains/bbb-api/services/BBBSyncService';
 import { bbbApiService } from '@/shared/services/BBBApiService';
 import { db } from '@/shared/db/database';
 import type {
   DBBTableResponse,
+  DBBTeamMatchesResponse,
 } from '@/shared/types';
 import { createMockTableResponse, createMockSpielplanResponse } from '@/test/helpers/bbbTestHelpers';
 
@@ -276,6 +277,127 @@ describe('BBBSyncService (v7.0)', () => {
 
       // v7.0: Should use team name (U12), not liga name (U10)
       expect(participations[0].altersklasse).toBe('U12');
+    });
+  });
+
+  describe('syncSpielplanForTeam (v7.0)', () => {
+    // Inject the mocked bbbApiService so the service uses the mock, not the real API
+    let serviceWithMock: BBBSyncService;
+    beforeEach(() => {
+      serviceWithMock = new BBBSyncService(bbbApiService as any);
+    });
+
+    it('sollte getTeamMatches aufrufen und Spiele speichern', async () => {
+      const teamPermanentId = 167889;
+
+      // Erstelle Verein + Team + Liga in DB (Voraussetzung für Spiel-Sync)
+      const vereinId = crypto.randomUUID();
+      await db.vereine.add({
+        verein_id: vereinId,
+        name: 'TSV Neumarkt',
+        ort: '',
+        ist_eigener_verein: false,
+        created_at: new Date(),
+      });
+      const teamId = crypto.randomUUID();
+      await db.teams.add({
+        team_id: teamId,
+        name: 'TSV Neumarkt U14',
+        team_typ: 'eigen',
+        verein_id: vereinId,
+        extern_permanent_id: String(teamPermanentId),
+        created_at: new Date(),
+      } as any);
+      const gastTeamId = crypto.randomUUID();
+      await db.teams.add({
+        team_id: gastTeamId,
+        name: 'SV Postbauer U14',
+        team_typ: 'gegner',
+        verein_id: vereinId,
+        extern_permanent_id: '999',
+        created_at: new Date(),
+      } as any);
+      const ligaId = crypto.randomUUID();
+      await db.ligen.add({
+        liga_id: ligaId,
+        name: 'U14 Bayernliga',
+        bbb_liga_id: '47653',
+        saison: '2024/25',
+        altersklasse: 'U14' as any,
+        created_at: new Date(),
+      } as any);
+
+      const mockResponse: DBBTeamMatchesResponse = {
+        teamId: teamPermanentId,
+        teamName: 'TSV Neumarkt U14',
+        matches: [
+          {
+            matchId: 11111,
+            gameNumber: 1,
+            gameDay: 1,
+            date: '2024-10-05',
+            time: '15:00',
+            ligaId: 47653,
+            liganame: 'U14 Bayernliga',
+            homeTeam: {
+              teamId: 12345,
+              teamPermanentId: teamPermanentId,
+              teamName: 'TSV Neumarkt U14',
+              clubId: 100,
+            },
+            awayTeam: {
+              teamId: 67890,
+              teamPermanentId: 999,
+              teamName: 'SV Postbauer U14',
+              clubId: 200,
+            },
+            status: 'finished',
+            homeScore: 80,
+            awayScore: 60,
+          },
+        ],
+      };
+
+      vi.mocked(bbbApiService.getTeamMatches).mockResolvedValue(mockResponse);
+
+      await serviceWithMock.syncSpielplanForTeam(teamPermanentId);
+
+      expect(bbbApiService.getTeamMatches).toHaveBeenCalledWith(teamPermanentId);
+
+      const spiele = await db.spiele.toArray();
+      expect(spiele).toHaveLength(1);
+      expect(spiele[0].extern_spiel_id).toBe('11111');
+    });
+
+    it('sollte auf getSpielplan fallen wenn getTeamMatches fehlschlägt', async () => {
+      const teamPermanentId = 167889;
+      const fallbackLigaId = 47653;
+
+      vi.mocked(bbbApiService.getTeamMatches).mockRejectedValue(new Error('API error'));
+
+      // syncSpielplan needs a liga in DB — set it up
+      await db.ligen.add({
+        liga_id: crypto.randomUUID(),
+        name: 'U14 Bayernliga',
+        bbb_liga_id: String(fallbackLigaId),
+        saison: '2024/25',
+        altersklasse: 'U14' as any,
+        created_at: new Date(),
+      } as any);
+
+      const mockSpielplan = createMockSpielplanResponse(fallbackLigaId, []);
+      vi.mocked(bbbApiService.getSpielplan).mockResolvedValue(mockSpielplan);
+      vi.mocked(bbbApiService.getTabelle).mockResolvedValue(createMockTableResponse(fallbackLigaId, []));
+
+      await serviceWithMock.syncSpielplanForTeam(teamPermanentId, { fallbackLigaIds: [fallbackLigaId] });
+
+      expect(bbbApiService.getTeamMatches).toHaveBeenCalledWith(teamPermanentId);
+      expect(bbbApiService.getSpielplan).toHaveBeenCalledWith(fallbackLigaId);
+    });
+
+    it('sollte Fehler werfen bei teamPermanentId <= 0', async () => {
+      await expect(serviceWithMock.syncSpielplanForTeam(0)).rejects.toThrow();
+      await expect(serviceWithMock.syncSpielplanForTeam(-1)).rejects.toThrow();
     });
   });
 

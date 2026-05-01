@@ -392,7 +392,7 @@ export async function importDatabase(jsonData: string): Promise<void> {
   // Daher in viele kleine Transaktionen aufteilen
   
   // Transaction 1: Vereine, Teams, Team Participations, Spieler
-  await db.transaction('rw', db.vereine, db.teams, db.team_liga_participations, db.spieler, db.bewertungen, async () => {
+  await db.transaction('rw', [db.vereine, db.teams, db.team_liga_participations, db.spieler, db.bewertungen], async () => {
     await db.vereine.clear();
     await db.teams.clear();
     await db.team_liga_participations.clear();

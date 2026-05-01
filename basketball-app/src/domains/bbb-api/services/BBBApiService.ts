@@ -14,7 +14,9 @@ import type {
   DBBSpielplanResponse,
   DBBSpielplanEintrag,
   DBBMatchInfoResponse,
-  DBBPlayerDetailsResponse
+  DBBPlayerDetailsResponse,
+  DBBTeamMatchesResponse,
+  DBBTeamMatchEintrag
 } from '../../../shared/types';
 
 /**
@@ -342,6 +344,7 @@ export class BBBApiService {
         .map((entry: any) => ({
           position: entry.rang || 0,
           teamId: entry.team?.seasonTeamId || 0,
+          teamPermanentId: entry.team?.teamPermanentId,
           teamName: entry.team?.teamname || '',
           clubId: entry.team?.clubId || entry.team?.seasonTeamId || 0,
           clubName: entry.team?.teamname?.split(' ')[0] || entry.team?.teamname || 'Unknown',
@@ -436,10 +439,12 @@ export class BBBApiService {
         time: match.kickoffTime || '',
         homeTeam: {
           teamId: match.homeTeam?.seasonTeamId || 0,
+          teamPermanentId: match.homeTeam?.teamPermanentId,
           teamName: match.homeTeam?.teamname || 'Unknown'
         },
         awayTeam: {
           teamId: match.guestTeam?.seasonTeamId || 0,
+          teamPermanentId: match.guestTeam?.teamPermanentId,
           teamName: match.guestTeam?.teamname || 'Unknown'
         },
         venue: match.venue ? {
@@ -454,6 +459,57 @@ export class BBBApiService {
       ligaId: spielplanData.ligaData?.ligaId || spielplanData.ligaId || ligaId,
       liganame: spielplanData.ligaData?.liganame || spielplanData.liganame || '',
       games: mappedGames
+    };
+  }
+
+  /**
+   * GET /rest/team/id/{teamPermanentId}/matches
+   * Gibt alle Spiele eines Teams über alle Ligen zurück.
+   */
+  async getTeamMatches(teamPermanentId: number): Promise<DBBTeamMatchesResponse> {
+    if (!teamPermanentId || teamPermanentId <= 0 || !Number.isInteger(teamPermanentId)) {
+      throw new Error('Invalid team permanent ID: must be a positive integer');
+    }
+
+    const response = await this.fetchWithFallback(
+      `${this.BASE_URL}/rest/team/id/${teamPermanentId}/matches`,
+      { headers: { 'Accept': 'application/json' } }
+    );
+
+    const apiResponse: any = await response.json();
+    const data = apiResponse.data || apiResponse;
+
+    const matches: DBBTeamMatchEintrag[] = (data.matches || [])
+      .filter((m: any) => m && m.homeTeam && m.guestTeam)
+      .map((m: any) => ({
+        matchId: m.matchId || 0,
+        gameNumber: m.matchNo || 0,
+        gameDay: m.matchDay || 0,
+        date: m.kickoffDate || '',
+        time: m.kickoffTime || '',
+        ligaId: m.ligaData?.ligaId || 0,
+        liganame: m.ligaData?.liganame || '',
+        homeTeam: {
+          teamId: m.homeTeam?.seasonTeamId || 0,
+          teamPermanentId: m.homeTeam?.teamPermanentId,
+          teamName: m.homeTeam?.teamname || 'Unknown',
+          clubId: m.homeTeam?.clubId || m.homeTeam?.seasonTeamId || 0,
+        },
+        awayTeam: {
+          teamId: m.guestTeam?.seasonTeamId || 0,
+          teamPermanentId: m.guestTeam?.teamPermanentId,
+          teamName: m.guestTeam?.teamname || 'Unknown',
+          clubId: m.guestTeam?.clubId || m.guestTeam?.seasonTeamId || 0,
+        },
+        status: m.result ? 'finished' : 'scheduled',
+        homeScore: m.result ? parseInt(m.result.split(':')[0]) : undefined,
+        awayScore: m.result ? parseInt(m.result.split(':')[1]) : undefined,
+      }));
+
+    return {
+      teamId: data.team?.teamId || 0,
+      teamName: data.team?.teamName || '',
+      matches,
     };
   }
 

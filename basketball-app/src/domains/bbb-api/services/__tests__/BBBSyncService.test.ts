@@ -539,4 +539,58 @@ describe('BBBSyncService', () => {
       expect(team[0].saison).toBe(liga[0].saison);
     });
   });
+
+  describe('syncSpielplanForTeam', () => {
+    it('sollte getTeamMatches aufrufen und Spiele speichern', async () => {
+      const mockTeamMatches = {
+        teamId: 167889,
+        teamName: 'Test Baskets',
+        matches: [
+          {
+            matchId: 2001,
+            gameNumber: 1,
+            gameDay: 1,
+            date: '2025-10-04',
+            time: '19:30',
+            ligaId: 47653,
+            liganame: 'Bayernliga Herren Mitte',
+            homeTeam: {
+              teamId: 405995,
+              teamPermanentId: 167889,
+              teamName: 'Test Baskets',
+              clubId: 4468,
+            },
+            awayTeam: {
+              teamId: 397879,
+              teamPermanentId: 154164,
+              teamName: 'TSV Gegner',
+              clubId: 1422,
+            },
+            status: 'finished',
+            homeScore: 93,
+            awayScore: 74,
+          },
+        ],
+      };
+
+      vi.mocked(bbbApiService.getTeamMatches).mockResolvedValue(mockTeamMatches as any);
+
+      await service.syncSpielplanForTeam(167889);
+
+      expect(bbbApiService.getTeamMatches).toHaveBeenCalledWith(167889);
+    });
+
+    it('sollte auf getSpielplan(ligaId) fallen wenn getTeamMatches fehlschlägt', async () => {
+      vi.mocked(bbbApiService.getTeamMatches).mockRejectedValue(new Error('API error'));
+      vi.mocked(bbbApiService.getSpielplan).mockResolvedValue({
+        ligaId: 47653,
+        liganame: 'Bayernliga',
+        games: [],
+      });
+
+      await service.syncSpielplanForTeam(167889, { fallbackLigaId: 47653 });
+
+      expect(bbbApiService.getSpielplan).toHaveBeenCalledWith(47653);
+    });
+  });
 });

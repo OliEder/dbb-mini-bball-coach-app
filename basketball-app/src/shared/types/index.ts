@@ -640,6 +640,32 @@ export interface DBBSpielplanResponse {
   games: DBBSpielplanEintrag[];
 }
 
+// Team Matches Response (GET /rest/team/id/{teamPermanentId}/matches)
+export interface DBBTeamMatchEintrag extends Omit<DBBSpielplanEintrag, 'homeTeam' | 'awayTeam'> {
+  ligaId: number;
+  liganame: string;
+  homeTeam: {
+    teamId: number;
+    teamPermanentId?: number;
+    teamName: string;
+    clubId: number;
+    clubName?: string; // nicht im Team-Endpunkt verfügbar
+  };
+  awayTeam: {
+    teamId: number;
+    teamPermanentId?: number;
+    teamName: string;
+    clubId: number;
+    clubName?: string; // nicht im Team-Endpunkt verfügbar
+  };
+}
+
+export interface DBBTeamMatchesResponse {
+  teamId: number;
+  teamName: string;
+  matches: DBBTeamMatchEintrag[];
+}
+
 // Match Info Response
 export interface DBBPlayer {
   playerId: number;
