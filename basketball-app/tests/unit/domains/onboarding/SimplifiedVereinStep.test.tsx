@@ -1,425 +1,245 @@
 /**
- * Unit Tests: SimplifiedVereinStep Component
- * 
- * Testet die Vereinsauswahl-Component mit gemocktem ClubDataLoader
+ * Unit Tests: SimplifiedVereinStep Component (v2)
+ *
+ * Testet die Vereinsauswahl-Komponente mit dem neuen clubs.json-basierten Store.
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { SimplifiedVereinStep } from '@/domains/onboarding/components/SimplifiedVereinStep';
-import type { Verein } from '@/shared/types';
+import type { VRClub } from '@/domains/onboarding/onboarding-simple.store';
 
-// Mock ClubDataLoader - WICHTIG: Vor dem Import!
-vi.mock('@/shared/services/ClubDataLoader', () => ({
-  clubDataLoader: {
-    loadAllClubs: vi.fn(),
-    clearCache: vi.fn()
-  }
-}));
+// Mock the store
+vi.mock('@/domains/onboarding/onboarding-simple.store', () => {
+  const mockClubs: VRClub[] = [
+    {
+      clubId: 4468,
+      name: 'Fibalon Baskets Neumarkt',
+      verbandId: 2,
+      verbandName: 'Bayern',
+      lat: 49.28,
+      lng: 11.46,
+      geocodedFrom: 'Neumarkt',
+      logoUrl: null,
+      lastCrawled: '2026-04-14T00:00:00.000Z',
+      halls: [],
+      teams: [{ teamPermanentId: 167889, altersklasse: 'Senioren I', geschlecht: 'm', teamNumber: 1 }],
+    },
+    {
+      clubId: 9999,
+      name: 'Alba Berlin',
+      verbandId: 3,
+      verbandName: 'Berlin',
+      lat: 52.5,
+      lng: 13.4,
+      geocodedFrom: 'Berlin',
+      logoUrl: null,
+      lastCrawled: '2026-04-14T00:00:00.000Z',
+      halls: [],
+      teams: [],
+    },
+  ];
 
-// Nach dem Mock importieren
-import { clubDataLoader } from '@/shared/services/ClubDataLoader';
+  const mockStore = {
+    clubs: mockClubs,
+    clubsLoaded: true,
+    clubsError: null,
+    searchQuery: '',
+    selectedClub: null,
+    loadClubs: vi.fn().mockResolvedValue(undefined),
+    setSearchQuery: vi.fn(),
+    setSelectedClub: vi.fn(),
+  };
 
-const createMockVerein = (id: string, name: string, kurzname: string, verbandIds: number[]): Verein => ({
-  verein_id: id,
-  name,
-  kurzname,
-  verband_ids: verbandIds,
-  ist_eigener_verein: false,
-  created_at: new Date()
+  return {
+    useSimpleOnboardingStore: vi.fn(() => mockStore),
+    searchClubs: (clubs: VRClub[], query: string) => {
+      if (!query.trim()) return clubs;
+      const q = query.toLowerCase();
+      return clubs.filter((c) => c.name.toLowerCase().includes(q));
+    },
+  };
 });
 
-const mockClubs = [
-  {
-    verein: createMockVerein('V001', 'FC Bayern München Basketball', 'Bayern München', [2]),
-    clubId: 'club_001'
-  },
-  {
-    verein: createMockVerein('V002', 'Alba Berlin', 'Alba', [3]),
-    clubId: 'club_002'
-  },
-  {
-    verein: createMockVerein('V003', 'MHP Riesen Ludwigsburg', 'Ludwigsburg', [1]),
-    clubId: 'club_003'
-  }
-];
+import { useSimpleOnboardingStore } from '@/domains/onboarding/onboarding-simple.store';
 
 describe('SimplifiedVereinStep', () => {
   const mockOnNext = vi.fn();
   const mockOnBack = vi.fn();
-  const mockOnVerbandFilterChange = vi.fn();
 
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.mocked(clubDataLoader.loadAllClubs).mockResolvedValue(mockClubs);
+    // Reset store mock to default state
+    (useSimpleOnboardingStore as any).mockReturnValue({
+      clubs: [
+        {
+          clubId: 4468,
+          name: 'Fibalon Baskets Neumarkt',
+          verbandId: 2,
+          verbandName: 'Bayern',
+          lat: 49.28,
+          lng: 11.46,
+          geocodedFrom: 'Neumarkt',
+          logoUrl: null,
+          lastCrawled: '2026-04-14T00:00:00.000Z',
+          halls: [],
+          teams: [{ teamPermanentId: 167889, altersklasse: 'Senioren I', geschlecht: 'm', teamNumber: 1 }],
+        },
+        {
+          clubId: 9999,
+          name: 'Alba Berlin',
+          verbandId: 3,
+          verbandName: 'Berlin',
+          lat: 52.5,
+          lng: 13.4,
+          geocodedFrom: 'Berlin',
+          logoUrl: null,
+          lastCrawled: '2026-04-14T00:00:00.000Z',
+          halls: [],
+          teams: [],
+        },
+      ],
+      clubsLoaded: true,
+      clubsError: null,
+      searchQuery: '',
+      selectedClub: null,
+      loadClubs: vi.fn().mockResolvedValue(undefined),
+      setSearchQuery: vi.fn(),
+      setSelectedClub: vi.fn(),
+    });
   });
 
-  describe('Rendering & Loading States', () => {
-    it('zeigt Loading-State beim initialen Laden', () => {
-      render(
-        <SimplifiedVereinStep
-          verbandFilter={null}
-          onVerbandFilterChange={mockOnVerbandFilterChange}
-          onNext={mockOnNext}
-          onBack={mockOnBack}
-        />
-      );
-
-      expect(screen.getByText(/Vereine werden geladen/i)).toBeInTheDocument();
-    });
-
-    it('zeigt Vereinsliste nach erfolgreichem Laden', async () => {
-      render(
-        <SimplifiedVereinStep
-          verbandFilter={null}
-          onVerbandFilterChange={mockOnVerbandFilterChange}
-          onNext={mockOnNext}
-          onBack={mockOnBack}
-        />
-      );
-
-      await waitFor(() => {
-        expect(screen.getByText('FC Bayern München Basketball')).toBeInTheDocument();
+  describe('Ladestate', () => {
+    it('zeigt Ladeanzeige wenn clubs noch nicht geladen', () => {
+      (useSimpleOnboardingStore as any).mockReturnValue({
+        clubs: [],
+        clubsLoaded: false,
+        clubsError: null,
+        searchQuery: '',
+        selectedClub: null,
+        loadClubs: vi.fn(),
+        setSearchQuery: vi.fn(),
+        setSelectedClub: vi.fn(),
       });
 
+      render(<SimplifiedVereinStep onNext={mockOnNext} onBack={mockOnBack} />);
+      expect(screen.getByText(/vereine werden geladen/i)).toBeInTheDocument();
+    });
+
+    it('zeigt Fehlermeldung bei Ladefehler', () => {
+      (useSimpleOnboardingStore as any).mockReturnValue({
+        clubs: [],
+        clubsLoaded: false,
+        clubsError: 'Vereine konnten nicht geladen werden. Bitte erneut versuchen.',
+        searchQuery: '',
+        selectedClub: null,
+        loadClubs: vi.fn(),
+        setSearchQuery: vi.fn(),
+        setSelectedClub: vi.fn(),
+      });
+
+      render(<SimplifiedVereinStep onNext={mockOnNext} onBack={mockOnBack} />);
+      expect(screen.getByText(/vereine konnten nicht geladen werden/i)).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /erneut versuchen/i })).toBeInTheDocument();
+    });
+
+    it('zeigt Vereinsliste nach erfolgreichem Laden', () => {
+      render(<SimplifiedVereinStep onNext={mockOnNext} onBack={mockOnBack} />);
+      expect(screen.getByText('Fibalon Baskets Neumarkt')).toBeInTheDocument();
       expect(screen.getByText('Alba Berlin')).toBeInTheDocument();
-      expect(screen.getByText('MHP Riesen Ludwigsburg')).toBeInTheDocument();
-    });
-
-    it('zeigt Error-State bei Lade-Fehler', async () => {
-      vi.mocked(clubDataLoader.loadAllClubs).mockRejectedValue(new Error('Network error'));
-
-      render(
-        <SimplifiedVereinStep
-          verbandFilter={null}
-          onVerbandFilterChange={mockOnVerbandFilterChange}
-          onNext={mockOnNext}
-          onBack={mockOnBack}
-        />
-      );
-
-      await waitFor(() => {
-        expect(screen.getByText(/Fehler beim Laden/i)).toBeInTheDocument();
-      });
-
-      expect(screen.getByRole('button', { name: /Neu laden/i })).toBeInTheDocument();
-    });
-  });
-
-  describe('Verband-Filter', () => {
-    it('zeigt Verband-Dropdown', async () => {
-      render(
-        <SimplifiedVereinStep
-          verbandFilter={null}
-          onVerbandFilterChange={mockOnVerbandFilterChange}
-          onNext={mockOnNext}
-          onBack={mockOnBack}
-        />
-      );
-
-      await waitFor(() => {
-        expect(screen.getByText('FC Bayern München Basketball')).toBeInTheDocument();
-      });
-
-      const select = screen.getByRole('combobox');
-      expect(select).toBeInTheDocument();
-    });
-
-    it('filtert Vereine nach Verband', async () => {
-      const user = userEvent.setup();
-
-      const { rerender } = render(
-        <SimplifiedVereinStep
-          verbandFilter={null}
-          onVerbandFilterChange={mockOnVerbandFilterChange}
-          onNext={mockOnNext}
-          onBack={mockOnBack}
-        />
-      );
-
-      await waitFor(() => {
-        expect(screen.getByText('FC Bayern München Basketball')).toBeInTheDocument();
-      });
-
-      const select = screen.getByRole('combobox');
-      await user.selectOptions(select, '2');
-
-      expect(mockOnVerbandFilterChange).toHaveBeenCalledWith(2);
-
-      // Rerender mit neuem Filter
-      rerender(
-        <SimplifiedVereinStep
-          verbandFilter={2}
-          onVerbandFilterChange={mockOnVerbandFilterChange}
-          onNext={mockOnNext}
-          onBack={mockOnBack}
-        />
-      );
-
-      await waitFor(() => {
-        expect(screen.getByText('FC Bayern München Basketball')).toBeInTheDocument();
-      });
-
-      expect(screen.queryByText('Alba Berlin')).not.toBeInTheDocument();
-    });
-  });
-
-  describe('Suche', () => {
-    it('zeigt Suchfeld', async () => {
-      render(
-        <SimplifiedVereinStep
-          verbandFilter={null}
-          onVerbandFilterChange={mockOnVerbandFilterChange}
-          onNext={mockOnNext}
-          onBack={mockOnBack}
-        />
-      );
-
-      await waitFor(() => {
-        expect(screen.getByPlaceholderText(/z.B. Bayern München/i)).toBeInTheDocument();
-      });
-    });
-
-    it('filtert Vereine nach Suchbegriff', async () => {
-      const user = userEvent.setup();
-
-      render(
-        <SimplifiedVereinStep
-          verbandFilter={null}
-          onVerbandFilterChange={mockOnVerbandFilterChange}
-          onNext={mockOnNext}
-          onBack={mockOnBack}
-        />
-      );
-
-      await waitFor(() => {
-        expect(screen.getByText('FC Bayern München Basketball')).toBeInTheDocument();
-      });
-
-      const searchInput = screen.getByPlaceholderText(/z.B. Bayern München/i);
-      await user.type(searchInput, 'Alba');
-
-      await waitFor(() => {
-        expect(screen.getByText('Alba Berlin')).toBeInTheDocument();
-      });
-
-      expect(screen.queryByText('FC Bayern München Basketball')).not.toBeInTheDocument();
-    });
-
-    it('ist case-insensitive', async () => {
-      const user = userEvent.setup();
-
-      render(
-        <SimplifiedVereinStep
-          verbandFilter={null}
-          onVerbandFilterChange={mockOnVerbandFilterChange}
-          onNext={mockOnNext}
-          onBack={mockOnBack}
-        />
-      );
-
-      await waitFor(() => {
-        expect(screen.getByText('FC Bayern München Basketball')).toBeInTheDocument();
-      });
-
-      const searchInput = screen.getByPlaceholderText(/z.B. Bayern München/i);
-      await user.type(searchInput, 'MÜNCHEN');
-
-      await waitFor(() => {
-        expect(screen.getByText('FC Bayern München Basketball')).toBeInTheDocument();
-      });
-    });
-
-    it('zeigt "Keine Vereine gefunden" bei leerem Ergebnis', async () => {
-      const user = userEvent.setup();
-
-      render(
-        <SimplifiedVereinStep
-          verbandFilter={null}
-          onVerbandFilterChange={mockOnVerbandFilterChange}
-          onNext={mockOnNext}
-          onBack={mockOnBack}
-        />
-      );
-
-      await waitFor(() => {
-        expect(screen.getByText('FC Bayern München Basketball')).toBeInTheDocument();
-      });
-
-      const searchInput = screen.getByPlaceholderText(/z.B. Bayern München/i);
-      await user.type(searchInput, 'Nicht existierender Verein XYZ');
-
-      await waitFor(() => {
-        expect(screen.getByText(/Keine Vereine gefunden/i)).toBeInTheDocument();
-      });
     });
   });
 
   describe('Vereinsauswahl', () => {
-    it('erlaubt Auswahl eines Vereins', async () => {
-      const user = userEvent.setup();
-
-      render(
-        <SimplifiedVereinStep
-          verbandFilter={null}
-          onVerbandFilterChange={mockOnVerbandFilterChange}
-          onNext={mockOnNext}
-          onBack={mockOnBack}
-        />
-      );
-
-      await waitFor(() => {
-        expect(screen.getByText('FC Bayern München Basketball')).toBeInTheDocument();
-      });
-
-      const albaRadio = screen.getByRole('radio', { name: /Alba Berlin/i });
-      await user.click(albaRadio);
-
-      expect(albaRadio).toBeChecked();
+    it('rendert Suchfeld', () => {
+      render(<SimplifiedVereinStep onNext={mockOnNext} onBack={mockOnBack} />);
+      expect(screen.getByPlaceholderText(/baskets neumarkt/i)).toBeInTheDocument();
     });
 
-    it('hebt ausgewählten Verein visuell hervor', async () => {
-      const user = userEvent.setup();
+    it('rendert Weiter-Button als disabled ohne Auswahl', () => {
+      render(<SimplifiedVereinStep onNext={mockOnNext} onBack={mockOnBack} />);
+      const button = screen.getByRole('button', { name: /weiter/i });
+      expect(button).toBeDisabled();
+    });
 
-      render(
-        <SimplifiedVereinStep
-          verbandFilter={null}
-          onVerbandFilterChange={mockOnVerbandFilterChange}
-          onNext={mockOnNext}
-          onBack={mockOnBack}
-        />
-      );
-
-      await waitFor(() => {
-        expect(screen.getByText('FC Bayern München Basketball')).toBeInTheDocument();
+    it('ruft setSelectedClub auf wenn Verein gewählt wird', async () => {
+      const setSelectedClub = vi.fn();
+      (useSimpleOnboardingStore as any).mockReturnValue({
+        clubs: [
+          {
+            clubId: 4468,
+            name: 'Fibalon Baskets Neumarkt',
+            verbandId: 2,
+            verbandName: 'Bayern',
+            lat: null,
+            lng: null,
+            geocodedFrom: null,
+            logoUrl: null,
+            lastCrawled: '2026-04-14T00:00:00.000Z',
+            halls: [],
+            teams: [],
+          },
+        ],
+        clubsLoaded: true,
+        clubsError: null,
+        searchQuery: '',
+        selectedClub: null,
+        loadClubs: vi.fn(),
+        setSearchQuery: vi.fn(),
+        setSelectedClub,
       });
 
-      const albaLabel = screen.getByText('Alba Berlin').closest('label');
-      expect(albaLabel).not.toHaveClass('bg-blue-50');
+      render(<SimplifiedVereinStep onNext={mockOnNext} onBack={mockOnBack} />);
 
-      const albaRadio = screen.getByRole('radio', { name: /Alba Berlin/i });
-      await user.click(albaRadio);
+      const radio = screen.getByRole('radio');
+      await userEvent.click(radio);
 
-      expect(albaLabel).toHaveClass('bg-blue-50');
+      expect(setSelectedClub).toHaveBeenCalledWith(
+        expect.objectContaining({ clubId: 4468 })
+      );
+    });
+
+    it('ruft onNext auf wenn Verein ausgewählt und Weiter geklickt', async () => {
+      const selectedClub: VRClub = {
+        clubId: 4468,
+        name: 'Fibalon Baskets Neumarkt',
+        verbandId: 2,
+        verbandName: 'Bayern',
+        lat: null,
+        lng: null,
+        geocodedFrom: null,
+        logoUrl: null,
+        lastCrawled: '2026-04-14T00:00:00.000Z',
+        halls: [],
+        teams: [],
+      };
+
+      (useSimpleOnboardingStore as any).mockReturnValue({
+        clubs: [selectedClub],
+        clubsLoaded: true,
+        clubsError: null,
+        searchQuery: '',
+        selectedClub,
+        loadClubs: vi.fn(),
+        setSearchQuery: vi.fn(),
+        setSelectedClub: vi.fn(),
+      });
+
+      render(<SimplifiedVereinStep onNext={mockOnNext} onBack={mockOnBack} />);
+
+      const button = screen.getByRole('button', { name: /weiter/i });
+      await userEvent.click(button);
+
+      expect(mockOnNext).toHaveBeenCalledWith(selectedClub);
     });
   });
 
   describe('Navigation', () => {
     it('Zurück-Button ruft onBack auf', async () => {
-      const user = userEvent.setup();
-
-      render(
-        <SimplifiedVereinStep
-          verbandFilter={null}
-          onVerbandFilterChange={mockOnVerbandFilterChange}
-          onNext={mockOnNext}
-          onBack={mockOnBack}
-        />
-      );
-
-      await waitFor(() => {
-        expect(screen.getByText('FC Bayern München Basketball')).toBeInTheDocument();
-      });
-
-      const backButton = screen.getByRole('button', { name: /Zurück/i });
-      await user.click(backButton);
-
-      expect(mockOnBack).toHaveBeenCalledTimes(1);
-    });
-
-    it('Weiter-Button ist disabled ohne Auswahl', async () => {
-      render(
-        <SimplifiedVereinStep
-          verbandFilter={null}
-          onVerbandFilterChange={mockOnVerbandFilterChange}
-          onNext={mockOnNext}
-          onBack={mockOnBack}
-        />
-      );
-
-      await waitFor(() => {
-        expect(screen.getByText('FC Bayern München Basketball')).toBeInTheDocument();
-      });
-
-      const nextButton = screen.getByRole('button', { name: /Weiter/i });
-      expect(nextButton).toBeDisabled();
-    });
-
-    it('Weiter-Button ist enabled mit Auswahl', async () => {
-      const user = userEvent.setup();
-
-      render(
-        <SimplifiedVereinStep
-          verbandFilter={null}
-          onVerbandFilterChange={mockOnVerbandFilterChange}
-          onNext={mockOnNext}
-          onBack={mockOnBack}
-        />
-      );
-
-      await waitFor(() => {
-        expect(screen.getByText('FC Bayern München Basketball')).toBeInTheDocument();
-      });
-
-      const albaRadio = screen.getByRole('radio', { name: /Alba Berlin/i });
-      await user.click(albaRadio);
-
-      const nextButton = screen.getByRole('button', { name: /Weiter/i });
-      expect(nextButton).not.toBeDisabled();
-    });
-
-    it('Weiter-Button ruft onNext mit Verein und ClubId', async () => {
-      const user = userEvent.setup();
-
-      render(
-        <SimplifiedVereinStep
-          verbandFilter={null}
-          onVerbandFilterChange={mockOnVerbandFilterChange}
-          onNext={mockOnNext}
-          onBack={mockOnBack}
-        />
-      );
-
-      await waitFor(() => {
-        expect(screen.getByText('Alba Berlin')).toBeInTheDocument();
-      });
-
-      const albaRadio = screen.getByRole('radio', { name: /Alba Berlin/i });
-      await user.click(albaRadio);
-
-      const nextButton = screen.getByRole('button', { name: /Weiter/i });
-      await user.click(nextButton);
-
-      expect(mockOnNext).toHaveBeenCalledWith(
-        expect.objectContaining({
-          verein_id: 'V002',
-          name: 'Alba Berlin',
-          kurzname: 'Alba'
-        }),
-        'club_002'
-      );
-    });
-  });
-
-  describe('Accessibility', () => {
-    it('hat korrekte ARIA-Labels', async () => {
-      render(
-        <SimplifiedVereinStep
-          verbandFilter={null}
-          onVerbandFilterChange={mockOnVerbandFilterChange}
-          onNext={mockOnNext}
-          onBack={mockOnBack}
-        />
-      );
-
-      await waitFor(() => {
-        expect(screen.getByText('FC Bayern München Basketball')).toBeInTheDocument();
-      });
-
-      expect(screen.getByRole('combobox')).toBeInTheDocument();
-      expect(screen.getByRole('textbox')).toBeInTheDocument();
-      expect(screen.getAllByRole('radio')).toHaveLength(3);
+      render(<SimplifiedVereinStep onNext={mockOnNext} onBack={mockOnBack} />);
+      await userEvent.click(screen.getByRole('button', { name: /zurück/i }));
+      expect(mockOnBack).toHaveBeenCalled();
     });
   });
 });

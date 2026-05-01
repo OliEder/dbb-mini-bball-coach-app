@@ -1,8 +1,8 @@
 /**
  * BBBApiService - Wrapper für DBB REST API
  * Basis-URL: https://www.basketball-bund.net
- * 
- * Test-Mode: Deaktiviert CORS-Fallback für PACT-Tests
+ * CORS: Requests werden via corsproxy.io weitergeleitet
+ * Test-Mode: Direkter Fetch gegen PACT Mock-Server (kein Proxy)
  */
 
 import type {
@@ -14,7 +14,9 @@ import type {
   DBBSpielplanResponse,
   DBBSpielplanEintrag,
   DBBMatchInfoResponse,
-  DBBPlayerDetailsResponse
+  DBBPlayerDetailsResponse,
+  DBBTeamMatchesResponse,
+  DBBTeamMatchEintrag
 } from '@/shared/types';
 
 /**
@@ -24,7 +26,7 @@ export interface BBBApiConfig {
   /**
    * Base URL für API-Calls
    * Default: https://www.basketball-bund.net
-   * Test-Mode: URL des PACT Mock-Servers
+   * Überschreiben nur für Tests (PACT Mock-Server)
    */
   baseUrl?: string;
 
@@ -57,9 +59,9 @@ export class BBBApiService {
    * ```
    */
   constructor(config?: BBBApiConfig) {
-    this.BASE_URL = config?.baseUrl || 'https://api.benchboss.de';
-    this.testMode = config?.testMode || false;
-    
+    this.BASE_URL = config?.baseUrl ?? 'https://www.basketball-bund.net';
+    this.testMode = config?.testMode ?? false;
+
     if (this.testMode) {
       console.log('🧪 BBBApiService in TEST MODE - CORS fallback disabled');
       console.log('🧪 Base URL:', this.BASE_URL);
@@ -119,9 +121,8 @@ export class BBBApiService {
   }
 
   /**
-   * Fetch gegen api.benchboss.de (eigener PHP-Proxy, löst CORS auf)
-   *
-   * Test Mode: direkter Fetch gegen den PACT Mock-Server
+   * Fetch via corsproxy.io um CORS zu umgehen.
+   * Test Mode: direkter Fetch gegen den PACT Mock-Server (kein Proxy nötig)
    */
   private async fetchWithFallback(url: string, options?: RequestInit): Promise<Response> {
     if (this.testMode) {
@@ -132,7 +133,8 @@ export class BBBApiService {
       return response;
     }
 
-    const response = await fetch(url, {
+    const proxiedUrl = `https://corsproxy.io/?url=${encodeURIComponent(url)}`;
+    const response = await fetch(proxiedUrl, {
       ...options,
       signal: AbortSignal.timeout(15000),
     });
@@ -414,6 +416,57 @@ export class BBBApiService {
       ligaId: spielplanData.ligaData?.ligaId || spielplanData.ligaId || ligaId,
       liganame: spielplanData.ligaData?.liganame || spielplanData.liganame || '',
       games: mappedGames
+    };
+  }
+
+  /**
+   * GET /rest/team/id/{teamPermanentId}/matches
+   * Gibt alle Spiele eines Teams über alle Ligen zurück.
+   */
+  async getTeamMatches(teamPermanentId: number): Promise<DBBTeamMatchesResponse> {
+    if (!teamPermanentId || teamPermanentId <= 0 || !Number.isInteger(teamPermanentId)) {
+      throw new Error('Invalid team permanent ID: must be a positive integer');
+    }
+
+    const response = await this.fetchWithFallback(
+      `${this.BASE_URL}/rest/team/id/${teamPermanentId}/matches`,
+      { headers: { 'Accept': 'application/json' } }
+    );
+
+    const apiResponse: any = await response.json();
+    const data = apiResponse.data || apiResponse;
+
+    const matches: DBBTeamMatchEintrag[] = (data.matches || [])
+      .filter((m: any) => m && m.homeTeam && m.guestTeam)
+      .map((m: any) => ({
+        matchId: m.matchId || 0,
+        gameNumber: m.matchNo || 0,
+        gameDay: m.matchDay || 0,
+        date: m.kickoffDate || '',
+        time: m.kickoffTime || '',
+        ligaId: m.ligaData?.ligaId || 0,
+        liganame: m.ligaData?.liganame || '',
+        homeTeam: {
+          teamId: m.homeTeam?.seasonTeamId || 0,
+          teamPermanentId: m.homeTeam?.teamPermanentId,
+          teamName: m.homeTeam?.teamname || 'Unknown',
+          clubId: m.homeTeam?.clubId || m.homeTeam?.seasonTeamId || 0,
+        },
+        awayTeam: {
+          teamId: m.guestTeam?.seasonTeamId || 0,
+          teamPermanentId: m.guestTeam?.teamPermanentId,
+          teamName: m.guestTeam?.teamname || 'Unknown',
+          clubId: m.guestTeam?.clubId || m.guestTeam?.seasonTeamId || 0,
+        },
+        status: m.result ? 'finished' : 'scheduled',
+        homeScore: m.result ? parseInt(m.result.split(':')[0]) : undefined,
+        awayScore: m.result ? parseInt(m.result.split(':')[1]) : undefined,
+      }));
+
+    return {
+      teamId: data.team?.teamId || 0,
+      teamName: data.team?.teamName || '',
+      matches,
     };
   }
 

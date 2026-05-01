@@ -308,9 +308,100 @@ describe('BBBApiService', () => {
     });
   });
 
+  describe('getTeamMatches', () => {
+    it('sollte Team-Matches-Daten abrufen und mappen', async () => {
+      const mockData = {
+        data: {
+          team: {
+            teamId: 167889,
+            teamName: 'Test Baskets',
+          },
+          matches: [
+            {
+              ligaData: {
+                ligaId: 47653,
+                liganame: 'Bayernliga Herren Mitte',
+              },
+              matchId: 1001,
+              matchNo: 1,
+              matchDay: 1,
+              kickoffDate: '2025-10-04',
+              kickoffTime: '19:30',
+              homeTeam: {
+                seasonTeamId: 405995,
+                teamPermanentId: 167889,
+                teamname: 'Test Baskets',
+                clubId: 4468,
+              },
+              guestTeam: {
+                seasonTeamId: 397879,
+                teamPermanentId: 154164,
+                teamname: 'TSV Gegner',
+                clubId: 1422,
+              },
+              result: '93:74',
+            },
+          ],
+        },
+      };
+
+      const mockResponse = {
+        ok: true,
+        json: vi.fn().mockResolvedValue(mockData),
+      };
+      (global.fetch as any).mockResolvedValueOnce(mockResponse);
+
+      const result = await apiService.getTeamMatches(167889);
+
+      expect(result.teamId).toBe(167889);
+      expect(result.teamName).toBe('Test Baskets');
+      expect(result.matches).toHaveLength(1);
+      expect(result.matches[0]).toMatchObject({
+        matchId: 1001,
+        gameNumber: 1,
+        gameDay: 1,
+        ligaId: 47653,
+        liganame: 'Bayernliga Herren Mitte',
+        homeTeam: {
+          teamId: 405995,
+          teamPermanentId: 167889,
+          teamName: 'Test Baskets',
+          clubId: 4468,
+        },
+        awayTeam: {
+          teamId: 397879,
+          teamPermanentId: 154164,
+          teamName: 'TSV Gegner',
+          clubId: 1422,
+        },
+        status: 'finished',
+        homeScore: 93,
+        awayScore: 74,
+      });
+    });
+
+    it('sollte Fehler werfen bei ungültiger teamPermanentId', async () => {
+      await expect(apiService.getTeamMatches(0)).rejects.toThrow('Invalid team permanent ID');
+      await expect(apiService.getTeamMatches(-1)).rejects.toThrow('Invalid team permanent ID');
+    });
+
+    it('sollte leere matches-Liste handhaben', async () => {
+      const mockData = {
+        data: { team: { teamId: 1, teamName: 'Test' }, matches: [] },
+      };
+      (global.fetch as any).mockResolvedValueOnce({
+        ok: true,
+        json: vi.fn().mockResolvedValue(mockData),
+      });
+
+      const result = await apiService.getTeamMatches(1);
+      expect(result.matches).toHaveLength(0);
+    });
+  });
+
   describe('CORS Proxy Handling', () => {
-    it('should use own proxy and return result', async () => {
-      // ARRANGE - Eigener Proxy (api.benchboss.de) erfolgreich
+    it('should route requests via corsproxy.io', async () => {
+      // ARRANGE
       (global.fetch as any).mockResolvedValueOnce({
         ok: true,
         json: async () => ({
@@ -327,11 +418,37 @@ describe('BBBApiService', () => {
 
       // ASSERT
       expect(result).toBeDefined();
-      expect(global.fetch).toHaveBeenCalledTimes(1);
+      expect(global.fetch).toHaveBeenCalledWith(
+        expect.stringContaining('corsproxy.io'),
+        expect.anything()
+      );
+    });
+
+    it('should include the target URL encoded in the proxy URL', async () => {
+      // ARRANGE
+      (global.fetch as any).mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          status: '0',
+          data: {
+            ligaData: { ligaId: 123, liganame: 'Test' },
+            tabelle: { entries: [] }
+          }
+        })
+      });
+
+      // ACT
+      await apiService.getTabelle(123);
+
+      // ASSERT
+      expect(global.fetch).toHaveBeenCalledWith(
+        expect.stringContaining('basketball-bund.net'),
+        expect.anything()
+      );
     });
 
     it('should throw on proxy failure', async () => {
-      // ARRANGE - Proxy schlägt fehl
+      // ARRANGE
       (global.fetch as any).mockRejectedValue(new Error('Proxy failed'));
 
       // ACT & ASSERT

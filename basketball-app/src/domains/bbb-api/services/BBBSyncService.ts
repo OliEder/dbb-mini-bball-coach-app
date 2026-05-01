@@ -1,5 +1,11 @@
 /**
- * BBBSyncService - Synchronisiert Liga-Daten aus DBB REST API
+ * BBBSyncService v7.0 - Synchronisiert Liga-Daten aus DBB REST API
+ * 
+ * CHANGES v7.0:
+ * - Team-Deduplizierung über teamPermanentId (extern_permanent_id)
+ * - Neue Methode: createOrUpdateParticipation()
+ * - Team-Creation ohne altersklasse/saison/liga_id
+ * - Spiel-Queries berücksichtigen Participations
  * 
  * Funktionen:
  * - Vollständige Liga-Daten laden (alle Teams, alle Spiele)
@@ -8,20 +14,20 @@
  * - Venues aus Match-Info
  */
 
-import { db } from '../../../shared/db/database';
+import { db } from '@/shared/db/database';
 import { bbbApiService } from './BBBApiService';
 import type {
   Liga,
   Team,
+  TeamLigaParticipation,
   Verein,
   Spiel,
   Halle,
   Spieler,
   Altersklasse,
-  WamLigaEintrag,
   DBBTabellenEintrag,
   DBBSpielplanEintrag
-} from '../../../shared/types';
+} from '@/shared/types';
 
 export class BBBSyncService {
   private apiService: typeof bbbApiService;
@@ -165,6 +171,9 @@ export class BBBSyncService {
 
   /**
    * Synchronisiert Tabelle und extrahiert Teams + Vereine
+   * 
+   * v7.0: Nutzt teamPermanentId für Team-Deduplizierung
+   * v7.0: API-Response-Struktur ist verschachtelt: eintrag.team.*
    */
   async syncTabelleAndTeams(ligaId: number): Promise<void> {
     const tableResponse = await this.apiService.getTabelle(ligaId);
@@ -192,25 +201,47 @@ export class BBBSyncService {
 
     // 2. Für jedes Team in der Tabelle
     for (const eintrag of tableResponse.teams) {
-      console.log('🔄 Processing team:', eintrag.teamName, eintrag.teamId);
+      // ✅ KRITISCH: API-Response hat verschachtelte Struktur!
+      // OLD (falsch): eintrag.teamId, eintrag.teamName
+      // NEW (korrekt): eintrag.team.teamPermanentId, eintrag.team.teamname
+      
+      // Prüfe ob team-Objekt existiert (alte vs. neue API-Response)
+      const teamData = (eintrag as any).team || eintrag; // Backward compatibility
+      
+      console.log('🔄 Processing team:', teamData.teamname || teamData.teamName, 
+                  'permanentId:', teamData.teamPermanentId, 
+                  'seasonId:', teamData.seasonTeamId || teamData.teamId);
       
       // 2.1 Verein erstellen/finden
       const verein = await this.createOrFindVerein({
-        clubId: eintrag.clubId,
-        clubName: eintrag.clubName,
+        clubId: teamData.clubId,
+        clubName: teamData.clubName,
       });
       console.log('✅ Verein:', verein.name);
 
-      // 2.2 Team erstellen/finden
+      // 2.2 Team erstellen/finden (v7.0: über teamPermanentId)
+      // teamData.teamPermanentId ist jetzt korrekt gemappt, teamId ist seasonTeamId (Fallback)
       const team = await this.createOrFindTeam({
-        teamId: eintrag.teamId,
-        teamName: eintrag.teamName,
+        teamPermanentId: teamData.teamPermanentId || teamData.teamId,
+        teamName: teamData.teamname || teamData.teamName,
         vereinId: verein.verein_id,
-        ligaId: liga.liga_id,
       });
       console.log('✅ Team:', team.name);
 
-      // 2.3 Tabellen-Eintrag speichern
+      // 2.3 Team-Liga-Participation erstellen/updaten (NEU v7.0)
+      const teamAltersklasse = this.extractAltersklasseFromTeamname(team.name);
+      const altersklasse = teamAltersklasse || liga.altersklasse; // Fallback zur Liga-AK
+      
+      await this.createOrUpdateParticipation({
+        teamId: team.team_id,
+        ligaId: liga.liga_id,
+        seasonTeamId: teamData.seasonTeamId || teamData.teamId, // seasonTeamId für diese Saison
+        altersklasse: altersklasse,
+        saison: liga.saison,
+      });
+      console.log('✅ Participation created/updated');
+
+      // 2.4 Tabellen-Eintrag speichern
       await this.saveTabellenEintrag(liga.liga_id, eintrag);
       console.log('✅ Tabellen-Eintrag gespeichert');
     }
@@ -234,8 +265,8 @@ export class BBBSyncService {
     }
 
     const spiele = await db.spiele
-      .where('heim_team_id')
-      .notEqual('')
+      .where('liga_id')
+      .equals(liga.liga_id)
       .toArray();
 
     // Für jedes Spiel: Hole Match-Info für Spieler-Details
@@ -349,6 +380,8 @@ export class BBBSyncService {
 
   /**
    * Synchronisiert Spielplan
+   * 
+   * v7.0: Team-IDs werden über teamPermanentId gefunden
    */
   async syncSpielplan(ligaId: number): Promise<void> {
     const spielplanResponse = await this.apiService.getSpielplan(ligaId);
@@ -371,9 +404,11 @@ export class BBBSyncService {
     for (const spielEintrag of spielplanResponse.games) {
       console.log('🔄 Processing Spiel:', spielEintrag.matchId, spielEintrag.homeTeam.teamName, 'vs', spielEintrag.awayTeam.teamName);
       
-      // 1. Heim- und Gast-Team finden
-      const heimTeam = await this.findTeamByExternId(spielEintrag.homeTeam.teamId);
-      const gastTeam = await this.findTeamByExternId(spielEintrag.awayTeam.teamId);
+      // ✅ v7.0: Heim- und Gast-Team finden (über permanentId)
+      const heimPermanentId = spielEintrag.homeTeam.teamPermanentId || spielEintrag.homeTeam.teamId;
+      const gastPermanentId = spielEintrag.awayTeam.teamPermanentId || spielEintrag.awayTeam.teamId;
+      const heimTeam = await this.findTeamByPermanentId(heimPermanentId);
+      const gastTeam = await this.findTeamByPermanentId(gastPermanentId);
 
       if (!heimTeam || !gastTeam) {
         console.warn(`⚠️ Team not found for Spiel ${spielEintrag.matchId} - Heim: ${heimTeam?.name || 'NOT FOUND'}, Gast: ${gastTeam?.name || 'NOT FOUND'}`);
@@ -409,6 +444,77 @@ export class BBBSyncService {
     }
     
     console.log('✅ syncSpielplan completed');
+  }
+
+  /**
+   * Synchronisiert den Spielplan eines Teams über den /rest/team/id/{teamPermanentId}/matches Endpunkt.
+   * Primär: ein einziger Call für alle Ligen.
+   * Fallback: bei Fehler wird pro fallbackLigaId getSpielplan aufgerufen.
+   */
+  async syncSpielplanForTeam(
+    teamPermanentId: number,
+    options?: { fallbackLigaIds?: number[] }
+  ): Promise<void> {
+    if (teamPermanentId <= 0) {
+      throw new Error(`Ungültige teamPermanentId: ${teamPermanentId}`);
+    }
+
+    try {
+      const response = await this.apiService.getTeamMatches(teamPermanentId);
+      console.log(`📈 getTeamMatches: ${response.matches.length} Spiele für Team ${response.teamName}`);
+
+      for (const match of response.matches) {
+        const heimPermanentId = match.homeTeam.teamPermanentId || match.homeTeam.teamId;
+        const gastPermanentId = match.awayTeam.teamPermanentId || match.awayTeam.teamId;
+        const heimTeam = await this.findTeamByPermanentId(heimPermanentId);
+        const gastTeam = await this.findTeamByPermanentId(gastPermanentId);
+
+        if (!heimTeam || !gastTeam) {
+          console.warn(`⚠️ Team nicht gefunden für Spiel ${match.matchId} - Heim: ${heimTeam?.name || 'NOT FOUND'}, Gast: ${gastTeam?.name || 'NOT FOUND'}`);
+          continue;
+        }
+
+        // Liga über bbb_liga_id finden
+        const liga = await db.ligen
+          .where('bbb_liga_id')
+          .equals(String(match.ligaId))
+          .first();
+
+        if (!liga) {
+          console.warn(`⚠️ Liga ${match.ligaId} (${match.liganame}) nicht in DB`);
+          continue;
+        }
+
+        await this.createOrUpdateSpiel({
+          matchId: match.matchId,
+          gameNumber: match.gameNumber,
+          gameDay: match.gameDay,
+          date: match.date,
+          time: match.time,
+          heimTeamId: heimTeam.team_id,
+          gastTeamId: gastTeam.team_id,
+          ligaId: liga.liga_id,
+          halleId: undefined,
+          status: match.status,
+          homeScore: match.homeScore,
+          awayScore: match.awayScore,
+        });
+      }
+
+      console.log('✅ syncSpielplanForTeam completed');
+    } catch (error) {
+      console.warn(`⚠️ getTeamMatches fehlgeschlagen für teamPermanentId ${teamPermanentId}:`, error);
+
+      const fallbackLigaIds = options?.fallbackLigaIds ?? [];
+      if (fallbackLigaIds.length === 0) {
+        throw error;
+      }
+
+      console.log(`🔄 Fallback: syncSpielplan für ${fallbackLigaIds.length} Liga(en)`);
+      for (const ligaId of fallbackLigaIds) {
+        await this.syncSpielplan(ligaId);
+      }
+    }
   }
 
   /**
@@ -460,7 +566,8 @@ export class BBBSyncService {
   private async extractPlayersFromMatchInfo(matchInfo: any): Promise<void> {
     // Heim-Team Spieler
     if (matchInfo.homeTeam?.players) {
-      const heimTeam = await this.findTeamByExternId(matchInfo.homeTeam.teamId);
+      const heimPermanentId = matchInfo.homeTeam.teamPermanentId || matchInfo.homeTeam.teamId;
+      const heimTeam = await this.findTeamByPermanentId(heimPermanentId);
       if (heimTeam) {
         await this.syncPlayersForTeam(heimTeam.team_id, matchInfo.homeTeam.players);
       }
@@ -468,7 +575,8 @@ export class BBBSyncService {
 
     // Gast-Team Spieler
     if (matchInfo.awayTeam?.players) {
-      const gastTeam = await this.findTeamByExternId(matchInfo.awayTeam.teamId);
+      const gastPermanentId = matchInfo.awayTeam.teamPermanentId || matchInfo.awayTeam.teamId;
+      const gastTeam = await this.findTeamByPermanentId(gastPermanentId);
       if (gastTeam) {
         await this.syncPlayersForTeam(gastTeam.team_id, matchInfo.awayTeam.players);
       }
@@ -529,7 +637,7 @@ export class BBBSyncService {
   }
 
   // ============================================
-  // HELPER METHODS
+  // HELPER METHODS v7.0
   // ============================================
 
   /**
@@ -616,58 +724,41 @@ export class BBBSyncService {
   }
 
   /**
-   * Erstellt oder findet Team
+   * Erstellt oder findet Team (v7.0: über teamPermanentId)
+   * 
+   * WICHTIG: Team ist jetzt saisonen-unabhängig!
+   * Liga/Saison-Zuordnung erfolgt über TeamLigaParticipation
    */
   private async createOrFindTeam(data: {
-    teamId: number;
+    teamPermanentId: number;
     teamName: string;
     vereinId: string;
-    ligaId: string;
   }): Promise<Team> {
-    // ✅ Hole Liga für Saison (und Fallback-Altersklasse)
-    const liga = await db.ligen.get(data.ligaId);
-    if (!liga) {
-      throw new Error(`Liga ${data.ligaId} not found when creating team`);
-    }
-
-    // ✅ WICHTIG: Extrahiere Altersklasse aus TEAM-Namen, nicht Liga-Namen!
-    // Ein U12-Team kann in einer U14-Liga spielen (hochspielen)
-    const teamAltersklasse = this.extractAltersklasseFromTeamname(data.teamName);
-    const altersklasse = teamAltersklasse || liga.altersklasse; // Fallback zur Liga-AK wenn nicht im Team-Namen
-    
-    if (teamAltersklasse !== liga.altersklasse) {
-      console.log(`⚠️ Team-AK (${teamAltersklasse || 'nicht gefunden'}) != Liga-AK (${liga.altersklasse}) für Team: ${data.teamName}`);
-    }
-
-    // Suche nach extern_team_id
+    // ✅ v7.0: Suche nach teamPermanentId (permanent!)
     let team = await db.teams
-      .where('extern_team_id')
-      .equals(data.teamId.toString())
+      .where('extern_permanent_id')
+      .equals(data.teamPermanentId.toString())
       .first();
 
     if (team) {
-      // ✅ UPDATE: Aktualisiere auch bestehende Teams mit aktuellen Werten
-      await db.teams.update(team.team_id, {
-        name: data.teamName,
-        verein_id: data.vereinId,
-        altersklasse: altersklasse,  // ✅ Von Team-Namen extrahiert!
-        saison: liga.saison,         // ✅ Von Liga übernommen
-        liga_id: liga.bbb_liga_id,   // ⭐ WICHTIG: BBB-Liga-ID für Matching!
-        updated_at: new Date(),
-      });
-      return { ...team, name: data.teamName, verein_id: data.vereinId, altersklasse: altersklasse, saison: liga.saison, liga_id: liga.bbb_liga_id };
+      // ✅ UPDATE: Aktualisiere Team-Name falls geändert
+      if (team.name !== data.teamName) {
+        await db.teams.update(team.team_id, {
+          name: data.teamName,
+          updated_at: new Date(),
+        });
+        return { ...team, name: data.teamName };
+      }
+      return team;
     }
 
-    // Erstelle neues Team mit Werten aus Team-Namen und Liga
+    // Erstelle neues Team (ohne Liga/Saison/Altersklasse!)
     team = {
       team_id: crypto.randomUUID(),
-      extern_team_id: data.teamId.toString(),
+      extern_permanent_id: data.teamPermanentId.toString(),
       verein_id: data.vereinId,
       name: data.teamName,
       trainer: '', // Wird später gesetzt
-      altersklasse: altersklasse,  // ✅ Von Team-Namen extrahiert!
-      saison: liga.saison,         // ✅ Von Liga übernommen
-      liga_id: liga.bbb_liga_id,   // ⭐ WICHTIG: BBB-Liga-ID für Matching!
       team_typ: 'gegner', // Default: alle sind Gegner
       created_at: new Date(),
     };
@@ -677,12 +768,60 @@ export class BBBSyncService {
   }
 
   /**
-   * Findet Team anhand extern_team_id
+   * Erstellt oder updated Team-Liga-Participation (NEU v7.0)
+   * 
+   * Repräsentiert: Team spielt in Liga in Saison mit Altersklasse
    */
-  private async findTeamByExternId(teamId: number): Promise<Team | undefined> {
+  private async createOrUpdateParticipation(data: {
+    teamId: string;
+    ligaId: string;
+    seasonTeamId: number;
+    altersklasse: Altersklasse;
+    saison: string;
+  }): Promise<TeamLigaParticipation> {
+    // Suche nach existierender Participation für Team+Liga
+    const existing = await db.team_liga_participations
+      .where('[team_id+liga_id]')
+      .equals([data.teamId, data.ligaId])
+      .first();
+
+    const participationData = {
+      team_id: data.teamId,
+      liga_id: data.ligaId,
+      extern_team_id: data.seasonTeamId.toString(),
+      altersklasse: data.altersklasse,
+      saison: data.saison,
+      ist_aktiv: true, // Neu synchronisierte Participations sind aktiv
+    };
+
+    if (existing) {
+      // Update existing
+      await db.team_liga_participations.update(existing.id, participationData);
+      return { ...existing, ...participationData };
+    }
+
+    // Create new - Let Dexie handle auto-increment
+    const newParticipation = await db.team_liga_participations.add({
+      ...participationData,
+      created_at: new Date(),
+    });
+
+    // Fetch the created participation
+    const participation = await db.team_liga_participations.get(newParticipation);
+    if (!participation) {
+      throw new Error('Failed to create participation');
+    }
+    
+    return participation;
+  }
+
+  /**
+   * Findet Team anhand teamPermanentId (v7.0)
+   */
+  private async findTeamByPermanentId(teamPermanentId: number): Promise<Team | undefined> {
     return await db.teams
-      .where('extern_team_id')
-      .equals(teamId.toString())
+      .where('extern_permanent_id')
+      .equals(teamPermanentId.toString())
       .first();
   }
 
@@ -775,17 +914,16 @@ export class BBBSyncService {
       'cancelled': 'abgesagt',
     };
 
-    // ✅ Hole Liga für Altersklasse
-    const liga = await db.ligen.get(data.ligaId);
-    if (!liga) {
-      throw new Error(`Liga ${data.ligaId} not found when creating spiel`);
-    }
+    // ✅ v7.0: Hole Altersklasse über Participation
+    const heimParticipation = await db.team_liga_participations
+      .where('[team_id+liga_id]')
+      .equals([data.heimTeamId, data.ligaId])
+      .first();
 
     const heimTeam = await db.teams.get(data.heimTeamId);
     const gastTeam = await db.teams.get(data.gastTeamId);
 
-    // ✅ v6.0: Berechne ist_heimspiel basierend auf erstem eigenen Team
-    // Bei internem Spiel: ist_heimspiel = true (aus Heim-Perspektive)
+    // Berechne ist_heimspiel basierend auf erstem eigenen Team
     let istHeim = false;
     
     if (heimTeam?.team_typ === 'eigen') {
@@ -806,11 +944,11 @@ export class BBBSyncService {
       heim: heimTeam?.name || '',
       gast: gastTeam?.name || '',
       halle_id: data.halleId,
-      ist_heimspiel: istHeim, // 🔧 FIX: Jetzt korrekt gesetzt
+      ist_heimspiel: istHeim,
       status: statusMap[data.status] || 'geplant',
       ergebnis_heim: data.homeScore,
       ergebnis_gast: data.awayScore,
-      altersklasse: liga.altersklasse,  // ✅ Von Liga übernommen
+      altersklasse: heimParticipation?.altersklasse || 'U12' as Altersklasse,  // Fallback
       updated_at: new Date(),
     };
 
@@ -823,7 +961,6 @@ export class BBBSyncService {
     // Create new
     const spiel: Spiel = {
       spiel_id: crypto.randomUUID(),
-      // team_id ENTFERNT in v6.0! Spiel gehört keinem Team.
       ...spielData,
       altersklasse: spielData.altersklasse as Altersklasse,
       created_at: new Date(),
@@ -840,15 +977,19 @@ export class BBBSyncService {
     ligaId: string,
     eintrag: DBBTabellenEintrag
   ): Promise<void> {
+    // ✅ KRITISCH: API-Response kann verschachtelt sein!
+    const teamData = (eintrag as any).team || eintrag;
+    const teamName = teamData.teamname || teamData.teamName;
+    
     // Prüfe ob bereits vorhanden
     const existing = await db.liga_tabellen
       .where('[ligaid+teamname]')
-      .equals([ligaId, eintrag.teamName])
+      .equals([ligaId, teamName])
       .first();
 
     const data = {
       ligaid: ligaId,
-      teamname: eintrag.teamName,
+      teamname: teamName,
       platz: eintrag.position,
       spiele: eintrag.games,
       siege: eintrag.wins,

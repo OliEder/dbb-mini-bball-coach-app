@@ -23,7 +23,7 @@
 import React, { useEffect, useState } from 'react';
 import { useAppStore } from '@/stores/appStore';
 import { teamService } from '@/domains/team/services/TeamService';
-import { bbbSyncService } from '@/shared/services/BBBSyncService';
+import { bbbSyncService } from '@/domains/bbb-api/services/BBBSyncService';
 import { db, resetDatabase } from '@/shared/db/database';
 import { Home, Users, Calendar, ShirtIcon, BarChart3, Settings, RefreshCw, Layers, Trash2 } from 'lucide-react';
 import type { Team } from '@/shared/types';

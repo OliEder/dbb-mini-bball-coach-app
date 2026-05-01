@@ -223,6 +223,97 @@ describe('BBBApiService', () => {
     });
   });
 
+  describe('getTeamMatches', () => {
+  it('sollte Team-Matches-Daten abrufen und mappen', async () => {
+    const mockData = {
+      data: {
+        team: {
+          teamId: 167889,
+          teamName: 'Test Baskets',
+        },
+        matches: [
+          {
+            ligaData: {
+              ligaId: 47653,
+              liganame: 'Bayernliga Herren Mitte',
+            },
+            matchId: 1001,
+            matchNo: 1,
+            matchDay: 1,
+            kickoffDate: '2025-10-04',
+            kickoffTime: '19:30',
+            homeTeam: {
+              seasonTeamId: 405995,
+              teamPermanentId: 167889,
+              teamname: 'Test Baskets',
+              clubId: 4468,
+            },
+            guestTeam: {
+              seasonTeamId: 397879,
+              teamPermanentId: 154164,
+              teamname: 'TSV Gegner',
+              clubId: 1422,
+            },
+            result: '93:74',
+          },
+        ],
+      },
+    };
+
+    const mockResponse = {
+      ok: true,
+      json: vi.fn().mockResolvedValue(mockData),
+    };
+    vi.mocked(global.fetch).mockResolvedValueOnce(mockResponse as any);
+
+    const result = await service.getTeamMatches(167889);
+
+    expect(result.teamId).toBe(167889);
+    expect(result.teamName).toBe('Test Baskets');
+    expect(result.matches).toHaveLength(1);
+    expect(result.matches[0]).toMatchObject({
+      matchId: 1001,
+      gameNumber: 1,
+      gameDay: 1,
+      ligaId: 47653,
+      liganame: 'Bayernliga Herren Mitte',
+      homeTeam: {
+        teamId: 405995,
+        teamPermanentId: 167889,
+        teamName: 'Test Baskets',
+        clubId: 4468,
+      },
+      awayTeam: {
+        teamId: 397879,
+        teamPermanentId: 154164,
+        teamName: 'TSV Gegner',
+        clubId: 1422,
+      },
+      status: 'finished',
+      homeScore: 93,
+      awayScore: 74,
+    });
+  });
+
+  it('sollte Fehler werfen bei ungültiger teamPermanentId', async () => {
+    await expect(service.getTeamMatches(0)).rejects.toThrow('Invalid team permanent ID');
+    await expect(service.getTeamMatches(-1)).rejects.toThrow('Invalid team permanent ID');
+  });
+
+  it('sollte leere matches-Liste handhaben', async () => {
+    const mockData = {
+      data: { team: { teamId: 1, teamName: 'Test' }, matches: [] },
+    };
+    vi.mocked(global.fetch).mockResolvedValueOnce({
+      ok: true,
+      json: vi.fn().mockResolvedValue(mockData),
+    } as any);
+
+    const result = await service.getTeamMatches(1);
+    expect(result.matches).toHaveLength(0);
+  });
+});
+
   describe('getMatchInfo', () => {
     it('sollte Match-Info-Daten abrufen', async () => {
       const mockData = {

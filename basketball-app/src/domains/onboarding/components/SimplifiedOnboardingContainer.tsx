@@ -1,10 +1,10 @@
 /**
  * Simplified Onboarding Container
- * 
- * Schlanker Flow:
+ *
+ * Flow:
  * 1. Welcome
  * 2. User
- * 3. Verein (mit Filter)
+ * 3. Verein (clubs.json-Suche)
  * 4. Team
  * 5. Completion
  */
@@ -21,38 +21,34 @@ export const SimplifiedOnboardingContainer: React.FC = () => {
   const {
     currentStep,
     user,
-    selectedVerbandFilter,
-    selectedVerein,
-    selectedClubId,
-    selectedTeams,
-    
+    selectedClub,
+
     // Actions
     setStep,
     nextStep,
     previousStep,
     setUser,
-    setVerbandFilter,
-    setVerein,
-    setTeams,
-    completeOnboarding
+    setSelectedClub,
+    setSelectedTeam,
+    completeOnboarding,
   } = useSimpleOnboardingStore();
 
   const TOTAL_STEPS = 5;
-  const stepIndex = {
-    'welcome': 0,
-    'user': 1,
-    'verein': 2,
-    'team': 3,
-    'completion': 4
+  const stepIndex: Record<string, number> = {
+    welcome: 0,
+    user: 1,
+    verein: 2,
+    team: 3,
+    completion: 4,
   };
-  
+
   const progressPercentage = ((stepIndex[currentStep] || 0) / (TOTAL_STEPS - 1)) * 100;
 
   const renderStep = () => {
     switch (currentStep) {
       case 'welcome':
         return <WelcomeStep onNext={nextStep} />;
-      
+
       case 'user':
         return (
           <UserStep
@@ -64,22 +60,20 @@ export const SimplifiedOnboardingContainer: React.FC = () => {
             onBack={previousStep}
           />
         );
-      
+
       case 'verein':
         return (
           <SimplifiedVereinStep
-            verbandFilter={selectedVerbandFilter}
-            onVerbandFilterChange={setVerbandFilter}
-            onNext={(verein, clubId) => {
-              setVerein(verein, clubId);
+            onNext={(club) => {
+              setSelectedClub(club);
               nextStep();
             }}
             onBack={previousStep}
           />
         );
-      
+
       case 'team':
-        if (!selectedVerein || !selectedClubId) {
+        if (!selectedClub) {
           return (
             <div className="max-w-lg mx-auto p-6 text-center">
               <p className="text-gray-600 mb-4">Fehler: Kein Verein gewählt</p>
@@ -92,22 +86,20 @@ export const SimplifiedOnboardingContainer: React.FC = () => {
             </div>
           );
         }
-        
+
         return (
           <SimplifiedTeamStep
-            clubId={selectedClubId}
-            clubName={selectedVerein.name}
-            onNext={(teams) => {
-              setTeams(teams);
+            onNext={(team) => {
+              setSelectedTeam(team);
               nextStep();
             }}
             onBack={previousStep}
           />
         );
-      
+
       case 'completion':
         return <CompletionStep onComplete={completeOnboarding} />;
-      
+
       default:
         return null;
     }
@@ -128,7 +120,7 @@ export const SimplifiedOnboardingContainer: React.FC = () => {
               </span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2">
-              <div 
+              <div
                 className="bg-blue-600 h-2 rounded-full transition-all duration-300"
                 style={{ width: `${progressPercentage}%` }}
               />
@@ -136,7 +128,7 @@ export const SimplifiedOnboardingContainer: React.FC = () => {
           </div>
         </div>
       )}
-      
+
       {/* Main Content */}
       <div className={currentStep !== 'completion' ? 'pt-20 pb-12' : ''}>
         {renderStep()}
