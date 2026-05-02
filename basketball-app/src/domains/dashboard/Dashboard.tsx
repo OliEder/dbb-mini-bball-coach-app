@@ -24,6 +24,7 @@ import React, { useEffect, useState } from 'react';
 import { useAppStore } from '@/stores/appStore';
 import { teamService } from '@/domains/team/services/TeamService';
 import { bbbSyncService } from '@/domains/bbb-api/services/BBBSyncService';
+import { executeSyncForTeam } from './syncStrategy';
 import { db, resetDatabase } from '@/shared/db/database';
 import { Home, Users, Calendar, ShirtIcon, BarChart3, Settings, RefreshCw, Layers, Trash2 } from 'lucide-react';
 import type { Team } from '@/shared/types';
@@ -114,75 +115,39 @@ export function Dashboard() {
         return;
       }
 
+      // Prüfe ob Sync nötig ist (letzte Sync > 6 Stunden her)
+      const lastSyncKey = 'last-auto-sync';
+      const lastSync = localStorage.getItem(lastSyncKey);
+      const sixHoursAgo = Date.now() - 6 * 60 * 60 * 1000;
+      if (lastSync && parseInt(lastSync) > sixHoursAgo) {
+        return;
+      }
+
       try {
-        // Hole alle Teams des Users
-        const allTeams = await Promise.all(
-          myTeamIds.map(id => teamService.getTeamById(id))
-        );
-
-        // v7.0: Sammle alle eindeutigen Liga-IDs aus Participations
-        const ligaIds = new Set<number>();
-        for (const team of allTeams) {
-          if (team) {
-            try {
-              const participation = await teamService.getActiveParticipation(team.team_id);
-              if (participation?.liga_id) {
-                const ligaIdMatch = participation.liga_id.match(/\d+/);
-                if (ligaIdMatch) {
-                  ligaIds.add(parseInt(ligaIdMatch[0], 10));
-                }
-              }
-            } catch (err) {
-              console.error(`⚠️ Fehler beim Laden der Participation für Team ${team.name}:`, err);
-              // Weiter mit nächstem Team
-            }
-          }
-        }
-
-        if (ligaIds.size === 0) {
-          console.log('⚠️ Keine Ligen zum Synchronisieren gefunden');
-          return;
-        }
-
-        // Prüfe ob Sync nötig ist (letzte Sync > 6 Stunden her)
-        const lastSyncKey = 'last-auto-sync';
-        const lastSync = localStorage.getItem(lastSyncKey);
-        const sixHoursAgo = Date.now() - 6 * 60 * 60 * 1000;
-
-        if (lastSync && parseInt(lastSync) > sixHoursAgo) {
-          console.log('✅ Sync nicht nötig - letzter Sync vor', Math.round((Date.now() - parseInt(lastSync)) / 1000 / 60), 'Minuten');
-          return;
-        }
-
-        console.log('🔄 Starte automatischen Liga-Sync für', ligaIds.size, 'Ligen...');
         setIsInitialSync(true);
 
-        // Synchronisiere alle Ligen
-        for (const ligaId of Array.from(ligaIds)) {
-          try {
-            console.log('🎯 Auto-Sync Liga:', ligaId);
-            await bbbSyncService.syncLiga(ligaId, { skipMatchInfo: true });
-            console.log('✅ Liga', ligaId, 'synchronisiert');
-          } catch (error) {
-            console.error('❌ Auto-Sync fehlgeschlagen für Liga', ligaId, ':', error);
-            // Weiter mit nächster Liga
-          }
+        const syncDeps = {
+          getTeamById: (id: string) => teamService.getTeamById(id),
+          getActiveParticipation: (id: string) => teamService.getActiveParticipation(id),
+          syncSpielplanForTeam: (permanentId: number) => bbbSyncService.syncSpielplanForTeam(permanentId),
+          syncLiga: (ligaId: number, opts?: { skipMatchInfo?: boolean }) => bbbSyncService.syncLiga(ligaId, opts),
+        };
 
-          // Rate-Limiting
+        for (const teamId of myTeamIds) {
+          try {
+            await executeSyncForTeam(teamId, syncDeps);
+          } catch (err) {
+            console.error(`⚠️ Auto-Sync fehlgeschlagen für Team ${teamId}:`, err);
+            // Weiter mit nächstem Team
+          }
           await new Promise(resolve => setTimeout(resolve, 500));
         }
 
-        // Speichere Sync-Zeitpunkt
         localStorage.setItem(lastSyncKey, Date.now().toString());
-
-        console.log('✅ Auto-Sync abgeschlossen');
-
-        // Daten neu laden
         await loadData();
 
       } catch (error) {
         console.error('❌ Auto-Sync fehlgeschlagen:', error);
-        // Kein hasDbError setzen - Auto-Sync ist optional
       } finally {
         setIsInitialSync(false);
       }
@@ -232,36 +197,18 @@ export function Dashboard() {
 
   const handleSync = async () => {
     if (!currentTeamId || isSyncing) return;
-    
+
+    setIsSyncing(true);
     try {
-      // v7.0: Hole Liga-ID aus Participation
-      const participation = await teamService.getActiveParticipation(currentTeamId);
-      if (!participation?.liga_id) {
-        alert('Keine Liga zugeordnet');
-        return;
-      }
-      
-      setIsSyncing(true);
-      
-      // Extrahiere Liga-ID
-      const ligaIdMatch = participation.liga_id.match(/\d+/);
-      if (!ligaIdMatch) {
-        console.error('Keine gültige Liga-ID gefunden');
-        return;
-      }
-      
-      const ligaId = parseInt(ligaIdMatch[0], 10);
-      console.log('🔄 Starte manuellen Liga-Sync:', ligaId);
-      
-      await bbbSyncService.syncLiga(ligaId, { skipMatchInfo: true });
-      
-      console.log('✅ Liga-Sync erfolgreich');
-      
-      // Daten neu laden
+      await executeSyncForTeam(currentTeamId, {
+        getTeamById: (id) => teamService.getTeamById(id),
+        getActiveParticipation: (id) => teamService.getActiveParticipation(id),
+        syncSpielplanForTeam: (permanentId) => bbbSyncService.syncSpielplanForTeam(permanentId),
+        syncLiga: (ligaId, opts) => bbbSyncService.syncLiga(ligaId, opts),
+      });
       await loadData();
-      
     } catch (error) {
-      console.error('❌ Liga-Sync fehlgeschlagen:', error);
+      console.error('❌ Sync fehlgeschlagen:', error);
       alert('Sync fehlgeschlagen: ' + (error as Error).message);
     } finally {
       setIsSyncing(false);

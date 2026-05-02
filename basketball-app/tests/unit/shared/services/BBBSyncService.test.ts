@@ -7,7 +7,7 @@
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { BBBSyncService } from '@/domains/bbb-api/services/BBBSyncService';
-import { bbbApiService } from '@/shared/services/BBBApiService';
+import { bbbApiService } from '@/domains/bbb-api/services/BBBApiService';
 import { db } from '@/shared/db/database';
 import type {
   DBBTableResponse,
@@ -15,8 +15,8 @@ import type {
 } from '@/shared/types';
 import { createMockTableResponse, createMockSpielplanResponse } from '@/test/helpers/bbbTestHelpers';
 
-// Mock BBBApiService
-vi.mock('@/shared/services/BBBApiService');
+// Mock BBBApiService — muss auf den Domain-Pfad zeigen, den BBBSyncService importiert
+vi.mock('@/domains/bbb-api/services/BBBApiService');
 
 describe('BBBSyncService (v7.0)', () => {
   let service: BBBSyncService;
@@ -26,7 +26,8 @@ describe('BBBSyncService (v7.0)', () => {
     await db.delete();
     await db.open();
 
-    service = new BBBSyncService();
+    // Inject den gemockten bbbApiService via Konstruktor
+    service = new BBBSyncService(bbbApiService as any);
 
     // Reset all mocks
     vi.clearAllMocks();

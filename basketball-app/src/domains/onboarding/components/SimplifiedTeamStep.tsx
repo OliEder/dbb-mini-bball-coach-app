@@ -6,7 +6,7 @@ import {
 } from '../onboarding-simple.store';
 
 interface SimplifiedTeamStepProps {
-  onNext: (team: VRTeam) => void;
+  onNext: (teams: VRTeam[]) => void;
   onBack: () => void;
 }
 
@@ -26,24 +26,32 @@ export const SimplifiedTeamStep: React.FC<SimplifiedTeamStepProps> = ({
   onNext,
   onBack,
 }) => {
-  const { selectedClub, selectedTeam, setSelectedTeam } = useSimpleOnboardingStore();
+  const { selectedClub, selectedTeams, toggleTeam } = useSimpleOnboardingStore();
 
   const teams = selectedClub?.teams || [];
 
   const handleSubmit = () => {
-    if (selectedTeam) onNext(selectedTeam);
+    if (selectedTeams.length > 0) onNext(selectedTeams);
   };
+
+  const isSelected = (team: VRTeam) =>
+    selectedTeams.some((t) => t.teamPermanentId === team.teamPermanentId);
 
   return (
     <div className="max-w-2xl mx-auto p-6">
       <div className="bg-white rounded-lg shadow-sm p-6">
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-gray-900 mb-2">
-            Wähle dein Team
+            Wähle deine Teams
           </h1>
           <p className="text-gray-600">{selectedClub?.name}</p>
           <p className="text-sm text-gray-500 mt-1">
             {teams.length} {teams.length === 1 ? 'Team' : 'Teams'} verfügbar
+            {selectedTeams.length > 0 && (
+              <span className="ml-2 font-medium text-blue-600">
+                · {selectedTeams.length} {selectedTeams.length === 1 ? 'Team' : 'Teams'} ausgewählt
+              </span>
+            )}
           </p>
         </div>
 
@@ -59,15 +67,14 @@ export const SimplifiedTeamStep: React.FC<SimplifiedTeamStepProps> = ({
                 <label
                   key={team.teamPermanentId}
                   className={`flex items-center p-4 hover:bg-gray-50 cursor-pointer transition-colors ${
-                    selectedTeam?.teamPermanentId === team.teamPermanentId ? 'bg-blue-50' : ''
+                    isSelected(team) ? 'bg-blue-50' : ''
                   }`}
                 >
                   <input
-                    type="radio"
-                    name="team"
-                    checked={selectedTeam?.teamPermanentId === team.teamPermanentId}
-                    onChange={() => setSelectedTeam(team)}
-                    className="w-4 h-4 text-blue-600 focus:ring-blue-500"
+                    type="checkbox"
+                    checked={isSelected(team)}
+                    onChange={() => toggleTeam(team)}
+                    className="w-4 h-4 text-blue-600 focus:ring-blue-500 rounded"
                   />
                   <div className="ml-3">
                     <p className="font-medium text-gray-900">{formatTeamLabel(team)}</p>
@@ -88,7 +95,7 @@ export const SimplifiedTeamStep: React.FC<SimplifiedTeamStepProps> = ({
           </button>
           <button
             onClick={handleSubmit}
-            disabled={!selectedTeam}
+            disabled={selectedTeams.length === 0}
             className="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             Weiter →

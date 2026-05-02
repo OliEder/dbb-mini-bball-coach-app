@@ -72,7 +72,7 @@ interface OnboardingState {
   clubsError: string | null;
   searchQuery: string;
   selectedClub: VRClub | null;
-  selectedTeam: VRTeam | null;
+  selectedTeams: VRTeam[];
   error: string | null;
 }
 
@@ -84,7 +84,7 @@ interface OnboardingActions {
   loadClubs: () => Promise<void>;
   setSearchQuery: (query: string) => void;
   setSelectedClub: (club: VRClub) => void;
-  setSelectedTeam: (team: VRTeam) => void;
+  toggleTeam: (team: VRTeam) => void;
   setError: (error: string | null) => void;
   reset: () => void;
   completeOnboarding: () => Promise<void>;
@@ -106,7 +106,7 @@ const initialState: OnboardingState = {
   clubsError: null,
   searchQuery: '',
   selectedClub: null,
-  selectedTeam: null,
+  selectedTeams: [],
   error: null,
 };
 
@@ -148,9 +148,17 @@ export const useSimpleOnboardingStore = create<OnboardingState & OnboardingActio
 
       setSearchQuery: (query) => set({ searchQuery: query }),
 
-      setSelectedClub: (club) => set({ selectedClub: club, selectedTeam: null }),
+      setSelectedClub: (club) => set({ selectedClub: club, selectedTeams: [] }),
 
-      setSelectedTeam: (team) => set({ selectedTeam: team }),
+      toggleTeam: (team) => {
+        const current = get().selectedTeams;
+        const exists = current.some((t) => t.teamPermanentId === team.teamPermanentId);
+        set({
+          selectedTeams: exists
+            ? current.filter((t) => t.teamPermanentId !== team.teamPermanentId)
+            : [...current, team],
+        });
+      },
 
       setError: (error) => set({ error }),
 
@@ -159,7 +167,7 @@ export const useSimpleOnboardingStore = create<OnboardingState & OnboardingActio
       completeOnboarding: async () => {
         const state = get();
 
-        if (!state.user || !state.selectedClub || !state.selectedTeam) {
+        if (!state.user || !state.selectedClub || state.selectedTeams.length === 0) {
           throw new Error('Onboarding nicht vollständig');
         }
 
@@ -184,30 +192,33 @@ export const useSimpleOnboardingStore = create<OnboardingState & OnboardingActio
           vereinId = created.verein_id;
         }
 
-        // 2. Team anlegen mit extern_permanent_id
-        const team = state.selectedTeam;
+        // 2. Teams anlegen mit extern_permanent_id
         const trainerName = `${state.user.vorname} ${state.user.nachname}`;
+        const createdTeamIds: string[] = [];
 
-        const createdTeam = await teamService.createTeam({
-          verein_id: vereinId,
-          name: formatTeamLabel(team),
-          geschlecht: mapGeschlecht(team.geschlecht),
-          trainer: trainerName,
-          team_typ: 'eigen',
-          extern_permanent_id: team.teamPermanentId.toString(),
-        });
+        for (const team of state.selectedTeams) {
+          const createdTeam = await teamService.createTeam({
+            verein_id: vereinId,
+            name: formatTeamLabel(team),
+            geschlecht: mapGeschlecht(team.geschlecht),
+            trainer: trainerName,
+            team_typ: 'eigen',
+            extern_permanent_id: team.teamPermanentId.toString(),
+          });
+          createdTeamIds.push(createdTeam.team_id);
+        }
 
         // 3. App-State setzen
         localStorage.setItem('onboarding-complete', 'true');
-        localStorage.setItem('active-team-id', createdTeam.team_id);
+        localStorage.setItem('active-team-id', createdTeamIds[0]);
 
         const { useAppStore } = await import('@/stores/appStore');
         const appStore = useAppStore.getState();
-        appStore.setMyTeams([createdTeam.team_id]);
-        appStore.setCurrentTeam(createdTeam.team_id);
+        appStore.setMyTeams(createdTeamIds);
+        appStore.setCurrentTeam(createdTeamIds[0]);
         appStore.completeOnboarding();
 
-        console.log('✅ Onboarding abgeschlossen, Team:', createdTeam.team_id);
+        console.log('✅ Onboarding abgeschlossen, Teams:', createdTeamIds);
       },
     }),
     {
@@ -216,7 +227,7 @@ export const useSimpleOnboardingStore = create<OnboardingState & OnboardingActio
         currentStep: state.currentStep,
         user: state.user,
         selectedClub: state.selectedClub,
-        selectedTeam: state.selectedTeam,
+        selectedTeams: state.selectedTeams,
       }),
     }
   )

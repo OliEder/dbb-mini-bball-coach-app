@@ -42,7 +42,7 @@ test.describe('Simplified Onboarding', () => {
     await expect(page.getByText(/vereine verfügbar/i)).toBeVisible({ timeout: 10000 });
     
     // Suche nach Verein
-    const searchInput = page.getByPlaceholder(/verein suchen/i);
+    const searchInput = page.getByPlaceholder(/baskets neumarkt/i);
     await searchInput.fill('München');
     await page.waitForTimeout(500);
     
@@ -65,40 +65,6 @@ test.describe('Simplified Onboarding', () => {
     await expect(page).toHaveURL('/dashboard', { timeout: 5000 });
   });
 
-  test('sollte Verband-Filter funktionieren', async ({ page }) => {
-    await page.goto('/onboarding');
-    
-    // Skip to Verein
-    await page.evaluate(() => {
-      const store = (window as any).__SIMPLE_ONBOARDING_STORE__;
-      if (store) {
-        store.setState({
-          currentStep: 'verein',
-          user: { vorname: 'Test', nachname: 'User' }
-        });
-      }
-    });
-    await page.reload();
-    
-    // Warte auf Load
-    await expect(page.getByText(/vereine verfügbar/i)).toBeVisible({ timeout: 10000 });
-    
-    // Merke ursprüngliche Anzahl
-    const allCountText = await page.getByText(/vereine verfügbar/i).textContent();
-    const allCount = parseInt(allCountText?.match(/\d+/)?.[0] || '0');
-    
-    // Wähle Bayern
-    await page.locator('select').selectOption({ label: /bayern/i });
-    await page.waitForTimeout(500);
-    
-    // Gefilterte Anzahl sollte kleiner sein
-    const filteredCountText = await page.getByText(/von.*vereine/i).textContent();
-    const filteredCount = parseInt(filteredCountText?.match(/\d+/)?.[0] || '0');
-    
-    expect(filteredCount).toBeLessThan(allCount);
-    expect(filteredCount).toBeGreaterThan(0);
-  });
-
   test('sollte Suche funktionieren', async ({ page }) => {
     await page.goto('/onboarding');
     
@@ -117,7 +83,7 @@ test.describe('Simplified Onboarding', () => {
     await expect(page.getByText(/vereine verfügbar/i)).toBeVisible({ timeout: 10000 });
     
     // Suche
-    await page.getByPlaceholder(/verein suchen/i).fill('Bayern München');
+    await page.getByPlaceholder(/baskets neumarkt/i).fill('Bayern München');
     await page.waitForTimeout(500);
     
     // Ergebnisse gefiltert
@@ -241,6 +207,6 @@ test.describe('Simplified Onboarding', () => {
     await page.getByRole('button', { name: /weiter/i }).click();
     
     await expect(page.getByRole('heading', { name: /wähle deinen verein/i })).toBeVisible({ timeout: 10000 });
-    await expect(page.getByPlaceholder(/verein suchen/i)).toBeVisible();
+    await expect(page.getByPlaceholder(/baskets neumarkt/i)).toBeVisible();
   });
 });

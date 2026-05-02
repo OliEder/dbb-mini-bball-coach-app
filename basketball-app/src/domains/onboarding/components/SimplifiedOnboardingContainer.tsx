@@ -29,7 +29,6 @@ export const SimplifiedOnboardingContainer: React.FC = () => {
     previousStep,
     setUser,
     setSelectedClub,
-    setSelectedTeam,
     completeOnboarding,
   } = useSimpleOnboardingStore();
 
@@ -89,8 +88,7 @@ export const SimplifiedOnboardingContainer: React.FC = () => {
 
         return (
           <SimplifiedTeamStep
-            onNext={(team) => {
-              setSelectedTeam(team);
+            onNext={() => {
               nextStep();
             }}
             onBack={previousStep}
