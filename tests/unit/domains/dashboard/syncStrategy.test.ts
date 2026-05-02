@@ -25,8 +25,7 @@ const teamWithPermanentIdOnly: Team = {
   trainer: 'Max Mustermann',
   team_typ: 'eigen',
   extern_permanent_id: '167889',
-  erstellt_am: new Date().toISOString(),
-  aktualisiert_am: new Date().toISOString(),
+  created_at: new Date(),
 };
 
 const teamWithLigaParticipation: Team = {
