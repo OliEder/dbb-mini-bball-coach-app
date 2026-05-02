@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basketball Team Manager - Seite nicht gefunden</title>
+    <script>
+        // Single Page App Redirect für GitHub Pages
+        // Leitet alle 404s zur index.html mit dem ursprünglichen Pfad
+        const path = window.location.pathname;
+<<<<<<< HEAD
+        const base = '/dbb-mini-bball-coach-app/';  // GitHub Pages base path
+=======
+        const base = '/basketball-app/';  // GitHub Pages base path
+>>>>>>> c34e0aed0d7e14b9cafc932553a10e4d944f8f84
+        
+        if (path !== base) {
+            // Speichere den Pfad für die App
+            sessionStorage.setItem('redirectPath', path);
+            // Redirect zur Haupt-App
+            window.location.replace(base);
+        }
+    </script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
+        }
+        .container {
+            text-align: center;
+            padding: 2rem;
+        }
+        h1 {
+            font-size: 3rem;
+            margin: 0;
+        }
+        p {
+            font-size: 1.2rem;
+            margin: 1rem 0;
+            opacity: 0.9;
+        }
+        .loader {
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 3px solid white;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 2rem auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏀</h1>
+        <p>Einen Moment bitte...</p>
+        <div class="loader"></div>
+        <p style="font-size: 0.9rem; opacity: 0.7;">Die App wird geladen</p>
+    </div>
+</body>
+</html>

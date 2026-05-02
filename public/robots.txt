@@ -1,0 +1,15 @@
+# BenchBoss Basketball Team Manager
+# https://benchboss.de
+
+User-agent: *
+Allow: /
+
+# PWA Assets
+Allow: /assets/
+Allow: /manifest.json
+Allow: /sw.js
+
+# No need to crawl source maps
+Disallow: /*.map
+
+Sitemap: https://benchboss.de/sitemap.xml

@@ -1,0 +1,160 @@
+erDiagram
+    TEAM ||--o{ SPIELER : "hat"
+    TEAM ||--o{ SPIEL : "spielt_als_eigenes_team"
+    TEAM ||--o{ SPIEL : "spielt_als_gegner_optional"
+    TEAM ||--o{ TRIKOT : "besitzt"
+    SPIELPLAN ||--o| SPIEL : "wird_zu"
+    SPIEL ||--|{ SPIELER_EINSATZ : "hat_in_aufstellung"
+    SPIEL ||--|{ ACHTEL_STATISTIK : "hat_pro_achtel"
+    SPIELER ||--o{ SPIELER_EINSATZ : "nimmt_teil_an"
+    TRIKOT ||--o{ SPIELER_EINSATZ : "zugewiesen_als_jersey"
+    TRIKOT ||--o{ SPIELER_EINSATZ : "zugewiesen_als_hose"
+    
+    TEAM {
+        uuid team_id PK
+        string name
+        enum altersklasse "U8, U10, U12"
+        string saison
+        string trainer
+        string trainer_email
+        string trainer_tel
+        boolean leistungsorientiert "nur U12"
+        datetime created_at
+    }
+    
+    SPIELER {
+        uuid spieler_id PK
+        uuid team_id FK
+        string vorname
+        string nachname
+        string spieler_vollname
+        date geburtsdatum
+        string tna_nr "DBB Teilnehmerausweis"
+        integer konf_gr_oben "Konfektionsgröße Oberkörper"
+        integer konf_gr_unten "Konfektionsgröße Unterkörper"
+        string erz_berechtigter
+        string tel
+        string kontakt_email
+        datetime gemeldet
+        boolean in_easyVerein
+        boolean aktiv
+        integer ballhandling_score "1-3"
+        integer passen_fangen_score "1-3"
+        integer spieluebersicht_score "1-3"
+        integer teamplay_score "1-3"
+        integer defense_score "1-3"
+        integer laufbereitschaft_score "1-3"
+        integer rebound_score "1-3"
+        integer positionsflex_score "1-3"
+        integer abschluss_score "1-3"
+        float gesamt_wert "berechnet"
+    }
+    
+    SPIEL {
+        uuid game_id PK
+        uuid eigenes_team_id FK "Referenz zu TEAM"
+        uuid gegner_team_id FK "Optional: wenn Gegner auch im System"
+        string gegner_name "Fallback wenn kein Team"
+        uuid spielplan_id FK "Optional: Import-Referenz"
+        datetime datum
+        enum heim_auswaerts "Heim, Auswärts"
+        string spielhalle
+        enum altersklasse "U8, U10, U12"
+        boolean leistungsorientiert "nur U12"
+        string spielnummer
+        integer spieltag
+        string schiedsrichter
+        integer anzahl_spieler_aufgestellt "Wie viele Spieler in Aufstellung"
+        integer ergebnis_eigenes_team "nur U12"
+        integer ergebnis_gegner "nur U12"
+        enum status "geplant, aktiv, beendet, abgesagt"
+        float durchschnitt_team_score "Durchschnitt über alle 8 Achtel"
+        float min_team_score "Niedrigster Achtel-Score"
+        float max_team_score "Höchster Achtel-Score"
+        float balance_index "Standardabweichung - je niedriger desto ausgeglichener"
+        text notizen
+    }
+    
+    SPIELER_EINSATZ {
+        uuid spieler_einsatz_id PK
+        uuid game_id FK "In welchem Spiel"
+        uuid spieler_id FK "Welcher Spieler"
+        uuid jersey_id FK "Zugewiesenes Jersey für dieses Spiel"
+        uuid hose_id FK "Zugewiesene Hose für dieses Spiel"
+        integer position "Reihenfolge in Aufstellung"
+        string tna_nr "Aus Spieler"
+        integer trikot_nr "Aus jersey_id Nummer"
+        integer jersey_groesse "Aus jersey_id eu_groesse"
+        string achtung "Warnung: Muss spielen, Sollte pausieren, etc"
+        enum q1_1 "Im_Spiel, Bank"
+        enum q1_2 "Im_Spiel, Bank"
+        enum q2_1 "Im_Spiel, Bank"
+        enum q2_2 "Im_Spiel, Bank"
+        enum q3_1 "Im_Spiel, Bank"
+        enum q3_2 "Im_Spiel, Bank"
+        enum q4_1 "Im_Spiel, Bank"
+        enum q4_2 "Im_Spiel, Bank"
+        integer pausen "berechnet: COUNT(Bank)"
+        integer gespielt "berechnet: COUNT(Im_Spiel)"
+        integer einsatzmoeglichkeiten "berechnet: 8 - pausen - gespielt"
+        datetime created_at
+        datetime updated_at
+    }
+    
+    ACHTEL_STATISTIK {
+        uuid achtel_stat_id PK
+        uuid game_id FK
+        integer achtel_nummer "1-8 (Q1-1 bis Q4-2)"
+        string achtel_name "Q1-1, Q1-2, etc."
+        float team_score "Durchschnitt Gesamt-Wert der Spieler auf Feld"
+        integer spieler_auf_feld "3, 4 oder 5"
+        float ballhandling_avg "Durchschnitt Ballhandling"
+        float passen_fangen_avg "Durchschnitt Passen und Fangen"
+        float spieluebersicht_avg "Durchschnitt Spielübersicht"
+        float teamplay_avg "Durchschnitt Teamplay"
+        float defense_avg "Durchschnitt Defense"
+        float laufbereitschaft_avg "Durchschnitt Laufbereitschaft"
+        float rebound_avg "Durchschnitt Rebound"
+        float positionsflex_avg "Durchschnitt Positionsflexibilität"
+        float abschluss_avg "Durchschnitt Abschlussbereitschaft"
+        datetime berechnet_am
+    }
+    
+    TRIKOT {
+        uuid trikot_id PK
+        uuid team_id FK
+        enum art "Wendejersey, Hose"
+        string nummer "Nur bei Jersey"
+        string groesse "3xs, 2xs, xs, s, m, l, xl"
+        integer eu_groesse "116-170"
+        string farbe_dunkel
+        string farbe_hell
+        enum status "verfuegbar, im_einsatz, defekt"
+        string besonderheiten
+        datetime created_at
+    }
+    
+    SPIELPLAN {
+        uuid spielplan_id PK
+        string liga
+        integer nr
+        integer tag
+        datetime datum
+        string heim
+        string gast
+        string spielhalle
+        string schiedsrichter
+        string quelle
+        boolean importiert_als_spiel "false wenn noch nicht übernommen"
+    }
+    
+    KONFIGURATION {
+        uuid config_id PK
+        string metrik_name
+        float gewicht
+        string fokus_bedeutung
+        json bewertungslabels "Level 1-3 Beschreibungen"
+        json teams_liga
+        json groessen
+        json farben
+    }

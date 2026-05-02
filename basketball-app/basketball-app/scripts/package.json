@@ -1,0 +1,12 @@
+{
+  "name": "Basketball PWA Test Results",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node test-monitor-native.js",
+    "start:chalk": "npm install && node test-monitor.js"
+  },
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "chokidar": "^3.5.3"
+  }
+}

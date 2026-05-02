@@ -1,0 +1,155 @@
+/**
+ * Onboarding Store - Zustand State Management
+ * 
+ * Vereinfachter Workflow: Direkte Team-Auswahl ohne URL-Input
+ * 
+ * Flow:
+ * 1. Welcome
+ * 2. Team Select (Liga-ID aus DB/Konstanten)
+ * 3. Spieler CSV Import
+ * 4. Trikot CSV Import
+ * 5. Complete
+ */
+
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+
+type OnboardingStep = 
+  | 'welcome' 
+  | 'team_select'       // Team auswählen (Liga-ID aus DB)
+  | 'spieler'           // Spieler CSV Import
+  | 'trikots'           // Trikot CSV Import
+  | 'complete';         // Abschluss
+
+interface OnboardingState {
+  step: OnboardingStep;
+  
+  // Team-Auswahl
+  liga_id?: number;
+  selected_team_name?: string;
+  trainer_name?: string;
+  
+  // CSV-Files (NICHT persistiert wegen File-Objekt!)
+  spieler_csv?: File;
+  trikot_csv?: File;
+}
+
+interface OnboardingStore extends OnboardingState {
+  // Navigation
+  setStep: (step: OnboardingStep) => void;
+  nextStep: () => void;
+  previousStep: () => void;
+  
+  // Data Setters
+  setLigaId: (id: number) => void;
+  setSelectedTeam: (teamName: string) => void;
+  setTeam: (teamName: string) => void; // Alias für Kompatibilität
+  setTrainerName: (name: string) => void;
+  setSpielerCSV: (file: File) => void;
+  setTrikotCSV: (file: File) => void;
+  
+  // Utility
+  reset: () => void;
+  canProceed: () => boolean;
+}
+
+const STEP_ORDER: OnboardingStep[] = [
+  'welcome',
+  'team_select',
+  'spieler',
+  'trikots',
+  'complete'
+];
+
+const initialState: OnboardingState = {
+  step: 'welcome',
+  liga_id: undefined,
+  selected_team_name: undefined,
+  trainer_name: undefined,
+  spieler_csv: undefined,
+  trikot_csv: undefined,
+};
+
+export const useOnboardingStore = create<OnboardingStore>()(
+  persist(
+    (set, get) => ({
+      ...initialState,
+
+      // Navigation
+      setStep: (step) => set({ step }),
+
+      nextStep: () => {
+        const current = get().step;
+        const currentIndex = STEP_ORDER.indexOf(current);
+        if (currentIndex < STEP_ORDER.length - 1) {
+          set({ step: STEP_ORDER[currentIndex + 1] });
+        }
+      },
+      
+      previousStep: () => {
+        const current = get().step;
+        const currentIndex = STEP_ORDER.indexOf(current);
+        if (currentIndex > 0) {
+          set({ step: STEP_ORDER[currentIndex - 1] });
+        }
+      },
+
+      // Data Setters
+      setLigaId: (id) => set({ liga_id: id }),
+
+      setSelectedTeam: (teamName) => set({ selected_team_name: teamName }),
+      setTeam: (teamName) => set({ selected_team_name: teamName }), // Alias
+
+      setTrainerName: (name) => set({ trainer_name: name }),
+
+      setSpielerCSV: (file) => set({ spieler_csv: file }),
+
+      setTrikotCSV: (file) => set({ trikot_csv: file }),
+
+      // Utility
+      reset: () => set(initialState),
+
+      canProceed: () => {
+        const state = get();
+        
+        switch (state.step) {
+          case 'welcome':
+            return true;
+          
+          case 'team_select':
+            // Team + Liga-ID + Trainer-Name erforderlich
+            return !!(
+              state.liga_id && 
+              state.selected_team_name && 
+              state.trainer_name?.trim()
+            );
+          
+          case 'spieler':
+            return !!state.spieler_csv;
+          
+          case 'trikots':
+            return !!state.trikot_csv;
+          
+          case 'complete':
+            return true;
+          
+          default:
+            return false;
+        }
+      }
+    }),
+    {
+      name: 'basketball-onboarding',
+      // KRITISCH: Files NICHT persistieren (können nicht serialisiert werden)
+      partialize: (state) => ({
+        step: state.step,
+        liga_id: state.liga_id,
+        selected_team_name: state.selected_team_name,
+        trainer_name: state.trainer_name,
+        // EXPLIZIT AUSGESCHLOSSEN:
+        // - spieler_csv: File-Objekt
+        // - trikot_csv: File-Objekt
+      })
+    }
+  )
+);

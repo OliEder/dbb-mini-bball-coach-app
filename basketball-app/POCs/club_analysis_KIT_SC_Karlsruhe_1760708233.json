@@ -1,0 +1,220 @@
+{
+  "club_id": 4079,
+  "club_name": "KIT SC Karlsruhe",
+  "total_teams": 5,
+  "total_ligen": 5,
+  "team_variations": [
+    {
+      "teamname": "KIT SC Karlsruhe 2",
+      "teamPermanentIds": [
+        151210
+      ],
+      "teamCompetitionIds": [
+        402096
+      ]
+    },
+    {
+      "teamname": "Packservice BBA SSC Karlsruhe",
+      "teamPermanentIds": [
+        312550,
+        312561,
+        312562,
+        312563
+      ],
+      "teamCompetitionIds": [
+        401915,
+        402054,
+        431275,
+        434303
+      ]
+    }
+  ],
+  "ligen_by_category": {
+    "U18 männlich": [
+      {
+        "liga_id": 48120,
+        "liga_name": "BBW2 U18 männlich Bezirksliga Nord",
+        "spielklasse": "Bezirksliga",
+        "ebene": "Bezirk",
+        "verband": "Baden-Württemberg",
+        "bezirk": "SchwarzwaldOberrhein"
+      }
+    ],
+    "U16 männlich": [
+      {
+        "liga_id": 48125,
+        "liga_name": "BBW2 U16 männlich Kreisliga Nord/Mitte",
+        "spielklasse": "Bezirksliga",
+        "ebene": "Bezirk",
+        "verband": "Baden-Württemberg",
+        "bezirk": "SchwarzwaldOberrhein"
+      }
+    ],
+    "U12 mix": [
+      {
+        "liga_id": 48137,
+        "liga_name": "BBW2 U12 Bezirksliga Nord",
+        "spielklasse": "Bezirksliga",
+        "ebene": "Bezirk",
+        "verband": "Baden-Württemberg",
+        "bezirk": "SchwarzwaldOberrhein"
+      }
+    ],
+    "U14 mix": [
+      {
+        "liga_id": 48150,
+        "liga_name": "BBW2 U14 männlich Kreisliga Nord",
+        "spielklasse": "Kreisliga",
+        "ebene": "Kreis",
+        "verband": "Baden-Württemberg",
+        "bezirk": "SchwarzwaldOberrhein"
+      }
+    ],
+    "Senioren männlich": [
+      {
+        "liga_id": 48152,
+        "liga_name": "BBW2 Kreisliga A Nord Männer ",
+        "spielklasse": "Kreisliga A",
+        "ebene": "Kreis",
+        "verband": "Baden-Württemberg",
+        "bezirk": "SchwarzwaldOberrhein"
+      }
+    ]
+  },
+  "teams_detailed": [
+    {
+      "team_name": "Packservice BBA SSC Karlsruhe",
+      "team_name_small": "KIT S",
+      "team_permanent_id": 312550,
+      "season_team_id": 401915,
+      "liga_id": 48120,
+      "liga_name": "BBW2 U18 männlich Bezirksliga Nord",
+      "rang": 5,
+      "anzspiele": 1,
+      "siege": 0,
+      "niederlagen": 1,
+      "punkte": 0,
+      "koerbe": 36,
+      "gegen_koerbe": 133,
+      "korbdifferenz": -97
+    },
+    {
+      "team_name": "Packservice BBA SSC Karlsruhe",
+      "team_name_small": "KIT",
+      "team_permanent_id": 312561,
+      "season_team_id": 431275,
+      "liga_id": 48125,
+      "liga_name": "BBW2 U16 männlich Kreisliga Nord/Mitte",
+      "rang": 5,
+      "anzspiele": 2,
+      "siege": 0,
+      "niederlagen": 2,
+      "punkte": 0,
+      "koerbe": 87,
+      "gegen_koerbe": 120,
+      "korbdifferenz": -33
+    },
+    {
+      "team_name": "Packservice BBA SSC Karlsruhe",
+      "team_name_small": "SSC",
+      "team_permanent_id": 312563,
+      "season_team_id": 434303,
+      "liga_id": 48137,
+      "liga_name": "BBW2 U12 Bezirksliga Nord",
+      "rang": 7,
+      "anzspiele": 1,
+      "siege": 0,
+      "niederlagen": 1,
+      "punkte": 0,
+      "koerbe": 32,
+      "gegen_koerbe": 86,
+      "korbdifferenz": -54
+    },
+    {
+      "team_name": "Packservice BBA SSC Karlsruhe",
+      "team_name_small": "SSC",
+      "team_permanent_id": 312562,
+      "season_team_id": 402054,
+      "liga_id": 48150,
+      "liga_name": "BBW2 U14 männlich Kreisliga Nord",
+      "rang": 1,
+      "anzspiele": 2,
+      "siege": 2,
+      "niederlagen": 0,
+      "punkte": 4,
+      "koerbe": 157,
+      "gegen_koerbe": 41,
+      "korbdifferenz": 116
+    },
+    {
+      "team_name": "KIT SC Karlsruhe 2",
+      "team_name_small": "KIT S",
+      "team_permanent_id": 151210,
+      "season_team_id": 402096,
+      "liga_id": 48152,
+      "liga_name": "BBW2 Kreisliga A Nord Männer ",
+      "rang": 7,
+      "anzspiele": 3,
+      "siege": 1,
+      "niederlagen": 2,
+      "punkte": 2,
+      "koerbe": 159,
+      "gegen_koerbe": 191,
+      "korbdifferenz": -32
+    }
+  ],
+  "geographic_distribution": {
+    "verbaende": {
+      "Baden-Württemberg": 5
+    },
+    "bezirke": {
+      "SchwarzwaldOberrhein": 5
+    },
+    "ebenen": {
+      "Bezirk": 3,
+      "Kreis": 2
+    }
+  },
+  "best_teams": [
+    {
+      "team_name": "Packservice BBA SSC Karlsruhe",
+      "liga_name": "BBW2 U14 männlich Kreisliga Nord",
+      "rang": 1,
+      "punkte": 4,
+      "bilanz": "2:0",
+      "korbdifferenz": 116
+    },
+    {
+      "team_name": "Packservice BBA SSC Karlsruhe",
+      "liga_name": "BBW2 U18 männlich Bezirksliga Nord",
+      "rang": 5,
+      "punkte": 0,
+      "bilanz": "0:1",
+      "korbdifferenz": -97
+    },
+    {
+      "team_name": "Packservice BBA SSC Karlsruhe",
+      "liga_name": "BBW2 U16 männlich Kreisliga Nord/Mitte",
+      "rang": 5,
+      "punkte": 0,
+      "bilanz": "0:2",
+      "korbdifferenz": -33
+    },
+    {
+      "team_name": "KIT SC Karlsruhe 2",
+      "liga_name": "BBW2 Kreisliga A Nord Männer ",
+      "rang": 7,
+      "punkte": 2,
+      "bilanz": "1:2",
+      "korbdifferenz": -32
+    },
+    {
+      "team_name": "Packservice BBA SSC Karlsruhe",
+      "liga_name": "BBW2 U12 Bezirksliga Nord",
+      "rang": 7,
+      "punkte": 0,
+      "bilanz": "0:1",
+      "korbdifferenz": -54
+    }
+  ]
+}

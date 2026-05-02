@@ -1,0 +1,818 @@
+{
+  "club_id": 1442,
+  "club_name": "TuS Neukölln",
+  "total_teams": 15,
+  "total_ligen": 15,
+  "team_variations": [
+    {
+      "teamname": "TuS Neukölln",
+      "teamPermanentIds": [
+        158932
+      ],
+      "teamCompetitionIds": [
+        413994
+      ]
+    },
+    {
+      "teamname": "TuS Neukölln 1",
+      "teamPermanentIds": [
+        254417,
+        254433,
+        313302,
+        313448,
+        313502,
+        313546,
+        313584
+      ],
+      "teamCompetitionIds": [
+        419748,
+        422349,
+        422393,
+        422434,
+        423187,
+        423304,
+        431081
+      ]
+    },
+    {
+      "teamname": "TuS Neukölln 1 (aK)",
+      "teamPermanentIds": [
+        254438,
+        321389
+      ],
+      "teamCompetitionIds": [
+        421418,
+        428108
+      ]
+    },
+    {
+      "teamname": "TuS Neukölln 2",
+      "teamPermanentIds": [
+        254449,
+        254451,
+        313547,
+        313900
+      ],
+      "teamCompetitionIds": [
+        419653,
+        419691,
+        431050,
+        431062
+      ]
+    },
+    {
+      "teamname": "TuS Neukölln 3",
+      "teamPermanentIds": [
+        313896
+      ],
+      "teamCompetitionIds": [
+        424181
+      ]
+    }
+  ],
+  "ligen_by_category": {
+    "Senioren männlich": [
+      {
+        "liga_id": 50849,
+        "liga_name": "Herren Oberliga B",
+        "spielklasse": "Oberliga",
+        "ebene": "Verband",
+        "verband": "Berlin",
+        "bezirk": null
+      },
+      {
+        "liga_id": 50394,
+        "liga_name": "Herren Landesliga A",
+        "spielklasse": "Landesliga",
+        "ebene": "Verband",
+        "verband": "Berlin",
+        "bezirk": null
+      }
+    ],
+    "Senioren weiblich": [
+      {
+        "liga_id": 50388,
+        "liga_name": "Damen Oberliga",
+        "spielklasse": "Oberliga",
+        "ebene": "Verband",
+        "verband": "Berlin",
+        "bezirk": null
+      },
+      {
+        "liga_id": 50852,
+        "liga_name": "Damen Bezirksliga",
+        "spielklasse": "Bezirksliga",
+        "ebene": "Bezirk",
+        "verband": "Berlin",
+        "bezirk": null
+      },
+      {
+        "liga_id": 49741,
+        "liga_name": "1. Regionalliga Damen",
+        "spielklasse": "1.Regionalliga",
+        "ebene": "Verband",
+        "verband": "Regionalliga Nord",
+        "bezirk": null
+      }
+    ],
+    "U18 mix": [
+      {
+        "liga_id": 50400,
+        "liga_name": "mu18 Landesliga A",
+        "spielklasse": "Landesliga",
+        "ebene": "Verband",
+        "verband": "Berlin",
+        "bezirk": null
+      }
+    ],
+    "U16 mix": [
+      {
+        "liga_id": 50404,
+        "liga_name": "mu16 Landesliga A",
+        "spielklasse": "Landesliga",
+        "ebene": "Verband",
+        "verband": "Berlin",
+        "bezirk": null
+      },
+      {
+        "liga_id": 51779,
+        "liga_name": "mu16 Kreisliga",
+        "spielklasse": "Kreisliga",
+        "ebene": "Kreis",
+        "verband": "Berlin",
+        "bezirk": null
+      }
+    ],
+    "U12 mix": [
+      {
+        "liga_id": 50421,
+        "liga_name": "mu12 Landesliga A",
+        "spielklasse": "Landesliga",
+        "ebene": "Verband",
+        "verband": "Berlin",
+        "bezirk": null
+      }
+    ],
+    "U14 weiblich": [
+      {
+        "liga_id": 50610,
+        "liga_name": "wu14 Bezirksliga",
+        "spielklasse": "Bezirksliga",
+        "ebene": "Bezirk",
+        "verband": "Berlin",
+        "bezirk": null
+      }
+    ],
+    "U14 mix": [
+      {
+        "liga_id": 50607,
+        "liga_name": "mu14 Bezirksliga B",
+        "spielklasse": "Bezirksliga",
+        "ebene": "Bezirk",
+        "verband": "Berlin",
+        "bezirk": null
+      },
+      {
+        "liga_id": 51778,
+        "liga_name": "mu14 Kreisliga",
+        "spielklasse": "Kreisliga",
+        "ebene": "Kreis",
+        "verband": "Berlin",
+        "bezirk": null
+      }
+    ],
+    "U12 weiblich": [
+      {
+        "liga_id": 50618,
+        "liga_name": "wu12 Bezirksliga",
+        "spielklasse": "Bezirksliga",
+        "ebene": "Bezirk",
+        "verband": "Berlin",
+        "bezirk": null
+      }
+    ],
+    "U9 weiblich": [
+      {
+        "liga_id": 51365,
+        "liga_name": "Mini wu9 Anfänger",
+        "spielklasse": "Mini-A",
+        "ebene": "Kreis",
+        "verband": "Berlin",
+        "bezirk": null
+      }
+    ],
+    "U9 mix": [
+      {
+        "liga_id": 51781,
+        "liga_name": "Mini u9 Neulinge",
+        "spielklasse": "Mini-N",
+        "ebene": "Kreis",
+        "verband": "Berlin",
+        "bezirk": null
+      }
+    ]
+  },
+  "teams_detailed": [
+    {
+      "team_name": "TuS Neukölln 1",
+      "team_name_small": "TUSN1",
+      "team_permanent_id": 254417,
+      "season_team_id": 423304,
+      "liga_id": 50849,
+      "liga_name": "Herren Oberliga B",
+      "tabelle": {
+        "rang": 1,
+        "total_teams": 8,
+        "position_text": "1/8"
+      },
+      "spiele": {
+        "gesamt": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "heim": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "auswaerts": {
+          "gespielt": 0,
+          "anstehend": 0
+        }
+      },
+      "naechste_spiele": [],
+      "statistik": {
+        "siege": 3,
+        "niederlagen": 1,
+        "punkte": 6,
+        "koerbe": 262,
+        "gegen_koerbe": 226,
+        "korbdifferenz": 36
+      }
+    },
+    {
+      "team_name": "TuS Neukölln 2",
+      "team_name_small": "TUSN2",
+      "team_permanent_id": 254451,
+      "season_team_id": 419653,
+      "liga_id": 50388,
+      "liga_name": "Damen Oberliga",
+      "tabelle": {
+        "rang": 10,
+        "total_teams": 10,
+        "position_text": "10/10"
+      },
+      "spiele": {
+        "gesamt": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "heim": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "auswaerts": {
+          "gespielt": 0,
+          "anstehend": 0
+        }
+      },
+      "naechste_spiele": [],
+      "statistik": {
+        "siege": 0,
+        "niederlagen": 3,
+        "punkte": 0,
+        "koerbe": 130,
+        "gegen_koerbe": 151,
+        "korbdifferenz": -21
+      }
+    },
+    {
+      "team_name": "TuS Neukölln 2",
+      "team_name_small": "TUSN2",
+      "team_permanent_id": 254449,
+      "season_team_id": 419691,
+      "liga_id": 50394,
+      "liga_name": "Herren Landesliga A",
+      "tabelle": {
+        "rang": 8,
+        "total_teams": 11,
+        "position_text": "8/11"
+      },
+      "spiele": {
+        "gesamt": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "heim": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "auswaerts": {
+          "gespielt": 0,
+          "anstehend": 0
+        }
+      },
+      "naechste_spiele": [],
+      "statistik": {
+        "siege": 1,
+        "niederlagen": 2,
+        "punkte": 1,
+        "koerbe": 136,
+        "gegen_koerbe": 177,
+        "korbdifferenz": -41
+      }
+    },
+    {
+      "team_name": "TuS Neukölln 1",
+      "team_name_small": "TUSN1",
+      "team_permanent_id": 313502,
+      "season_team_id": 419748,
+      "liga_id": 50400,
+      "liga_name": "mu18 Landesliga A",
+      "tabelle": {
+        "rang": 8,
+        "total_teams": 10,
+        "position_text": "8/10"
+      },
+      "spiele": {
+        "gesamt": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "heim": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "auswaerts": {
+          "gespielt": 0,
+          "anstehend": 0
+        }
+      },
+      "naechste_spiele": [],
+      "statistik": {
+        "siege": 0,
+        "niederlagen": 1,
+        "punkte": 0,
+        "koerbe": 42,
+        "gegen_koerbe": 89,
+        "korbdifferenz": -47
+      }
+    },
+    {
+      "team_name": "TuS Neukölln 1",
+      "team_name_small": "TUSN1",
+      "team_permanent_id": 313584,
+      "season_team_id": 422393,
+      "liga_id": 50404,
+      "liga_name": "mu16 Landesliga A",
+      "tabelle": {
+        "rang": 8,
+        "total_teams": 10,
+        "position_text": "8/10"
+      },
+      "spiele": {
+        "gesamt": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "heim": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "auswaerts": {
+          "gespielt": 0,
+          "anstehend": 0
+        }
+      },
+      "naechste_spiele": [],
+      "statistik": {
+        "siege": 1,
+        "niederlagen": 2,
+        "punkte": 2,
+        "koerbe": 214,
+        "gegen_koerbe": 175,
+        "korbdifferenz": 39
+      }
+    },
+    {
+      "team_name": "TuS Neukölln 1",
+      "team_name_small": "TUSN1",
+      "team_permanent_id": 313448,
+      "season_team_id": 422349,
+      "liga_id": 50421,
+      "liga_name": "mu12 Landesliga A",
+      "tabelle": {
+        "rang": 7,
+        "total_teams": 10,
+        "position_text": "7/10"
+      },
+      "spiele": {
+        "gesamt": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "heim": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "auswaerts": {
+          "gespielt": 0,
+          "anstehend": 0
+        }
+      },
+      "naechste_spiele": [],
+      "statistik": {
+        "siege": 1,
+        "niederlagen": 2,
+        "punkte": 2,
+        "koerbe": 181,
+        "gegen_koerbe": 212,
+        "korbdifferenz": -31
+      }
+    },
+    {
+      "team_name": "TuS Neukölln 3",
+      "team_name_small": "TUSN3",
+      "team_permanent_id": 313896,
+      "season_team_id": 424181,
+      "liga_id": 50852,
+      "liga_name": "Damen Bezirksliga",
+      "tabelle": {
+        "rang": 6,
+        "total_teams": 14,
+        "position_text": "6/14"
+      },
+      "spiele": {
+        "gesamt": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "heim": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "auswaerts": {
+          "gespielt": 0,
+          "anstehend": 0
+        }
+      },
+      "naechste_spiele": [],
+      "statistik": {
+        "siege": 1,
+        "niederlagen": 1,
+        "punkte": 2,
+        "koerbe": 121,
+        "gegen_koerbe": 107,
+        "korbdifferenz": 14
+      }
+    },
+    {
+      "team_name": "TuS Neukölln 1 (aK)",
+      "team_name_small": "TUSN1",
+      "team_permanent_id": 254438,
+      "season_team_id": 421418,
+      "liga_id": 50610,
+      "liga_name": "wu14 Bezirksliga",
+      "tabelle": {
+        "rang": 3,
+        "total_teams": 12,
+        "position_text": "3/12"
+      },
+      "spiele": {
+        "gesamt": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "heim": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "auswaerts": {
+          "gespielt": 0,
+          "anstehend": 0
+        }
+      },
+      "naechste_spiele": [],
+      "statistik": {
+        "siege": 3,
+        "niederlagen": 2,
+        "punkte": 6,
+        "koerbe": 246,
+        "gegen_koerbe": 206,
+        "korbdifferenz": 40
+      }
+    },
+    {
+      "team_name": "TuS Neukölln 1",
+      "team_name_small": "TUSN1",
+      "team_permanent_id": 313546,
+      "season_team_id": 423187,
+      "liga_id": 50607,
+      "liga_name": "mu14 Bezirksliga B",
+      "tabelle": {
+        "rang": 1,
+        "total_teams": 12,
+        "position_text": "1/12"
+      },
+      "spiele": {
+        "gesamt": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "heim": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "auswaerts": {
+          "gespielt": 0,
+          "anstehend": 0
+        }
+      },
+      "naechste_spiele": [],
+      "statistik": {
+        "siege": 4,
+        "niederlagen": 0,
+        "punkte": 8,
+        "koerbe": 302,
+        "gegen_koerbe": 182,
+        "korbdifferenz": 120
+      }
+    },
+    {
+      "team_name": "TuS Neukölln 1",
+      "team_name_small": "TUSN1",
+      "team_permanent_id": 254433,
+      "season_team_id": 422434,
+      "liga_id": 50618,
+      "liga_name": "wu12 Bezirksliga",
+      "tabelle": {
+        "rang": 11,
+        "total_teams": 12,
+        "position_text": "11/12"
+      },
+      "spiele": {
+        "gesamt": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "heim": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "auswaerts": {
+          "gespielt": 0,
+          "anstehend": 0
+        }
+      },
+      "naechste_spiele": [],
+      "statistik": {
+        "siege": 0,
+        "niederlagen": 2,
+        "punkte": 0,
+        "koerbe": 65,
+        "gegen_koerbe": 241,
+        "korbdifferenz": -176
+      }
+    },
+    {
+      "team_name": "TuS Neukölln 2",
+      "team_name_small": "TUSN2",
+      "team_permanent_id": 313900,
+      "season_team_id": 431062,
+      "liga_id": 51779,
+      "liga_name": "mu16 Kreisliga",
+      "tabelle": {
+        "rang": 1,
+        "total_teams": 6,
+        "position_text": "1/6"
+      },
+      "spiele": {
+        "gesamt": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "heim": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "auswaerts": {
+          "gespielt": 0,
+          "anstehend": 0
+        }
+      },
+      "naechste_spiele": [],
+      "statistik": {
+        "siege": 3,
+        "niederlagen": 0,
+        "punkte": 6,
+        "koerbe": 239,
+        "gegen_koerbe": 105,
+        "korbdifferenz": 134
+      }
+    },
+    {
+      "team_name": "TuS Neukölln 2",
+      "team_name_small": "TUSN2",
+      "team_permanent_id": 313547,
+      "season_team_id": 431050,
+      "liga_id": 51778,
+      "liga_name": "mu14 Kreisliga",
+      "tabelle": {
+        "rang": 7,
+        "total_teams": 12,
+        "position_text": "7/12"
+      },
+      "spiele": {
+        "gesamt": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "heim": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "auswaerts": {
+          "gespielt": 0,
+          "anstehend": 0
+        }
+      },
+      "naechste_spiele": [],
+      "statistik": {
+        "siege": 2,
+        "niederlagen": 3,
+        "punkte": 4,
+        "koerbe": 196,
+        "gegen_koerbe": 173,
+        "korbdifferenz": 23
+      }
+    },
+    {
+      "team_name": "TuS Neukölln 1 (aK)",
+      "team_name_small": "TUSN1",
+      "team_permanent_id": 321389,
+      "season_team_id": 428108,
+      "liga_id": 51365,
+      "liga_name": "Mini wu9 Anfänger",
+      "tabelle": {
+        "rang": 4,
+        "total_teams": 6,
+        "position_text": "4/6"
+      },
+      "spiele": {
+        "gesamt": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "heim": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "auswaerts": {
+          "gespielt": 0,
+          "anstehend": 0
+        }
+      },
+      "naechste_spiele": [],
+      "statistik": {
+        "siege": 0,
+        "niederlagen": 0,
+        "punkte": 3,
+        "koerbe": 0,
+        "gegen_koerbe": 0,
+        "korbdifferenz": 0
+      }
+    },
+    {
+      "team_name": "TuS Neukölln 1",
+      "team_name_small": "TUSN1",
+      "team_permanent_id": 313302,
+      "season_team_id": 431081,
+      "liga_id": 51781,
+      "liga_name": "Mini u9 Neulinge",
+      "tabelle": {
+        "rang": 4,
+        "total_teams": 6,
+        "position_text": "4/6"
+      },
+      "spiele": {
+        "gesamt": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "heim": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "auswaerts": {
+          "gespielt": 0,
+          "anstehend": 0
+        }
+      },
+      "naechste_spiele": [],
+      "statistik": {
+        "siege": 0,
+        "niederlagen": 0,
+        "punkte": 3,
+        "koerbe": 0,
+        "gegen_koerbe": 0,
+        "korbdifferenz": 0
+      }
+    },
+    {
+      "team_name": "TuS Neukölln",
+      "team_name_small": "TuS N",
+      "team_permanent_id": 158932,
+      "season_team_id": 413994,
+      "liga_id": 49741,
+      "liga_name": "1. Regionalliga Damen",
+      "tabelle": {
+        "rang": 5,
+        "total_teams": 10,
+        "position_text": "5/10"
+      },
+      "spiele": {
+        "gesamt": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "heim": {
+          "gespielt": 0,
+          "anstehend": 0
+        },
+        "auswaerts": {
+          "gespielt": 0,
+          "anstehend": 0
+        }
+      },
+      "naechste_spiele": [],
+      "statistik": {
+        "siege": 1,
+        "niederlagen": 0,
+        "punkte": 2,
+        "koerbe": 65,
+        "gegen_koerbe": 49,
+        "korbdifferenz": 16
+      }
+    }
+  ],
+  "geographic_distribution": {
+    "verbaende": {
+      "Berlin": 14,
+      "Regionalliga Nord": 1
+    },
+    "bezirke": {
+      "Verbandsebene": 15
+    },
+    "ebenen": {
+      "Verband": 7,
+      "Bezirk": 4,
+      "Kreis": 4
+    }
+  },
+  "best_teams": [
+    {
+      "team_name": "TuS Neukölln 1",
+      "liga_name": "mu14 Bezirksliga B",
+      "rang": 1,
+      "total_teams": 12,
+      "punkte": 8,
+      "bilanz": "4:0",
+      "korbdifferenz": 120
+    },
+    {
+      "team_name": "TuS Neukölln 1",
+      "liga_name": "Herren Oberliga B",
+      "rang": 1,
+      "total_teams": 8,
+      "punkte": 6,
+      "bilanz": "3:1",
+      "korbdifferenz": 36
+    },
+    {
+      "team_name": "TuS Neukölln 2",
+      "liga_name": "mu16 Kreisliga",
+      "rang": 1,
+      "total_teams": 6,
+      "punkte": 6,
+      "bilanz": "3:0",
+      "korbdifferenz": 134
+    },
+    {
+      "team_name": "TuS Neukölln 1 (aK)",
+      "liga_name": "wu14 Bezirksliga",
+      "rang": 3,
+      "total_teams": 12,
+      "punkte": 6,
+      "bilanz": "3:2",
+      "korbdifferenz": 40
+    },
+    {
+      "team_name": "TuS Neukölln 1 (aK)",
+      "liga_name": "Mini wu9 Anfänger",
+      "rang": 4,
+      "total_teams": 6,
+      "punkte": 3,
+      "bilanz": "0:0",
+      "korbdifferenz": 0
+    }
+  ]
+}

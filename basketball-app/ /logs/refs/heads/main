@@ -1,0 +1,3 @@
+0000000000000000000000000000000000000000 87a11db0fcb56fb283a0c2307e5abd04cdb0051f Oliver-Marcus Eder <oliver-marcuseder@MacBookAir.localdomain> 1760269568 +0200	commit (initial): initial commit
+87a11db0fcb56fb283a0c2307e5abd04cdb0051f 87a11db0fcb56fb283a0c2307e5abd04cdb0051f Oliver-Marcus Eder <oliver-marcuseder@MacBook-Air-von-Oliver-Marcus.local> 1760269655 +0200	Branch: renamed refs/heads/main to refs/heads/main
+87a11db0fcb56fb283a0c2307e5abd04cdb0051f c141acb06e62b46440e78ba853299f925c26f22d Oliver-Marcus Eder <github.dev@oliver-eder.de> 1760272012 +0200	commit: erhöhen der test abdeckung und bereinigen von unötigen js dateien

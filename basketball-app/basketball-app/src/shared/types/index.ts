@@ -1,0 +1,785 @@
+/**
+ * Basketball PWA - Zentrale Type Definitions
+ * 
+ * Basiert auf Datenbank-Schema v4.0 (mit Compound-Indizes)
+ * Domain-Driven Design mit strikten Types
+ */
+
+// ==================== BASIC TYPES ====================
+
+export type UUID = string;
+
+// ==================== ENUMS ====================
+
+// ✅ Erweitert um alle möglichen Altersklassen inkl. Senioren
+// Deutsche Basketball-Altersklassen: U7 bis U23 + Senioren
+export type Altersklasse = 
+  | 'U7' | 'U8' | 'U9' 
+  | 'U10' | 'U11' | 'U12' | 'U13' 
+  | 'U14' | 'U15' | 'U16' | 'U17' 
+  | 'U18' | 'U19' | 'U20' | 'U21' | 'U23'
+  | 'Senioren';
+
+export type SpielerTyp = 'eigenes_team' | 'gegner' | 'scouting' | 'probetraining';
+
+export type BewertungsTyp = 'aktuell' | 'scouting' | 'archiv';
+
+export type Beziehungstyp = 
+  | 'Mutter' 
+  | 'Vater' 
+  | 'Vormund' 
+  | 'Großmutter' 
+  | 'Großvater' 
+  | 'Pflegemutter' 
+  | 'Pflegevater'
+  | 'Sonstiges';
+
+export type SpielStatus = 'geplant' | 'live' | 'abgeschlossen' | 'abgesagt';
+
+export type TeamTyp = 'eigen' | 'gegner';
+
+export type SpielPhase = 'planung' | 'in_halle' | 'im_spiel' | 'nachbereitung';
+
+export type EinsatzStatus = 'Im_Spiel' | 'Bank';
+
+export type TrikotArt = 'Wendejersey' | 'Hose';
+
+export type TrikotStatus = 'verfügbar' | 'im_einsatz' | 'defekt';
+
+export type TrikotGroesse = '3xs' | '2xs' | 'xs' | 's' | 'm' | 'l' | 'xl' | '2xl' | '3xl';
+
+export type Spieltyp = 'Ligaspiel' | 'Freundschaftsspiel' | 'Turnier';
+
+export type ProbetrainingStatus = 'aktiv' | 'interessiert' | 'aufgenommen' | 'abgesagt';
+
+export type NotizKategorie = 'Entwicklung' | 'Verhalten' | 'Gesundheit' | 'Elterngespräch';
+
+// ==================== USER/TRAINER ====================
+
+export interface User {
+  user_id: UUID;
+  vorname: string;
+  nachname: string;
+  name: string;  // Vollständiger Name
+  email?: string;
+  created_at: Date;
+  updated_at?: Date;
+}
+
+// ==================== VEREIN ====================
+
+export interface Verein {
+  verein_id: UUID;
+  extern_verein_id?: string;  // clubId aus DBB API
+  bbb_kontakt_id?: string;
+  verband_id?: number;  // 2 = Bayern (Legacy - single ID)
+  verband_ids?: number[];  // Neue Struktur: Mehrere Verbände möglich
+  name: string;
+  kurzname?: string;
+  ort?: string;
+  ist_eigener_verein: boolean;
+  sync_am?: Date;
+  created_at: Date;
+}
+
+// ==================== TEAM ====================
+
+/**
+ * Team Entity (v7.0)
+ * 
+ * BREAKING CHANGE in v7.0:
+ * - extern_team_id → extern_permanent_id (bleibt über Saisons konstant)
+ * - altersklasse, saison, liga_id → TeamLigaParticipation (neue Tabelle)
+ * 
+ * Ein Team ist die permanente Organisation (z.B. "TSV Pilsach U12").
+ * Altersklasse und Saison ändern sich jährlich → eigene Tabelle!
+ */
+export interface Team {
+  team_id: UUID;
+  extern_permanent_id?: string;  // Permanente Team-ID aus DBB API (bleibt über Saisons)
+  verein_id: UUID;
+  user_id?: UUID;  // Zuordnung zum Trainer (nur bei team_typ='eigen')
+  bbb_mannschafts_id?: string;
+  name: string;
+  geschlecht?: 'male' | 'female' | 'mixed';  // Geschlecht des Teams
+  trainer: string;
+  team_typ: TeamTyp;  // 'eigen' oder 'gegner'
+  created_at: Date;
+  updated_at?: Date;
+}
+
+/**
+ * Team Liga Participation (v7.0 - NEU)
+ * 
+ * Historisiert die Teilnahme eines Teams an einer Liga/Saison.
+ * 
+ * Beispiel:
+ * - TSV Pilsach U12 (team_id: 123) spielt 2024/25 in U12 Bezirksliga (altersklasse_id: 5)
+ * - TSV Pilsach U12 (team_id: 123) spielt 2025/26 in U13 Bezirksliga (altersklasse_id: 6)
+ * 
+ * → 2 Einträge in team_liga_participations
+ * → 1 Team in teams
+ */
+export interface TeamLigaParticipation {
+  id: number;  // Auto-increment Primary Key
+  team_id: UUID;  // Foreign Key → teams
+  extern_team_id?: string;  // teamId aus BBB API für diese Saison (ändert sich!)
+  saison: string;  // z.B. "2024/25"
+  altersklasse: Altersklasse;  // z.B. "U12"
+  altersklasse_id?: number;  // Altersklasse als ID (aus BBB API)
+  liga_id?: string;  // BBB Liga-ID (z.B. "12345")
+  liga_name?: string;  // BBB Liga-Name (z.B. "U12 Bezirksliga Oberpfalz")
+  leistungsorientiert?: boolean;  // nur U12
+  ist_aktiv: boolean;  // Aktuelle Saison? (pro Team nur 1 aktiv!)
+  sync_am?: Date;  // Letzter Sync mit BBB
+  created_at: Date;
+}
+
+// ==================== SPIELER ====================
+
+export interface Spieler {
+  spieler_id: UUID;
+  extern_spieler_id?: string;  // playerId aus DBB API (falls vorhanden)
+  team_id: UUID;  // PFLICHTFELD! 1:n Beziehung zu TEAMS
+  verein_id?: UUID;  // Für Gegner-Tracking
+  vorname: string;
+  nachname: string;
+  trikotnummer?: number;  // Aus Match-Info
+  tna_letzten_drei?: string;  // Letzte 3 Stellen TNA aus Spielberichtsbogen
+  geburtsdatum?: Date;
+  spieler_typ: SpielerTyp;
+  mitgliedsnummer?: string;
+  tna_nr?: string;
+  konfektionsgroesse_jersey?: number;  // 116-170
+  konfektionsgroesse_hose?: number;    // 116-170
+  aktiv: boolean;
+  created_at: Date;
+  updated_at?: Date;
+}
+
+// ==================== SPIELER BEWERTUNG ====================
+
+export interface SpielerBewertung {
+  bewertung_id: UUID;
+  spieler_id: UUID;
+  bewertungs_typ: BewertungsTyp;
+  saison: string;
+  altersklasse: Altersklasse;
+  gueltig_ab: Date;
+  gueltig_bis?: Date;
+  bewertet_von: string;
+  
+  // Bewertungsskalen (1-3, Default: 2)
+  ballhandling_score: number;
+  passen_fangen_score: number;
+  spieluebersicht_score: number;
+  teamplay_score: number;
+  defense_score: number;
+  laufbereitschaft_score: number;
+  rebound_score: number;
+  positionsflex_score: number;
+  abschluss_score: number;
+  
+  gesamt_wert: number;  // Berechnet
+  notizen?: string;
+  created_at: Date;
+  updated_at?: Date;
+}
+
+// ==================== ERZIEHUNGSBERECHTIGTE ====================
+
+export interface Erziehungsberechtigte {
+  erz_id: UUID;
+  vorname: string;
+  nachname: string;
+  telefon_mobil: string;
+  email: string;
+  datenschutz_akzeptiert: boolean;
+  created_at: Date;
+  updated_at?: Date;
+}
+
+export interface SpielerErziehungsberechtigte {
+  se_id: UUID;
+  spieler_id: UUID;
+  erz_id: UUID;
+  beziehung: Beziehungstyp;
+  ist_notfallkontakt: boolean;
+  abholberechtigt: boolean;
+  created_at: Date;
+}
+
+// ==================== HALLE ====================
+
+export interface Halle {
+  halle_id: UUID;
+  bbb_halle_id?: string;
+  name: string;
+  strasse: string;
+  plz: string;
+  ort: string;
+  verein_id?: UUID;
+  anzahl_felder?: number;
+  parken?: string;
+  oepnv?: string;
+  notizen?: string;
+  sync_am?: Date;
+  created_at: Date;
+}
+
+// ==================== LIGA ====================
+
+export interface Liga {
+  liga_id: UUID;
+  bbb_liga_id?: string;
+  verband_id?: number;
+  name: string;
+  saison: string;
+  altersklasse: Altersklasse;
+  spielklasse?: string;  // Bezirksliga, Kreisliga...
+  region?: string;       // Oberpfalz, Oberbayern...
+  sync_am?: Date;
+  created_at: Date;
+}
+
+export interface LigaTeilnahme {
+  teilnahme_id: UUID;
+  liga_id: UUID;
+  verein_id: UUID;
+  team_id?: UUID;
+  platzierung?: number;
+  spiele?: number;
+  siege?: number;
+  niederlagen?: number;
+  punkte?: number;
+  created_at: Date;
+}
+
+// ==================== SPIELPLAN (BBB-Integration v4.0) ====================
+
+export interface Spielplan {
+  spielplan_id: UUID;
+  team_id: UUID;
+  saison: string;
+  liga?: string;
+  altersklasse?: string;
+  
+  // BBB-Integration v4.0 - Drei URL-Struktur
+  bbb_spielplan_url?: string;
+  bbb_tabelle_url?: string;
+  bbb_ergebnisse_url?: string;
+  liga_nr_offiziell?: string;
+  syncam?: Date;
+  
+  created_at: Date;
+}
+
+// ==================== SPIEL ====================
+
+/**
+ * WICHTIG v6.0: Spiel gehört KEINEM Team!
+ * - Ein Spiel findet zwischen zwei Teams statt (heim_team_id, gast_team_id)
+ * - Filterung nach Team erfolgt über SpielService
+ * - Unterstützt Edge Case: Internes Spiel (beide Teams sind eigene Teams)
+ * 
+ * BREAKING CHANGE: team_id entfernt!
+ */
+export interface Spiel {
+  spiel_id: UUID;
+  extern_spiel_id?: string;  // matchId aus DBB API
+  spielplan_id?: UUID;
+  // team_id ENTFERNT in v6.0! Spiel gehört keinem Team.
+  liga_id?: UUID;  // Zuordnung zur Liga
+  
+  // BBB-Integration v4.0
+  spielnr?: number;
+  spieltag?: number;
+  
+  datum: Date;
+  uhrzeit?: string;
+  heim_team_id?: UUID;  // Referenz zu TEAMS
+  gast_team_id?: UUID;  // Referenz zu TEAMS
+  heim: string;  // Team-Name (legacy)
+  gast: string;  // Team-Name (legacy)
+  halle_id?: UUID;
+  ist_heimspiel: boolean;
+  
+  ergebnis_heim?: number;
+  ergebnis_gast?: number;
+  status: SpielStatus;
+  
+  altersklasse: Altersklasse;
+  leistungsorientiert?: boolean;
+  
+  // Einsatzplanung-Statistiken
+  durchschnitt_team_score?: number;
+  balance_index?: number;
+  
+  notizen?: string;
+  created_at: Date;
+  updated_at?: Date;
+}
+
+// ==================== LIGA ERGEBNISSE (für Benchmark) ====================
+
+export interface LigaErgebnis {
+  id: UUID;
+  ligaid: UUID;
+  spielnr?: number;
+  heimteam: string;
+  gastteam: string;
+  ergebnis_heim: number;
+  ergebnis_gast: number;
+  datum: Date;
+  syncam: Date;
+}
+
+// ==================== LIGA TABELLE ====================
+
+export interface LigaTabelle {
+  id: UUID;
+  ligaid: UUID;
+  teamname: string;
+  platz: number;
+  spiele: number;
+  siege: number;
+  niederlagen: number;
+  punkte: number;
+  korbe_erzielt: number;
+  korbe_erhalten: number;
+  korb_differenz: number;
+  heim_siege: number;
+  heim_niederlagen: number;
+  auswaerts_siege: number;
+  auswaerts_niederlagen: number;
+  syncam: Date;
+}
+
+// ==================== TRIKOT ====================
+
+export interface Trikot {
+  trikot_id: UUID;
+  team_id: UUID;
+  art: TrikotArt;
+  nummer?: string;
+  groesse: TrikotGroesse;
+  eu_groesse: number;  // 116-170
+  farbe_dunkel?: string;
+  farbe_hell?: string;
+  status: TrikotStatus;
+  besonderheiten?: string;
+  created_at: Date;
+}
+
+// ==================== SPIELER EINSATZ ====================
+
+export interface SpielerEinsatz {
+  einsatz_id: UUID;
+  spiel_id: UUID;
+  spieler_id: UUID;
+  jersey_id: UUID;
+  hose_id: UUID;
+  position: number;
+  
+  // 8 Achtel (Q1-1 bis Q4-2)
+  q1_1: EinsatzStatus;
+  q1_2: EinsatzStatus;
+  q2_1: EinsatzStatus;
+  q2_2: EinsatzStatus;
+  q3_1: EinsatzStatus;
+  q3_2: EinsatzStatus;
+  q4_1: EinsatzStatus;
+  q4_2: EinsatzStatus;
+  
+  // Berechnete Felder
+  pausen: number;
+  gespielt: number;
+  
+  created_at: Date;
+  updated_at?: Date;
+}
+
+// ==================== ACHTEL STATISTIK ====================
+
+export interface AchtelStatistik {
+  achtel_stat_id: UUID;
+  spiel_id: UUID;
+  achtel_nummer: number;  // 1-8
+  team_score: number;
+  spieler_auf_feld: number;  // 3, 4 oder 5
+  ballhandling_avg?: number;
+  defense_avg?: number;
+  berechnet_am: Date;
+}
+
+// ==================== TRAINING ====================
+
+export interface Training {
+  training_id: UUID;
+  team_id: UUID;
+  datum: Date;
+  dauer_minuten: number;
+  halle_id?: UUID;
+  trainer: string;
+  ist_probetraining: boolean;
+  fokus?: string;
+  notizen?: string;
+  created_at: Date;
+}
+
+export interface TrainingTeilnahme {
+  teilnahme_id: UUID;
+  training_id: UUID;
+  spieler_id: UUID;
+  anwesend: boolean;
+  entschuldigt?: boolean;
+  notiz?: string;
+}
+
+// ==================== PROBETRAINING ====================
+
+export interface ProbetrainingTeilnehmer {
+  probe_id: UUID;
+  vorname: string;
+  nachname?: string;
+  anzahl_teilnahmen: number;
+  eltern_telefon?: string;
+  status: ProbetrainingStatus;
+  aufgenommen_als_spieler_id?: UUID;
+  notizen?: string;
+  created_at: Date;
+}
+
+export interface ProbetrainingHistorie {
+  historie_id: UUID;
+  probe_id: UUID;
+  training_id: UUID;
+  datum: Date;
+  anwesend: boolean;
+  notiz?: string;
+}
+
+// ==================== SPIELER NOTIZEN ====================
+
+export interface SpielerNotiz {
+  notiz_id: UUID;
+  spieler_id: UUID;
+  trainer: string;
+  datum: Date;
+  kategorie: NotizKategorie;
+  text: string;
+  vertraulich: boolean;
+  created_at: Date;
+}
+
+// ==================== SAISON ARCHIV ====================
+
+export interface SaisonArchiv {
+  archiv_id: UUID;
+  saison: string;
+  team_id: UUID;
+  team_snapshot: object;  // JSON
+  statistiken: object;    // JSON
+  archiviert_am: Date;
+  archiviert_von: string;
+}
+
+// ==================== HELPER TYPES ====================
+
+// CSV Import Types
+export interface SpielerCSVRow {
+  vorname: string;
+  nachname: string;
+  geburtsdatum?: string;
+  tna_nr?: string;
+  konfektionsgroesse_jersey?: string;
+  konfektionsgroesse_hose?: string;
+  erz_vorname?: string;
+  erz_nachname?: string;
+  erz_telefon?: string;
+  erz_email?: string;
+}
+
+export interface TrikotCSVRow {
+  art: string;
+  nummer?: string;
+  groesse: string;
+  eu_groesse: string;
+  farbe_dunkel?: string;
+  farbe_hell?: string;
+}
+
+// BBB Parser Types (Legacy HTML-Parsing)
+export interface BBBSpielData {
+  nr: number;
+  tag: number;
+  datum: string;
+  uhrzeit: string;
+  heim: string;
+  gast: string;
+  halle: string;
+}
+
+export interface BBBTabellenEintrag {
+  teamname: string;
+  platz: number;
+  spiele: number;
+  siege: number;
+  niederlagen: number;
+  punkte: number;
+  korbe_erzielt: number;
+  korbe_erhalten: number;
+}
+
+// ==================== DBB REST API TYPES ====================
+
+// WAM Filter Request
+export interface WamFilterRequest {
+  token: number;
+  verbandIds: number[];
+  gebietIds: string[];
+  ligatypIds: number[];
+  akgGeschlechtIds: number[];
+  altersklasseIds: number[];
+  spielklasseIds: number[];
+  sortBy: number;
+}
+
+// WAM Data Response
+export interface WamFilterOption {
+  id: number | string;
+  label?: string;
+  bezirk?: string;
+  kreis?: string;
+  hits: number;
+}
+
+export interface WamLigaEintrag {
+  ligaId: number;
+  liganame: string;
+  liganr: number;
+  skName: string;  // Spielklasse
+  akName: string;  // Altersklasse
+  geschlecht: string;
+  verbandId: number;
+  verbandName: string;
+  bezirknr: number;
+  bezirkName: string;
+}
+
+export interface WamDataResponse {
+  data: {
+    verbaende: WamFilterOption[];
+    gebiete: WamFilterOption[];
+    altersklassen: WamFilterOption[];
+    spielklassen: WamFilterOption[];
+    ligaListe?: {
+      ligen: WamLigaEintrag[];
+      hasMoreData: boolean;
+      size: number;
+    };
+  };
+}
+
+// Competition Table Response
+export interface DBBTabellenEintrag {
+  position: number;
+  teamId: number;         // seasonTeamId (saisonspezifisch)
+  teamPermanentId?: number; // teamPermanentId (konstant über Saisons)
+  teamName: string;
+  clubId: number;
+  clubName: string;
+  games: number;
+  wins: number;
+  losses: number;
+  points: number;
+  scoredPoints: number;
+  concededPoints: number;
+  pointsDifference: number;
+}
+
+export interface DBBTableResponse {
+  ligaId: number;
+  liganame: string;
+  teams: DBBTabellenEintrag[];
+}
+
+// Competition Spielplan Response
+export interface DBBSpielplanEintrag {
+  matchId: number;
+  gameNumber: number;
+  gameDay: number;
+  date: string;
+  time: string;
+  homeTeam: {
+    teamId: number;          // seasonTeamId (saisonspezifisch)
+    teamPermanentId?: number; // teamPermanentId (konstant über Saisons)
+    teamName: string;
+    clubId: number;
+    clubName: string;
+  };
+  awayTeam: {
+    teamId: number;          // seasonTeamId (saisonspezifisch)
+    teamPermanentId?: number; // teamPermanentId (konstant über Saisons)
+    teamName: string;
+    clubId: number;
+    clubName: string;
+  };
+  venue?: {
+    name: string;
+    address?: string;
+  };
+  status: string;
+  homeScore?: number;
+  awayScore?: number;
+}
+
+export interface DBBSpielplanResponse {
+  ligaId: number;
+  liganame: string;
+  games: DBBSpielplanEintrag[];
+}
+
+// Team Matches Response (GET /rest/team/id/{teamPermanentId}/matches)
+export interface DBBTeamMatchEintrag extends Omit<DBBSpielplanEintrag, 'homeTeam' | 'awayTeam'> {
+  ligaId: number;
+  liganame: string;
+  homeTeam: {
+    teamId: number;
+    teamPermanentId?: number;
+    teamName: string;
+    clubId: number;
+    clubName?: string; // nicht im Team-Endpunkt verfügbar
+  };
+  awayTeam: {
+    teamId: number;
+    teamPermanentId?: number;
+    teamName: string;
+    clubId: number;
+    clubName?: string; // nicht im Team-Endpunkt verfügbar
+  };
+}
+
+export interface DBBTeamMatchesResponse {
+  teamId: number;
+  teamName: string;
+  matches: DBBTeamMatchEintrag[];
+}
+
+// Match Info Response
+export interface DBBPlayer {
+  playerId: number;
+  firstName: string;
+  lastName: string;
+  jerseyNumber?: number;
+  tnaNumber?: string;  // Letzte 3 Stellen
+}
+
+// Player Details Response (NEU - für getSpielerDetails)
+export interface DBBPlayerDetailsResponse {
+  playerId: number;
+  firstName: string;
+  lastName: string;
+  fullName: string;  // "Vorname Nachname"
+  dateOfBirth?: string;  // ISO Format: "2015-03-15"
+  age?: number;
+  jerseyNumber?: number;
+  tnaNumber?: string;
+  position?: string;  // Guard, Forward, Center
+  height?: number;  // in cm
+  weight?: number;  // in kg
+  club: {
+    clubId: number;
+    clubName: string;
+    city?: string;
+  };
+  currentTeam?: {
+    teamId: number;
+    teamName: string;
+    altersklasse: string;
+  };
+  statistics?: {
+    gamesPlayed: number;
+    pointsTotal: number;
+    pointsAverage: number;
+  };
+}
+
+export interface DBBTeamWithPlayers {
+  teamId: number;
+  teamName: string;
+  clubId: number;
+  clubName: string;
+  coach?: string;
+  assistant?: string;
+  players: DBBPlayer[];
+}
+
+export interface DBBMatchInfoResponse {
+  matchId: number;
+  gameNumber: number;
+  date: string;
+  time: string;
+  ligaId: number;
+  homeTeam: DBBTeamWithPlayers;
+  awayTeam: DBBTeamWithPlayers;
+  venue?: {
+    name: string;
+    address?: string;
+    city?: string;
+    zipCode?: string;
+  };
+  score?: {
+    home: number;
+    away: number;
+  };
+  referees?: string[];
+}
+
+// Onboarding State
+export interface OnboardingState {
+  step: 'welcome' | 'team' | 'verein' | 'spieler' | 'trikots' | 'spielplan' | 'complete';
+  team?: Partial<Team>;
+  verein?: Partial<Verein>;
+  spieler_csv?: File;
+  trikot_csv?: File;
+  bbb_url?: string;
+}
+
+// ==================== SERVICE INPUT TYPES ====================
+
+// CreateVereinInput
+export interface CreateVereinInput {
+  name: string;
+  ort: string;  // REQUIRED
+  kurzname?: string;
+  ist_eigener_verein?: boolean;  // Default: true
+  verband_id?: number;
+  verband_ids?: number[];
+  extern_verein_id?: string;
+  bbb_kontakt_id?: string;
+}
+
+// CreateTeamInput (v7.0 - simplified)
+export interface CreateTeamInput {
+  verein_id: UUID;
+  name: string;
+  geschlecht?: 'male' | 'female' | 'mixed';
+  trainer: string;
+  team_typ?: TeamTyp;  // Default: 'eigen'
+  user_id?: UUID;
+  extern_permanent_id?: string;
+}
+
+// CreateTeamLigaParticipationInput (v7.0 - NEW)
+export interface CreateTeamLigaParticipationInput {
+  team_id: UUID;
+  extern_team_id?: string;
+  saison: string;
+  altersklasse: Altersklasse;
+  altersklasse_id?: number;
+  liga_id?: string;
+  liga_name?: string;
+  leistungsorientiert?: boolean;
+  ist_aktiv?: boolean;  // Default: true
+}

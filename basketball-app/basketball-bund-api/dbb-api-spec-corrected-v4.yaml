@@ -1,0 +1,709 @@
+openapi: 3.0.0
+info:
+  title: Basketball-Bund.net API
+  version: 11.42.2
+  description: |
+    Offizielle API des Deutschen Basketball Bundes (DBB)
+    Basiert auf tatsächlichen Response-Analysen vom 17.10.2025
+    
+servers:
+  - url: https://www.basketball-bund.net
+    description: Production Server
+
+paths:
+  /rest/wam/data:
+    post:
+      summary: WAM Filter Data
+      description: Hauptendpunkt für gefilterte Liga-Suche mit Token-basiertem State
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WamDataRequest'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WamDataResponse'
+
+  /rest/competition/table/id/{ligaId}:
+    get:
+      summary: Liga Tabelle
+      parameters:
+        - name: ligaId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Liga table
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompetitionTableResponse'
+
+  /rest/competition/spielplan/id/{ligaId}:
+    get:
+      summary: Liga Spielplan
+      parameters:
+        - name: ligaId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Liga schedule
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompetitionSpielplanResponse'
+
+  /rest/competition/crosstable/id/{ligaId}:
+    get:
+      summary: Liga Kreuztabelle
+      parameters:
+        - name: ligaId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Liga crosstable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompetitionCrosstableResponse'
+
+  /rest/competition/actual/id/{ligaId}:
+    get:
+      summary: Aktuelle Liga Informationen
+      parameters:
+        - name: ligaId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Current league info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompetitionActualResponse'
+
+  /rest/match/id/{matchId}/matchInfo:
+    get:
+      summary: Match Detailinformationen
+      parameters:
+        - name: matchId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Match details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MatchInfoResponse'
+
+  /rest/match/id/{matchId}/boxscore:
+    get:
+      summary: Match Boxscore
+      parameters:
+        - name: matchId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Match boxscore
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MatchBoxscoreResponse'
+
+components:
+  schemas:
+    # Base Response Wrapper
+    ApiResponse:
+      type: object
+      required:
+        - timestamp
+        - status
+        - message
+        - data
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          example: "2025-10-17T17:12:38+0200"
+        status:
+          type: string
+          example: "0"
+        message:
+          type: string
+        data:
+          type: object
+        version:
+          type: string
+          example: "11.42.2-b100829"
+        dateFormat:
+          type: string
+          example: "yyyy-MM-dd"
+        timeFormat:
+          type: string
+        timeFormatShort:
+          type: string
+          example: "HH:mm"
+        serverInstance:
+          type: string
+          example: "www"
+        username:
+          type: string
+          nullable: true
+        appContext:
+          type: string
+          example: "https://www.basketball-bund.net"
+
+    # WAM Data Structures
+    WamDataRequest:
+      type: object
+      required:
+        - token
+      properties:
+        token:
+          type: integer
+          description: |
+            Token für State-Management:
+            0 = Initial (nur Verbände)
+            1 = Verbände ausgewählt (zeige Altersklassen)
+            2 = Altersklassen ausgewählt (zeige Gebiete)
+            3 = Alles ausgewählt (zeige Ligen)
+        verbandIds:
+          type: array
+          items:
+            type: integer
+        gebietIds:
+          type: array
+          items:
+            type: string
+        ligatypIds:
+          type: array
+          items:
+            type: integer
+        akgGeschlechtIds:
+          type: array
+          items:
+            type: string
+        altersklasseIds:
+          type: array
+          items:
+            type: integer
+        spielklasseIds:
+          type: array
+          items:
+            type: integer
+        sortBy:
+          type: integer
+          default: 1
+        start:
+          type: integer
+          description: Pagination start index
+        size:
+          type: integer
+          description: Page size for pagination
+
+    WamDataResponse:
+      allOf:
+        - $ref: '#/components/schemas/ApiResponse'
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                wam:
+                  type: object
+                  description: Echo der Request-Parameter
+                verbaende:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/VerbandOption'
+                gebiete:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/GebietOption'
+                ligatypen:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/LigatypOption'
+                agkGeschlechtList:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/AkgGeschlechtOption'
+                altersklassen:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/AltersklasseOption'
+                spielklassen:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/SpielklasseOption'
+                ligaListe:
+                  $ref: '#/components/schemas/LigaListe'
+
+    VerbandOption:
+      type: object
+      properties:
+        id:
+          type: integer
+        label:
+          type: string
+        hits:
+          type: integer
+
+    GebietOption:
+      type: object
+      properties:
+        id:
+          type: string  # WICHTIG: String, nicht Integer!
+        bezirk:
+          type: string
+          nullable: true
+        kreis:
+          type: string
+          nullable: true
+        hits:
+          type: integer
+
+    AltersklasseOption:
+      type: object
+      properties:
+        id:
+          type: integer
+        label:
+          type: string
+        hits:
+          type: integer
+
+    LigatypOption:
+      type: object
+      properties:
+        id:
+          type: integer
+        label:
+          type: string
+        hits:
+          type: integer
+
+    AkgGeschlechtOption:
+      type: object
+      properties:
+        id:
+          type: string
+        akg:
+          type: string
+        geschlecht:
+          type: string
+        hits:
+          type: integer
+
+    SpielklasseOption:
+      type: object
+      properties:
+        id:
+          type: integer
+        label:
+          type: string
+        hits:
+          type: integer
+
+    LigaListe:
+      type: object
+      properties:
+        startAtIndex:
+          type: integer
+        ligen:
+          type: array
+          items:
+            $ref: '#/components/schemas/LigaEintrag'
+        hasMoreData:
+          type: boolean
+        size:
+          type: integer
+
+    LigaEintrag:
+      type: object
+      properties:
+        seasonId:
+          type: integer
+          nullable: true
+        seasonName:
+          type: string
+          nullable: true
+        actualMatchDay:
+          type: integer
+          nullable: true
+        ligaId:
+          type: integer
+        liganame:
+          type: string
+        liganr:
+          type: integer
+        skName:
+          type: string
+          description: Spielklasse Name
+        skNameSmall:
+          type: string
+          nullable: true
+        skEbeneId:
+          type: integer
+          description: |
+            Hierarchie-Ebene:
+            0 = Verband
+            1 = Bezirk
+            2 = Kreis
+        skEbeneName:
+          type: string
+          enum: ["Verband", "Bezirk", "Kreis"]
+        akName:
+          type: string
+          description: Altersklasse Name
+        geschlechtId:
+          type: integer
+        geschlecht:
+          type: string
+        verbandId:
+          type: integer
+        verbandName:
+          type: string
+        bezirknr:
+          type: integer
+          nullable: true
+        bezirkName:
+          type: string
+          nullable: true
+        kreisnr:
+          type: integer
+          nullable: true
+        kreisname:
+          type: string
+          nullable: true
+        statisticType:
+          type: string
+          nullable: true
+        vorabliga:
+          type: boolean
+        tableExists:
+          type: boolean
+          nullable: true
+        crossTableExists:
+          type: boolean
+          nullable: true
+
+    # Competition Table
+    CompetitionTableResponse:
+      allOf:
+        - $ref: '#/components/schemas/ApiResponse'
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                ligaId:
+                  type: integer
+                liganame:
+                  type: string
+                teams:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/TabellenEintrag'
+
+    TabellenEintrag:
+      type: object
+      properties:
+        platzierung:
+          type: integer
+        teamId:
+          type: integer
+        teamname:
+          type: string
+        spiele:
+          type: integer
+        gewonnen:
+          type: integer
+        verloren:
+          type: integer
+        punkte:
+          type: integer
+        korbpunkteGemacht:
+          type: integer
+        korbpunkteGegen:
+          type: integer
+        differenz:
+          type: integer
+        siegeHeim:
+          type: integer
+        niederlagenHeim:
+          type: integer
+        siegeAuswaerts:
+          type: integer
+        niederlagenAuswaerts:
+          type: integer
+
+    # Competition Spielplan
+    CompetitionSpielplanResponse:
+      allOf:
+        - $ref: '#/components/schemas/ApiResponse'
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                ligaId:
+                  type: integer
+                liganame:
+                  type: string
+                spielplan:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/SpielplanEintrag'
+
+    SpielplanEintrag:
+      type: object
+      properties:
+        tag:
+          type: integer
+          description: Spieltag
+        nr:
+          type: integer
+          description: Spielnummer
+        datum:
+          type: string
+          format: date
+        uhrzeit:
+          type: string
+          format: time
+        heimteamname:
+          type: string
+        gastteamname:
+          type: string
+        halle:
+          type: string
+        heimteamid:
+          type: integer
+        gastteamid:
+          type: integer
+        spielbericht:
+          type: string
+          nullable: true
+        spielid:
+          type: integer
+        heimTore:
+          type: integer
+          nullable: true
+        gastTore:
+          type: integer
+          nullable: true
+
+    # Competition Crosstable
+    CompetitionCrosstableResponse:
+      allOf:
+        - $ref: '#/components/schemas/ApiResponse'
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                ligaId:
+                  type: integer
+                liganame:
+                  type: string
+                teams:
+                  type: array
+                  items:
+                    type: string
+                spiele:
+                  type: array
+                  items:
+                    type: array
+                    items:
+                      type: string
+                      nullable: true
+
+    # Competition Actual
+    CompetitionActualResponse:
+      allOf:
+        - $ref: '#/components/schemas/ApiResponse'
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                ligaId:
+                  type: integer
+                liganame:
+                  type: string
+                aktuellerSpieltag:
+                  type: integer
+                anzahlSpieltage:
+                  type: integer
+                erstelltAm:
+                  type: string
+                naechsteSpiele:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/NaechstesSpiel'
+
+    NaechstesSpiel:
+      type: object
+      properties:
+        spielId:
+          type: integer
+        tag:
+          type: integer
+        datum:
+          type: string
+        uhrzeit:
+          type: string
+        heim:
+          type: string
+        gast:
+          type: string
+        halle:
+          type: string
+
+    # Match Info
+    MatchInfoResponse:
+      allOf:
+        - $ref: '#/components/schemas/ApiResponse'
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                akgId:
+                  type: string
+                spielNr:
+                  type: string
+                spielTag:
+                  type: integer
+                heimmannschaft:
+                  type: string
+                gastmannschaft:
+                  type: string
+                ort:
+                  type: string
+                datum:
+                  type: string
+                uhrzeit:
+                  type: string
+                heimErgebnis:
+                  type: integer
+                  nullable: true
+                gastErgebnis:
+                  type: integer
+                  nullable: true
+                schiedsrichter1:
+                  type: string
+                  nullable: true
+                schiedsrichter2:
+                  type: string
+                  nullable: true
+                kommissar:
+                  type: string
+                  nullable: true
+                zuschauer:
+                  type: integer
+                  nullable: true
+                heimSpielerList:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/SpielerInfo'
+                gastSpielerList:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/SpielerInfo'
+                viertelErgebnisse:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ViertelErgebnis'
+
+    SpielerInfo:
+      type: object
+      properties:
+        spielerNr:
+          type: string
+        vorname:
+          type: string
+        nachname:
+          type: string
+        tnaLetzten3:
+          type: string
+          nullable: true
+
+    ViertelErgebnis:
+      type: object
+      properties:
+        viertel:
+          type: integer
+        heimPunkte:
+          type: integer
+        gastPunkte:
+          type: integer
+
+    # Match Boxscore
+    MatchBoxscoreResponse:
+      allOf:
+        - $ref: '#/components/schemas/ApiResponse'
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                spielId:
+                  type: integer
+                heimStatistik:
+                  $ref: '#/components/schemas/TeamStatistik'
+                gastStatistik:
+                  $ref: '#/components/schemas/TeamStatistik'
+
+    TeamStatistik:
+      type: object
+      properties:
+        teamname:
+          type: string
+        punkte:
+          type: integer
+        feldversuche:
+          type: integer
+        feldtreffer:
+          type: integer
+        dreierversuche:
+          type: integer
+        dreiertreffer:
+          type: integer
+        freiwurfversuche:
+          type: integer
+        freiwurftreffer:
+          type: integer
+        rebounds:
+          type: integer
+        assists:
+          type: integer
+        steals:
+          type: integer
+        blocks:
+          type: integer
+        turnovers:
+          type: integer
+        fouls:
+          type: integer

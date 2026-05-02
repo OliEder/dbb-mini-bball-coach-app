@@ -1,0 +1,15 @@
+meta {
+  name: competition-table-id-_ligaId
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{baseURL}}/rest/competition/table/id/:ligaId
+  body: none
+  auth: none
+}
+
+params:path {
+  ligaId: 47756
+}

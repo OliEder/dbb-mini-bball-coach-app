@@ -1,0 +1,37 @@
+meta {
+  name: wam-liga-list
+  type: http
+  seq: 9
+}
+
+post {
+  url: {{baseURL}}/rest/wam/liga/list?startAtIndex=0
+  body: json
+  auth: none
+}
+
+params:query {
+  startAtIndex: 0
+}
+
+body:json {
+  {
+    "token":{{token}},
+    "verbandIds":[{{verbaendeIds}}],
+    "gebietIds":[{{gebieteIds}}],
+    "ligatypIds":[{{ligatypenIds}}],
+    "akgGeschlechtIds":[{{agkGeschlechtListIds}}],
+    "altersklasseIds":[{{altersklassenIds}}],
+    "spielklasseIds":[{{spielklassenIds}}]
+  }
+}
+
+vars:pre-request {
+  token: 0
+  verbaendeIds: 30
+  ligatypenIds: 
+  agkGeschlechtListIds: 
+  altersklassenIds: 
+  spielklassenIds: 
+  gebieteIds: 
+}

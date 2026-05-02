@@ -1,0 +1,25 @@
+docs {
+  # Reverse Engineering der REST-API von www.basketball-bund.net
+  Dies ist der Versuch alle aktuell öffentlich zugänglichen Rest-API-Endpunkte des DBB zu dokumentieren.
+  ## Wichtige Parameter
+  
+  Es gibt einen zentrallen Call über den man 
+  ### rest/wam/data
+  
+  ```json
+  {
+    "token":0
+    "verbandIds": [2],
+    "gebietIds": ["4_"],
+    "ligatypIds": [],
+    "akgGeschlechtIds": [],
+    "altersklasseIds": [12],
+    "spielklasseIds": [],
+    "sortBy": 1
+  }
+  ```
+  This object is to filter the results. 
+  At the moment the most important info to get from here is a ligaId. 
+  With a ligaId you get all importen infos for the games, teams, clubs, etc.
+  I did not find a specific call to get infs on clubs or generell info on teams, but with the calls within this collection you can collect pritty much info on everything actually public available.
+}

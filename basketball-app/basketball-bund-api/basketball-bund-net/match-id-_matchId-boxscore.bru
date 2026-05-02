@@ -1,0 +1,15 @@
+meta {
+  name: match-id-_matchId-boxscore
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseURL}}/rest/match/id/:matchId/boxscore
+  body: none
+  auth: none
+}
+
+params:path {
+  matchId: 2812371
+}

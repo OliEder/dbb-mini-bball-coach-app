@@ -1,0 +1,14 @@
+vorname,nachname,geburtsdatum,tna_nr,konfektionsgroesse_jersey,konfektionsgroesse_hose,erz_vorname,erz_nachname,erz_telefon,erz_email
+Adam,Apfel,2017-06-03,030510019,140,140,Nina,Apfel,+49 163 7484472,nina.apfel@example.com
+Bertram,Bohne,2016-11-18,290818005,152,132,Olive,Bohne,+49 171 610 1859,olive.bohne@example.com
+Cesar,Climnt ,2018-08-29,141016013,128,128,Marcus,Climnt ,+49 171 610 1859,marcus.climnt@example.com
+Daniel,Dom,2017-11-27,271517013,,,Lisa,Dom,+49 157 560 266 34,lisa.dom@example.com
+Emil,Engelbert,2016-09-05,050936019,140,140,Caroline,Engelbert,+49 178 7184231,caroline.engelbert@example.com
+Fritz,Füller,2017-12-31,311218007,140,140,Tom,Füller,+49 1523 4245297,tom.fueller@example.com
+Gertrud,Gießen,2017-07-03,020717028,140,140,Cinthya ,Gießen,+49 151 52420513,cinthya.giessen@example.com
+Herta,Heimann,2018-11-20,141116025,128,128,Marko,Heimann,+49 175 2020911,marko.heimann@example.com
+Inga,Idastein,2016-11-14,201118005,140,140,Marko,Idastein,+49 175 2020911,marko.idastein@example.com
+Jutta,Juni,2017-02-13,120318012,140,140,Susanne,Juni,+49 174 941 44 82,susanne.juni@example.com
+Klamauk,Klar,2016-03-30,310316027,158,152,Claudia,Klar,+49 176 922 15 351,claudia.klamauk@example.com
+Ludwig,Lustig,2017-01-02,020117017,,,Mathias,Lustig,+49 160 880 92 03,mathias.lustig@example.com
+Orfali,Omar,2016-09-06,070915016,140,140,Sabrina,Omar,+49 151 612 41 255,sabrina.orfali@example.com

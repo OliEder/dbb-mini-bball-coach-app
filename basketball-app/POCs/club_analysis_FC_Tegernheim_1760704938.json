@@ -1,0 +1,405 @@
+{
+  "club_id": 428,
+  "club_name": "FC Tegernheim",
+  "total_teams": 16,
+  "total_ligen": 16,
+  "team_variations": [
+    "FC Tegernheim",
+    "FC Tegernheim 1",
+    "FC Tegernheim 2",
+    "FC Tegernheim 3"
+  ],
+  "ligen_by_category": {
+    "Senioren männlich": [
+      {
+        "liga_id": 47653,
+        "liga_name": "Bayernliga Herren Mitte (ByLHM) 25/26",
+        "spielklasse": "Bayernliga",
+        "ebene": "Verband",
+        "verband": "Bayern",
+        "bezirk": null
+      },
+      {
+        "liga_id": 51347,
+        "liga_name": "Bezirksoberliga Herren 2025/26",
+        "spielklasse": "Bezirksoberliga",
+        "ebene": "Bezirk",
+        "verband": "Bayern",
+        "bezirk": "Oberpfalz"
+      },
+      {
+        "liga_id": 51348,
+        "liga_name": "Bezirksliga Herren 2025/26",
+        "spielklasse": "Bezirksliga",
+        "ebene": "Bezirk",
+        "verband": "Bayern",
+        "bezirk": "Oberpfalz"
+      }
+    ],
+    "Senioren weiblich": [
+      {
+        "liga_id": 48508,
+        "liga_name": "MFR Bezirksoberliga Damen",
+        "spielklasse": "Bezirksoberliga",
+        "ebene": "Bezirk",
+        "verband": "Bayern",
+        "bezirk": "Mittelfranken"
+      }
+    ],
+    "U18 weiblich": [
+      {
+        "liga_id": 51958,
+        "liga_name": "U18 weiblich Bezirksoberliga",
+        "spielklasse": "Bezirksoberliga",
+        "ebene": "Bezirk",
+        "verband": "Bayern",
+        "bezirk": "Oberpfalz"
+      }
+    ],
+    "U16 männlich": [
+      {
+        "liga_id": 51935,
+        "liga_name": "U16 männlich Bezirksoberliga",
+        "spielklasse": "Bezirksoberliga",
+        "ebene": "Bezirk",
+        "verband": "Bayern",
+        "bezirk": "Oberpfalz"
+      }
+    ],
+    "U16 weiblich": [
+      {
+        "liga_id": 51937,
+        "liga_name": "U16 weiblich Bezirksoberliga",
+        "spielklasse": "Bezirksoberliga",
+        "ebene": "Bezirk",
+        "verband": "Bayern",
+        "bezirk": "Oberpfalz"
+      }
+    ],
+    "U14 männlich": [
+      {
+        "liga_id": 51931,
+        "liga_name": "U14 männlich Bezirksoberliga",
+        "spielklasse": "Bezirksoberliga",
+        "ebene": "Bezirk",
+        "verband": "Bayern",
+        "bezirk": "Oberpfalz"
+      },
+      {
+        "liga_id": 51932,
+        "liga_name": "U14 männlich Bezirksliga",
+        "spielklasse": "Bezirksliga",
+        "ebene": "Bezirk",
+        "verband": "Bayern",
+        "bezirk": "Oberpfalz"
+      }
+    ],
+    "U14 weiblich": [
+      {
+        "liga_id": 51933,
+        "liga_name": "U14 weiblich Bezirksoberliga",
+        "spielklasse": "Bezirksoberliga",
+        "ebene": "Bezirk",
+        "verband": "Bayern",
+        "bezirk": "Oberpfalz"
+      }
+    ],
+    "U12 weiblich": [
+      {
+        "liga_id": 51971,
+        "liga_name": "U12 weiblich Bezirksoberliga",
+        "spielklasse": "Bezirksoberliga",
+        "ebene": "Bezirk",
+        "verband": "Bayern",
+        "bezirk": "Oberpfalz"
+      }
+    ],
+    "U12 mix": [
+      {
+        "liga_id": 51959,
+        "liga_name": "U12 mixed Bezirksoberliga",
+        "spielklasse": "Bezirksoberliga",
+        "ebene": "Bezirk",
+        "verband": "Bayern",
+        "bezirk": "Oberpfalz"
+      },
+      {
+        "liga_id": 51960,
+        "liga_name": "U12 mixed Bezirksliga",
+        "spielklasse": "Bezirksliga",
+        "ebene": "Bezirk",
+        "verband": "Bayern",
+        "bezirk": "Oberpfalz"
+      },
+      {
+        "liga_id": 51970,
+        "liga_name": "U12 mixed Kreisliga",
+        "spielklasse": "Kreisliga",
+        "ebene": "Kreis",
+        "verband": "Bayern",
+        "bezirk": "Oberpfalz"
+      }
+    ],
+    "U10 mix": [
+      {
+        "liga_id": 51928,
+        "liga_name": "U10 Bezirksoberliga",
+        "spielklasse": "Bezirksoberliga",
+        "ebene": "Bezirk",
+        "verband": "Bayern",
+        "bezirk": "Oberpfalz"
+      }
+    ],
+    "U8 mix": [
+      {
+        "liga_id": 52029,
+        "liga_name": "U8 mixed Bezirksoberliga",
+        "spielklasse": "Bezirksoberliga",
+        "ebene": "Bezirk",
+        "verband": "Bayern",
+        "bezirk": "Oberpfalz"
+      }
+    ]
+  },
+  "teams_detailed": [
+    {
+      "team_name": "FC Tegernheim",
+      "team_name_small": "TEG",
+      "rang": 10,
+      "anzspiele": 2,
+      "siege": 0,
+      "niederlagen": 2,
+      "punkte": 0,
+      "koerbe": 114,
+      "gegen_koerbe": 165,
+      "korbdifferenz": -51
+    },
+    {
+      "team_name": "FC Tegernheim 2",
+      "team_name_small": "FCT 2",
+      "rang": 3,
+      "anzspiele": 2,
+      "siege": 1,
+      "niederlagen": 1,
+      "punkte": 2,
+      "koerbe": 172,
+      "gegen_koerbe": 130,
+      "korbdifferenz": 42
+    },
+    {
+      "team_name": "FC Tegernheim",
+      "team_name_small": "TEG",
+      "rang": 7,
+      "anzspiele": 1,
+      "siege": 0,
+      "niederlagen": 1,
+      "punkte": 0,
+      "koerbe": 57,
+      "gegen_koerbe": 63,
+      "korbdifferenz": -6
+    },
+    {
+      "team_name": "FC Tegernheim",
+      "team_name_small": "FCT",
+      "rang": 2,
+      "anzspiele": 0,
+      "siege": 0,
+      "niederlagen": 0,
+      "punkte": 0,
+      "koerbe": 0,
+      "gegen_koerbe": 0,
+      "korbdifferenz": 0
+    },
+    {
+      "team_name": "FC Tegernheim",
+      "team_name_small": "FC Te",
+      "rang": 5,
+      "anzspiele": 2,
+      "siege": 1,
+      "niederlagen": 1,
+      "punkte": 2,
+      "koerbe": 165,
+      "gegen_koerbe": 126,
+      "korbdifferenz": 39
+    },
+    {
+      "team_name": "FC Tegernheim",
+      "team_name_small": "FC Te",
+      "rang": 2,
+      "anzspiele": 0,
+      "siege": 0,
+      "niederlagen": 0,
+      "punkte": 0,
+      "koerbe": 0,
+      "gegen_koerbe": 0,
+      "korbdifferenz": 0
+    },
+    {
+      "team_name": "FC Tegernheim",
+      "team_name_small": null,
+      "rang": 1,
+      "anzspiele": 2,
+      "siege": 2,
+      "niederlagen": 0,
+      "punkte": 4,
+      "koerbe": 160,
+      "gegen_koerbe": 101,
+      "korbdifferenz": 59
+    },
+    {
+      "team_name": "FC Tegernheim",
+      "team_name_small": "TEG1",
+      "rang": 5,
+      "anzspiele": 2,
+      "siege": 0,
+      "niederlagen": 2,
+      "punkte": 0,
+      "koerbe": 88,
+      "gegen_koerbe": 115,
+      "korbdifferenz": -27
+    },
+    {
+      "team_name": "FC Tegernheim",
+      "team_name_small": null,
+      "rang": 2,
+      "anzspiele": 0,
+      "siege": 0,
+      "niederlagen": 0,
+      "punkte": 0,
+      "koerbe": 0,
+      "gegen_koerbe": 0,
+      "korbdifferenz": 0
+    },
+    {
+      "team_name": "FC Tegernheim 1",
+      "team_name_small": "FC Te",
+      "rang": 2,
+      "anzspiele": 1,
+      "siege": 1,
+      "niederlagen": 0,
+      "punkte": 2,
+      "koerbe": 90,
+      "gegen_koerbe": 27,
+      "korbdifferenz": 63
+    },
+    {
+      "team_name": "FC Tegernheim",
+      "team_name_small": "FCT",
+      "rang": 2,
+      "anzspiele": 1,
+      "siege": 0,
+      "niederlagen": 1,
+      "punkte": 0,
+      "koerbe": 22,
+      "gegen_koerbe": 47,
+      "korbdifferenz": -25
+    },
+    {
+      "team_name": "FC Tegernheim",
+      "team_name_small": null,
+      "rang": 2,
+      "anzspiele": 0,
+      "siege": 0,
+      "niederlagen": 0,
+      "punkte": 0,
+      "koerbe": 0,
+      "gegen_koerbe": 0,
+      "korbdifferenz": 0
+    },
+    {
+      "team_name": "FC Tegernheim 3",
+      "team_name_small": "FCT 3",
+      "rang": 4,
+      "anzspiele": 0,
+      "siege": 0,
+      "niederlagen": 0,
+      "punkte": 0,
+      "koerbe": 0,
+      "gegen_koerbe": 0,
+      "korbdifferenz": 0
+    },
+    {
+      "team_name": "FC Tegernheim",
+      "team_name_small": "FC Te",
+      "rang": 6,
+      "anzspiele": 1,
+      "siege": 0,
+      "niederlagen": 1,
+      "punkte": 0,
+      "koerbe": 29,
+      "gegen_koerbe": 68,
+      "korbdifferenz": -39
+    },
+    {
+      "team_name": "FC Tegernheim 2",
+      "team_name_small": null,
+      "rang": 5,
+      "anzspiele": 1,
+      "siege": 0,
+      "niederlagen": 1,
+      "punkte": 0,
+      "koerbe": 39,
+      "gegen_koerbe": 79,
+      "korbdifferenz": -40
+    },
+    {
+      "team_name": "FC Tegernheim 3",
+      "team_name_small": null,
+      "rang": 4,
+      "anzspiele": 0,
+      "siege": 0,
+      "niederlagen": 0,
+      "punkte": 0,
+      "koerbe": 0,
+      "gegen_koerbe": 0,
+      "korbdifferenz": 0
+    }
+  ],
+  "geographic_distribution": {
+    "verbaende": {
+      "Bayern": 16
+    },
+    "bezirke": {
+      "Verbandsebene": 1,
+      "Oberpfalz": 14,
+      "Mittelfranken": 1
+    },
+    "ebenen": {
+      "Verband": 1,
+      "Bezirk": 14,
+      "Kreis": 1
+    }
+  },
+  "best_teams": [
+    {
+      "team_name": "FC Tegernheim",
+      "rang": 1,
+      "punkte": 4,
+      "bilanz": "2:0"
+    },
+    {
+      "team_name": "FC Tegernheim",
+      "rang": 2,
+      "punkte": 0,
+      "bilanz": "0:0"
+    },
+    {
+      "team_name": "FC Tegernheim",
+      "rang": 2,
+      "punkte": 0,
+      "bilanz": "0:0"
+    },
+    {
+      "team_name": "FC Tegernheim",
+      "rang": 2,
+      "punkte": 0,
+      "bilanz": "0:0"
+    },
+    {
+      "team_name": "FC Tegernheim 1",
+      "rang": 2,
+      "punkte": 2,
+      "bilanz": "1:0"
+    }
+  ]
+}

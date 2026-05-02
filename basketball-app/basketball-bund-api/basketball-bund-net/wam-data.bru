@@ -1,0 +1,33 @@
+meta {
+  name: wam-data
+  type: http
+  seq: 8
+}
+
+post {
+  url: {{baseURL}}/rest/wam/data
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "token":{{token}},
+    "verbandIds": [{{verbaendeIds}}],
+    "gebietIds": [{{gebieteIds}}],
+    "ligatypIds": [{{ligatypenIds}}],
+    "akgGeschlechtIds": [{{agkGeschlechtListIds}}],
+    "altersklasseIds": [{{altersklassenIds}}],
+    "spielklasseIds": [{{spielklassenIds}}]
+  }
+}
+
+vars:pre-request {
+  token: 0
+  verbaendeIds: 
+  ligatypenIds: 
+  agkGeschlechtListIds: 
+  altersklassenIds: 
+  spielklassenIds: 
+  gebieteIds: 
+}

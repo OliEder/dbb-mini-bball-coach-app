@@ -1,0 +1,692 @@
+{
+  "club_id": 906,
+  "club_name": "TG Würzburg",
+  "total_teams": 32,
+  "total_ligen": 27,
+  "team_variations": [
+    "TG 48 Würzburg 1",
+    "TG 48 Würzburg 2",
+    "TG 48 Würzburg Youngsters 4",
+    "TG Pfauen Würzburg",
+    "TG Würzburg 5",
+    "TG 48 Würzburg 4",
+    "TG 48 Würzburg 3",
+    "TG 48 Würzburg",
+    "TG 48 Würzburg 2 AK"
+  ],
+  "ligen_by_category": {
+    "Senioren weiblich": [
+      {
+        "liga_id": 47599,
+        "liga_name": "Regionalliga Damen HR-Nord (RLD-HRN)",
+        "spielklasse": "Regionalliga",
+        "ebene": "Verband",
+        "verband": "Regionalliga Südost",
+        "bezirk": null
+      },
+      {
+        "liga_id": 47655,
+        "liga_name": "Bayernliga Nord Damen (ByLND) 25/26",
+        "spielklasse": "Bayernliga",
+        "ebene": "Verband",
+        "verband": "Bayern",
+        "bezirk": null
+      },
+      {
+        "liga_id": 51124,
+        "liga_name": "UFR Bezirksoberliga Damen",
+        "spielklasse": "Bezirksoberliga",
+        "ebene": "Bezirk",
+        "verband": "Bayern",
+        "bezirk": "Unterfranken"
+      }
+    ],
+    "Senioren männlich": [
+      {
+        "liga_id": 47614,
+        "liga_name": "2. Regionalliga Nord (2RLN)",
+        "spielklasse": "2. Regionalliga",
+        "ebene": "Verband",
+        "verband": "Regionalliga Südost",
+        "bezirk": null
+      },
+      {
+        "liga_id": 51123,
+        "liga_name": "UFR Bezirksoberliga Herren",
+        "spielklasse": "Bezirksoberliga",
+        "ebene": "Bezirk",
+        "verband": "Bayern",
+        "bezirk": "Unterfranken"
+      },
+      {
+        "liga_id": 51128,
+        "liga_name": "UFR Bezirksklasse Herren West",
+        "spielklasse": "Bezirksklasse",
+        "ebene": "Bezirk",
+        "verband": "Bayern",
+        "bezirk": "Unterfranken"
+      }
+    ],
+    "U16 männlich": [
+      {
+        "liga_id": 49758,
+        "liga_name": "Bayernliga U16 männlich Nord",
+        "spielklasse": "Bayernliga",
+        "ebene": "Verband",
+        "verband": "Bayern",
+        "bezirk": null
+      },
+      {
+        "liga_id": 51059,
+        "liga_name": "UFR Einteilungsrunde 4 U16 männlich",
+        "spielklasse": "Bezirksklasse",
+        "ebene": "Bezirk",
+        "verband": "Bayern",
+        "bezirk": "Unterfranken"
+      }
+    ],
+    "U16 weiblich": [
+      {
+        "liga_id": 49762,
+        "liga_name": "Bayernliga U16 weiblich Nord",
+        "spielklasse": "Bayernliga",
+        "ebene": "Verband",
+        "verband": "Bayern",
+        "bezirk": null
+      },
+      {
+        "liga_id": 51034,
+        "liga_name": "UFR Bezirksliga U16 weiblich",
+        "spielklasse": "Bezirksliga",
+        "ebene": "Bezirk",
+        "verband": "Bayern",
+        "bezirk": "Unterfranken"
+      }
+    ],
+    "U14 männlich": [
+      {
+        "liga_id": 49763,
+        "liga_name": "Bayernliga U14 männlich Einteilungsrunde Nord",
+        "spielklasse": "Bayernliga",
+        "ebene": "Verband",
+        "verband": "Bayern",
+        "bezirk": null
+      },
+      {
+        "liga_id": 51066,
+        "liga_name": "UFR Einteilungsrunde 2 U14 männlich",
+        "spielklasse": "Bezirksklasse",
+        "ebene": "Bezirk",
+        "verband": "Bayern",
+        "bezirk": "Unterfranken"
+      },
+      {
+        "liga_id": 51065,
+        "liga_name": "UFR Einteilungsrunde 4 U14 männlich",
+        "spielklasse": "Bezirksklasse",
+        "ebene": "Bezirk",
+        "verband": "Bayern",
+        "bezirk": "Unterfranken"
+      }
+    ],
+    "U14 weiblich": [
+      {
+        "liga_id": 49765,
+        "liga_name": "Bayernliga U14 weiblich Einteilungsrunde Nord",
+        "spielklasse": "Bayernliga",
+        "ebene": "Verband",
+        "verband": "Bayern",
+        "bezirk": null
+      },
+      {
+        "liga_id": 51040,
+        "liga_name": "UFR Bezirksliga U14 2 weiblich",
+        "spielklasse": "Bezirksliga",
+        "ebene": "Bezirk",
+        "verband": "Bayern",
+        "bezirk": "Unterfranken"
+      }
+    ],
+    "U20 männlich": [
+      {
+        "liga_id": 49823,
+        "liga_name": "Landesliga U20 männlich Nord",
+        "spielklasse": "Landesliga",
+        "ebene": "Verband",
+        "verband": "Bayern",
+        "bezirk": null
+      }
+    ],
+    "U18 männlich": [
+      {
+        "liga_id": 49821,
+        "liga_name": "Landesliga U18 m Einteilungsrunde West",
+        "spielklasse": "Landesliga",
+        "ebene": "Verband",
+        "verband": "Bayern",
+        "bezirk": null
+      },
+      {
+        "liga_id": 51051,
+        "liga_name": "UFR Bezirksliga U18 männlich",
+        "spielklasse": "Bezirksliga",
+        "ebene": "Bezirk",
+        "verband": "Bayern",
+        "bezirk": "Unterfranken"
+      }
+    ],
+    "U12 weiblich": [
+      {
+        "liga_id": 49804,
+        "liga_name": "Landesliga U12 weiblich Nord",
+        "spielklasse": "Landesliga",
+        "ebene": "Verband",
+        "verband": "Bayern",
+        "bezirk": null
+      },
+      {
+        "liga_id": 51035,
+        "liga_name": "UFR Bezirksliga U12 weiblich",
+        "spielklasse": "Bezirksliga",
+        "ebene": "Bezirk",
+        "verband": "Bayern",
+        "bezirk": "Unterfranken"
+      }
+    ],
+    "U12 männlich": [
+      {
+        "liga_id": 51043,
+        "liga_name": "UFR Bezirksliga U12 männlich",
+        "spielklasse": "Bezirksliga",
+        "ebene": "Bezirk",
+        "verband": "Bayern",
+        "bezirk": "Unterfranken"
+      },
+      {
+        "liga_id": 51047,
+        "liga_name": "UFR Kreisliga U12 männlich 1",
+        "spielklasse": "Kreisliga",
+        "ebene": "Kreis",
+        "verband": "Bayern",
+        "bezirk": "Unterfranken"
+      },
+      {
+        "liga_id": 51048,
+        "liga_name": "UFR Kreisliga U12 männlich 2",
+        "spielklasse": "Kreisliga",
+        "ebene": "Kreis",
+        "verband": "Bayern",
+        "bezirk": "Unterfranken"
+      }
+    ],
+    "U10 weiblich": [
+      {
+        "liga_id": 51036,
+        "liga_name": "UFR Bezirksliga U10 weiblich",
+        "spielklasse": "Bezirksliga",
+        "ebene": "Bezirk",
+        "verband": "Bayern",
+        "bezirk": "Unterfranken"
+      }
+    ],
+    "U10 mix": [
+      {
+        "liga_id": 51115,
+        "liga_name": "UFR Einteilungsrunde 2 U10 mix",
+        "spielklasse": "Bezirksklasse",
+        "ebene": "Bezirk",
+        "verband": "Bayern",
+        "bezirk": "Unterfranken"
+      },
+      {
+        "liga_id": 51116,
+        "liga_name": "UFR Einteilungsrunde 4 U10 mix",
+        "spielklasse": "Bezirksklasse",
+        "ebene": "Bezirk",
+        "verband": "Bayern",
+        "bezirk": "Unterfranken"
+      },
+      {
+        "liga_id": 51113,
+        "liga_name": "UFR Einteilungsrunde 3 U10 mix",
+        "spielklasse": "Kreisklasse",
+        "ebene": "Kreis",
+        "verband": "Bayern",
+        "bezirk": "Unterfranken"
+      }
+    ]
+  },
+  "teams_detailed": [
+    {
+      "team_name": "TG 48 Würzburg 2",
+      "team_name_small": "TGW-D",
+      "rang": 5,
+      "anzspiele": 3,
+      "siege": 1,
+      "niederlagen": 2,
+      "punkte": 2,
+      "koerbe": 160,
+      "gegen_koerbe": 200,
+      "korbdifferenz": -40
+    },
+    {
+      "team_name": "TG Pfauen Würzburg",
+      "team_name_small": "TGW",
+      "rang": 7,
+      "anzspiele": 2,
+      "siege": 1,
+      "niederlagen": 1,
+      "punkte": 2,
+      "koerbe": 166,
+      "gegen_koerbe": 164,
+      "korbdifferenz": 2
+    },
+    {
+      "team_name": "TG 48 Würzburg 3",
+      "team_name_small": "TGW 3",
+      "rang": 8,
+      "anzspiele": 2,
+      "siege": 0,
+      "niederlagen": 2,
+      "punkte": 0,
+      "koerbe": 95,
+      "gegen_koerbe": 129,
+      "korbdifferenz": -34
+    },
+    {
+      "team_name": "TG 48 Würzburg",
+      "team_name_small": "TGW1",
+      "rang": 1,
+      "anzspiele": 1,
+      "siege": 1,
+      "niederlagen": 0,
+      "punkte": 2,
+      "koerbe": 91,
+      "gegen_koerbe": 55,
+      "korbdifferenz": 36
+    },
+    {
+      "team_name": "TG 48 Würzburg",
+      "team_name_small": "TGW 1",
+      "rang": 2,
+      "anzspiele": 2,
+      "siege": 2,
+      "niederlagen": 0,
+      "punkte": 4,
+      "koerbe": 161,
+      "gegen_koerbe": 91,
+      "korbdifferenz": 70
+    },
+    {
+      "team_name": "TG 48 Würzburg",
+      "team_name_small": "TGW",
+      "rang": 7,
+      "anzspiele": 2,
+      "siege": 0,
+      "niederlagen": 2,
+      "punkte": 0,
+      "koerbe": 116,
+      "gegen_koerbe": 169,
+      "korbdifferenz": -53
+    },
+    {
+      "team_name": "TG 48 Würzburg",
+      "team_name_small": "TGW 1",
+      "rang": 1,
+      "anzspiele": 3,
+      "siege": 3,
+      "niederlagen": 0,
+      "punkte": 6,
+      "koerbe": 303,
+      "gegen_koerbe": 103,
+      "korbdifferenz": 200
+    },
+    {
+      "team_name": "TG 48 Würzburg",
+      "team_name_small": "TG Wü",
+      "rang": 6,
+      "anzspiele": 0,
+      "siege": 0,
+      "niederlagen": 0,
+      "punkte": 0,
+      "koerbe": 0,
+      "gegen_koerbe": 0,
+      "korbdifferenz": 0
+    },
+    {
+      "team_name": "TG 48 Würzburg",
+      "team_name_small": "TGW1",
+      "rang": 2,
+      "anzspiele": 1,
+      "siege": 1,
+      "niederlagen": 0,
+      "punkte": 2,
+      "koerbe": 88,
+      "gegen_koerbe": 54,
+      "korbdifferenz": 34
+    },
+    {
+      "team_name": "TG 48 Würzburg",
+      "team_name_small": "TGW",
+      "rang": 4,
+      "anzspiele": 1,
+      "siege": 0,
+      "niederlagen": 1,
+      "punkte": 0,
+      "koerbe": 54,
+      "gegen_koerbe": 61,
+      "korbdifferenz": -7
+    },
+    {
+      "team_name": "TG 48 Würzburg Youngsters 4",
+      "team_name_small": "TGW 4",
+      "rang": 3,
+      "anzspiele": 1,
+      "siege": 1,
+      "niederlagen": 0,
+      "punkte": 2,
+      "koerbe": 85,
+      "gegen_koerbe": 47,
+      "korbdifferenz": 38
+    },
+    {
+      "team_name": "TG 48 Würzburg 2",
+      "team_name_small": "TGW 2",
+      "rang": 4,
+      "anzspiele": 2,
+      "siege": 1,
+      "niederlagen": 1,
+      "punkte": 2,
+      "koerbe": 134,
+      "gegen_koerbe": 125,
+      "korbdifferenz": 9
+    },
+    {
+      "team_name": "TG 48 Würzburg 3",
+      "team_name_small": "TG Wü",
+      "rang": 9,
+      "anzspiele": 2,
+      "siege": 0,
+      "niederlagen": 2,
+      "punkte": 0,
+      "koerbe": 95,
+      "gegen_koerbe": 217,
+      "korbdifferenz": -122
+    },
+    {
+      "team_name": "TG 48 Würzburg 4",
+      "team_name_small": "TGW 4",
+      "rang": 5,
+      "anzspiele": 2,
+      "siege": 1,
+      "niederlagen": 1,
+      "punkte": 2,
+      "koerbe": 142,
+      "gegen_koerbe": 98,
+      "korbdifferenz": 44
+    },
+    {
+      "team_name": "TG 48 Würzburg 2",
+      "team_name_small": "TGW 2",
+      "rang": 4,
+      "anzspiele": 3,
+      "siege": 1,
+      "niederlagen": 2,
+      "punkte": 2,
+      "koerbe": 210,
+      "gegen_koerbe": 212,
+      "korbdifferenz": -2
+    },
+    {
+      "team_name": "TG 48 Würzburg 2",
+      "team_name_small": "TGW 2",
+      "rang": 2,
+      "anzspiele": 0,
+      "siege": 0,
+      "niederlagen": 0,
+      "punkte": 0,
+      "koerbe": 0,
+      "gegen_koerbe": 0,
+      "korbdifferenz": 0
+    },
+    {
+      "team_name": "TG 48 Würzburg 2 AK",
+      "team_name_small": "TGW 2",
+      "rang": 4,
+      "anzspiele": 0,
+      "siege": 0,
+      "niederlagen": 0,
+      "punkte": 0,
+      "koerbe": 0,
+      "gegen_koerbe": 0,
+      "korbdifferenz": 0
+    },
+    {
+      "team_name": "TG 48 Würzburg 3",
+      "team_name_small": "TGW",
+      "rang": 5,
+      "anzspiele": 1,
+      "siege": 0,
+      "niederlagen": 1,
+      "punkte": 0,
+      "koerbe": 43,
+      "gegen_koerbe": 87,
+      "korbdifferenz": -44
+    },
+    {
+      "team_name": "TG 48 Würzburg 1",
+      "team_name_small": "TGW 1",
+      "rang": 3,
+      "anzspiele": 2,
+      "siege": 1,
+      "niederlagen": 1,
+      "punkte": 2,
+      "koerbe": 134,
+      "gegen_koerbe": 173,
+      "korbdifferenz": -39
+    },
+    {
+      "team_name": "TG 48 Würzburg 2",
+      "team_name_small": null,
+      "rang": 4,
+      "anzspiele": 0,
+      "siege": 0,
+      "niederlagen": 0,
+      "punkte": 0,
+      "koerbe": 0,
+      "gegen_koerbe": 0,
+      "korbdifferenz": 0
+    },
+    {
+      "team_name": "TG 48 Würzburg 3",
+      "team_name_small": null,
+      "rang": 8,
+      "anzspiele": 1,
+      "siege": 0,
+      "niederlagen": 1,
+      "punkte": 0,
+      "koerbe": 49,
+      "gegen_koerbe": 79,
+      "korbdifferenz": -30
+    },
+    {
+      "team_name": "TG 48 Würzburg",
+      "team_name_small": "TGW",
+      "rang": 2,
+      "anzspiele": 0,
+      "siege": 0,
+      "niederlagen": 0,
+      "punkte": 0,
+      "koerbe": 0,
+      "gegen_koerbe": 0,
+      "korbdifferenz": 0
+    },
+    {
+      "team_name": "TG 48 Würzburg 2",
+      "team_name_small": null,
+      "rang": 3,
+      "anzspiele": 0,
+      "siege": 0,
+      "niederlagen": 0,
+      "punkte": 0,
+      "koerbe": 0,
+      "gegen_koerbe": 0,
+      "korbdifferenz": 0
+    },
+    {
+      "team_name": "TG Würzburg 5",
+      "team_name_small": "TGW5",
+      "rang": 6,
+      "anzspiele": 0,
+      "siege": 0,
+      "niederlagen": 0,
+      "punkte": 0,
+      "koerbe": 0,
+      "gegen_koerbe": 0,
+      "korbdifferenz": 0
+    },
+    {
+      "team_name": "TG 48 Würzburg 2",
+      "team_name_small": "TGW2",
+      "rang": 3,
+      "anzspiele": 1,
+      "siege": 0,
+      "niederlagen": 1,
+      "punkte": 0,
+      "koerbe": 75,
+      "gegen_koerbe": 77,
+      "korbdifferenz": -2
+    },
+    {
+      "team_name": "TG 48 Würzburg 2",
+      "team_name_small": "TGW 2",
+      "rang": 1,
+      "anzspiele": 3,
+      "siege": 3,
+      "niederlagen": 0,
+      "punkte": 6,
+      "koerbe": 269,
+      "gegen_koerbe": 170,
+      "korbdifferenz": 99
+    },
+    {
+      "team_name": "TG 48 Würzburg 3",
+      "team_name_small": "TGW",
+      "rang": 2,
+      "anzspiele": 2,
+      "siege": 1,
+      "niederlagen": 1,
+      "punkte": 2,
+      "koerbe": 154,
+      "gegen_koerbe": 131,
+      "korbdifferenz": 23
+    },
+    {
+      "team_name": "TG 48 Würzburg 2",
+      "team_name_small": "TGW 2",
+      "rang": 4,
+      "anzspiele": 2,
+      "siege": 0,
+      "niederlagen": 2,
+      "punkte": 0,
+      "koerbe": 23,
+      "gegen_koerbe": 121,
+      "korbdifferenz": -98
+    },
+    {
+      "team_name": "TG 48 Würzburg 3",
+      "team_name_small": "TGW",
+      "rang": 3,
+      "anzspiele": 1,
+      "siege": 0,
+      "niederlagen": 1,
+      "punkte": 0,
+      "koerbe": 24,
+      "gegen_koerbe": 96,
+      "korbdifferenz": -72
+    },
+    {
+      "team_name": "TG 48 Würzburg 2",
+      "team_name_small": "TG 48",
+      "rang": 3,
+      "anzspiele": 1,
+      "siege": 1,
+      "niederlagen": 0,
+      "punkte": 2,
+      "koerbe": 66,
+      "gegen_koerbe": 51,
+      "korbdifferenz": 15
+    },
+    {
+      "team_name": "TG 48 Würzburg 3",
+      "team_name_small": "TGW 3",
+      "rang": 7,
+      "anzspiele": 1,
+      "siege": 0,
+      "niederlagen": 1,
+      "punkte": 0,
+      "koerbe": 32,
+      "gegen_koerbe": 56,
+      "korbdifferenz": -24
+    },
+    {
+      "team_name": "TG 48 Würzburg",
+      "team_name_small": "TG 48",
+      "rang": 2,
+      "anzspiele": 2,
+      "siege": 1,
+      "niederlagen": 1,
+      "punkte": 2,
+      "koerbe": 167,
+      "gegen_koerbe": 109,
+      "korbdifferenz": 58
+    }
+  ],
+  "geographic_distribution": {
+    "verbaende": {
+      "Regionalliga Südost": 2,
+      "Bayern": 25
+    },
+    "bezirke": {
+      "Verbandsebene": 10,
+      "Unterfranken": 17
+    },
+    "ebenen": {
+      "Verband": 10,
+      "Bezirk": 14,
+      "Kreis": 3
+    }
+  },
+  "best_teams": [
+    {
+      "team_name": "TG 48 Würzburg",
+      "rang": 1,
+      "punkte": 2,
+      "bilanz": "1:0"
+    },
+    {
+      "team_name": "TG 48 Würzburg",
+      "rang": 1,
+      "punkte": 6,
+      "bilanz": "3:0"
+    },
+    {
+      "team_name": "TG 48 Würzburg 2",
+      "rang": 1,
+      "punkte": 6,
+      "bilanz": "3:0"
+    },
+    {
+      "team_name": "TG 48 Würzburg",
+      "rang": 2,
+      "punkte": 4,
+      "bilanz": "2:0"
+    },
+    {
+      "team_name": "TG 48 Würzburg",
+      "rang": 2,
+      "punkte": 2,
+      "bilanz": "1:0"
+    }
+  ]
+}
