@@ -84,7 +84,7 @@
     "tsx": "^4.20.6",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.46.2",
-    "vite": "^8.0.10",
+    "vite": "^7.3.2",
     "vite-plugin-pwa": "^1.2.0",
     "vitest": "^4.0.10",
     "workbox-build": "^7.0.0",
